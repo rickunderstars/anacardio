@@ -6,117 +6,332 @@
 		<title>heart-vis</title>
 	</head>
 
-	<body>
-		<div class="global-container">
-			<div id="viewport"></div>
-			<div class="right-column">
-				<div class="right-row">
-					<div class="title">
+	<body class="bg-slate-900 text-slate-100 antialiased font-sans">
+		<div class="flex h-screen w-full overflow-hidden">
+			<div id="viewport" class="bg-black relative"></div>
+
+			<div
+				class="flex-grow w-2/5 flex flex-col gap-6 p-4 bg-slate-800 overflow-y-auto"
+			>
+				<div class="flex gap-3 overflow-auto">
+					<div
+						class="flex flex-none w-1/2 items-center gap-2 text-4xl font-bold text-shadow-xl"
+					>
 						heart-vis
 						<img
 							src="assets/images/heart-icon.png"
-							class="title-icon"
+							class="w-10 h-10 object-contain drop-shadow-xl"
 						/>
 					</div>
+
 					<input
 						type="file"
 						id="raw-mesh"
 						accept="text/*"
-						class="hidden-btn-upload"
+						class="hidden"
 					/>
-					<label for="raw-mesh" class="btn-upload">
+					<label
+						for="raw-mesh"
+						class="block w-1/3 p-2 bg-blue-600 hover:bg-blue-500 text-center rounded-md cursor-pointer transition-colors font-medium"
+					>
 						upload raw mesh file
 					</label>
-					<div id="filename" class="upload-info">
+					<div
+						id="filename"
+						class="block w-1/3 text-sm italic align-middle"
+					>
 						No file selected
 					</div>
 				</div>
-				<div class="right-row">
-					<label id="camera-reset" class="btn-camera"
-						>camera reset</label
-					>
 
-					<label id="add-test-meshes" class="btn-camera"
-						>add test meshes</label
+				<div class="flex gap-2">
+					<label
+						id="camera-reset"
+						class="flex-1 p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer transition-all border border-slate-600"
 					>
+						Camera Reset
+					</label>
+					<label
+						id="add-test-meshes"
+						class="flex-1 p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer transition-all border border-slate-600"
+					>
+						Add Test Meshes
+					</label>
 				</div>
-				<div class="right-row">
-					<div class="qualities-container">
-						<label class="quality-top">
-							<input
-								type="radio"
-								name="quality"
-								value="unipolar"
-								checked
-							/>
-							<span>Unipolar</span>
-						</label>
-						<label>
-							<input
-								type="radio"
-								name="quality"
-								value="bipolar"
-							/>
-							<span>Bipolar</span>
-						</label>
-						<label>
-							<input type="radio" name="quality" value="lat" />
-							<span>LAT</span>
-						</label>
-						<label>
-							<input type="radio" name="quality" value="eml" />
-							<span>EML</span>
-						</label>
-						<label>
-							<input type="radio" name="quality" value="exteml" />
-							<span>ExtEML</span>
-						</label>
-						<label>
-							<input type="radio" name="quality" value="scar" />
-							<span>SCAR</span>
-						</label>
-						<label class="quality-bottom">
-							<input
-								type="radio"
-								name="quality"
-								value="groupid"
-							/>
-							<span>groupID</span>
-						</label>
+
+				<div class="flex flex-grow gap-4">
+					<div class="flex flex-col flex-grow gap-4">
+						<div
+							data-js="qualities-list"
+							class="flex flex-col border border-slate-700 rounded-md overflow-hidden divide-y divide-slate-700 w-full"
+						>
+							<label class="cursor-pointer group">
+								<input
+									type="radio"
+									name="quality"
+									value="unipolar"
+									class="sr-only peer"
+									checked
+								/>
+								<div
+									class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+								>
+									<div
+										class="flex flex-row items-center w-full"
+									>
+										<div
+											class="w-1/2 border-r border-slate-400 pr-4 text-left text-md font-medium truncate"
+										>
+											Unipolar
+										</div>
+										<div
+											id="unipolar-value"
+											class="pl-4 text-md font-medium truncate"
+										>
+											---
+										</div>
+									</div>
+								</div>
+							</label>
+
+							<label class="cursor-pointer group">
+								<input
+									type="radio"
+									name="quality"
+									value="bipolar"
+									class="sr-only peer"
+								/>
+								<div
+									class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+								>
+									<div
+										class="flex flex-row items-center w-full"
+									>
+										<div
+											class="w-1/2 border-r border-slate-400 pr-4 text-left text-md font-medium truncate"
+										>
+											Bipolar
+										</div>
+										<div
+											id="bipolar-value"
+											class="pl-4 text-md font-medium truncate"
+										>
+											---
+										</div>
+									</div>
+								</div>
+							</label>
+
+							<label class="cursor-pointer group">
+								<input
+									type="radio"
+									name="quality"
+									value="lat"
+									class="sr-only peer"
+								/>
+								<div
+									class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+								>
+									<div
+										class="flex flex-row items-center w-full"
+									>
+										<div
+											class="w-1/2 border-r border-slate-400 pr-4 text-left text-md font-medium truncate"
+										>
+											LAT
+										</div>
+										<div
+											id="lat-value"
+											class="pl-4 text-md font-medium truncate"
+										>
+											---
+										</div>
+									</div>
+								</div>
+							</label>
+
+							<label class="cursor-pointer group">
+								<input
+									type="radio"
+									name="quality"
+									value="eml"
+									class="sr-only peer"
+								/>
+								<div
+									class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+								>
+									<div
+										class="flex flex-row items-center w-full"
+									>
+										<div
+											class="w-1/2 border-r border-slate-400 pr-4 text-left text-md font-medium truncate"
+										>
+											EML
+										</div>
+										<div
+											id="eml-value"
+											class="pl-4 text-md font-medium truncate"
+										>
+											---
+										</div>
+									</div>
+								</div>
+							</label>
+
+							<label class="cursor-pointer group">
+								<input
+									type="radio"
+									name="quality"
+									value="exteml"
+									class="sr-only peer"
+								/>
+								<div
+									class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+								>
+									<div
+										class="flex flex-row items-center w-full"
+									>
+										<div
+											class="w-1/2 border-r border-slate-400 pr-4 text-left text-md font-medium truncate"
+										>
+											ExtEML
+										</div>
+										<div
+											id="exteml-value"
+											class="pl-4 text-md font-medium truncate"
+										>
+											---
+										</div>
+									</div>
+								</div>
+							</label>
+
+							<label class="cursor-pointer group">
+								<input
+									type="radio"
+									name="quality"
+									value="scar"
+									class="sr-only peer"
+								/>
+								<div
+									class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+								>
+									<div
+										class="flex flex-row items-center w-full"
+									>
+										<div
+											class="w-1/2 border-r border-slate-400 pr-4 text-left text-md font-medium truncate"
+										>
+											SCAR
+										</div>
+										<div
+											id="scar-value"
+											class="pl-4 text-md font-medium truncate"
+										>
+											---
+										</div>
+									</div>
+								</div>
+							</label>
+
+							<label class="cursor-pointer group">
+								<input
+									type="radio"
+									name="quality"
+									value="groupid"
+									class="sr-only peer"
+								/>
+								<div
+									class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+								>
+									<div
+										class="flex flex-row items-center w-full"
+									>
+										<div
+											class="w-1/2 border-r border-slate-400 pr-4 text-left text-md font-medium truncate"
+										>
+											GroupID
+										</div>
+										<div
+											id="groupid-value"
+											class="pl-4 text-md font-medium truncate"
+										>
+											---
+										</div>
+									</div>
+								</div>
+							</label>
+						</div>
+
+						<div
+							id="loaded-meshes"
+							data-js="meshes-list"
+							class="flex flex-col gap-2 overflow-y-auto mt-auto"
+						></div>
 					</div>
-					<div id="vertex-info" class="vertex-info"></div>
-					<div id="color-gauge" class="color-gauge">
-						<div id="max-value" class="max-value">max</div>
-						<div class="right-row">
+
+					<div
+						id="color-gauge"
+						class="w-1/7 flex flex-col items-center"
+					>
+						<div
+							id="max-value"
+							class="text-sm text-center font-bold bg-black rounded w-full mb-1"
+						>
+							max<br />---
+						</div>
+						<div
+							class="relative w-full h-full flex justify-center rounded"
+						>
 							<canvas
 								id="gradient-bar"
-								class="gradient-bar"
+								class="w-full h-full rounded-sm box-shadow-xl"
 							></canvas>
-							<div id="gauge-line" class="gauge-line"></div>
+							<div
+								id="gauge-line"
+								class="absolute left-0 w-full h-0.5 rounded border-y border-black pointer-events-none"
+							></div>
 						</div>
-						<div id="min-value" class="min-value">min</div>
+						<div
+							id="min-value"
+							class="text-sm text-center font-bold bg-black rounded w-full mt-1"
+						>
+							min<br />---
+						</div>
 					</div>
 				</div>
-				<div class="right-row">
-					<div id="loaded-meshes" class="meshes-container"></div>
-				</div>
-				<div class="right-row">
-					<label id="dynamic-animation" class="btn-animation"
-						>dynamic animation</label
-					>
-					<div class="slider-container">
+
+				<div class="flex flex-col gap-4 pt-4 border-t border-slate-700">
+					<label class="w-full cursor-pointer group">
+						<input
+							type="checkbox"
+							class="hidden peer"
+							id="dynamic-animation"
+						/>
+
+						<div
+							class="w-full p-2 bg-blue-600 text-center rounded-md transition-colors text-md font-semibold shadow-lg hover:bg-blue-500 peer-checked:bg-green-700"
+						>
+							Dynamic Animation
+						</div>
+					</label>
+					<div class="flex flex-col gap-2">
+						<div class="text-sm text-slate-500 font-bold">
+							Lighting Intensity
+						</div>
 						<input
 							type="range"
 							min="20"
 							max="100"
 							value="60"
-							class="slider-knob"
 							id="light-slider"
+							class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
 						/>
 					</div>
 				</div>
 			</div>
 		</div>
+
 		<script src="/js/emscripten/heart.out.js"></script>
 		<script type="module" src="js/main.js"></script>
 	</body>

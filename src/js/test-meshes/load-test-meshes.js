@@ -3,8 +3,10 @@ import { addMesh } from "../interaction/file-processing";
 import testMesh1 from "@assets/test-meshes/2-LA.mesh?raw";
 import testMesh2 from "@assets/test-meshes/2-LA-FA.mesh?raw";
 
-export const testMeshes = [testMesh1, testMesh2];
-export const testMeshesFilenames = ["2-LA.mesh", "2-LA-FA.mesh"];
+const testMeshes = [
+	[testMesh1, "2-LA.mesh"],
+	[testMesh2, "2-LA-FA.mesh"],
+];
 
 export function addTestMesh(dependencies) {
 	const { state, shaders, scene, camera, controls, renderer } = dependencies;
@@ -16,8 +18,8 @@ export function addTestMesh(dependencies) {
 	}
 
 	HeartModule().then((cpp) => {
-		const mesh = cpp.importMesh(testMeshes.pop());
-		const filename = testMeshesFilenames.pop();
+		const [testMesh, filename] = testMeshes.pop();
+		const mesh = cpp.importMesh(testMesh);
 
 		if (filename === "2-LA.mesh") {
 			mesh.triangleFix(8703, 4559, 4538);

@@ -1,11 +1,8 @@
-// css
 import "@css/styles.css";
 
-// three
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
-// my stuff
 import { createScene } from "@js/visualization/scene.js";
 import { createRenderer } from "@js/visualization/renderer.js";
 import state from "@js/state/state.js";
@@ -14,8 +11,6 @@ import { updateActiveMaterial } from "@js/visualization/material-update";
 import { loadShaders } from "@js/visualization/shader-update";
 import { setupEventHandlers } from "@js/interaction/event-handlers";
 import { colorizeGradient } from "@js/visualization/color-gauge";
-
-/////// three.js ///////
 
 const scene = createScene();
 const viewport = document.getElementById("viewport");
@@ -45,7 +40,6 @@ if (!state.timeMode) {
 
 const clock = new THREE.Clock();
 
-/////// model upload ///////
 let shaders = await loadShaders();
 
 state.meshes = [];
@@ -53,8 +47,9 @@ state.meshes = [];
 state.setActiveMesh(-1);
 
 state.setActiveQuality(
-	document.querySelector('.qualities-container input[name="quality"]:checked')
-		.value,
+	document.querySelector(
+		'[data-js="qualities-list"] input[name="quality"]:checked',
+	).value,
 );
 
 setupFileHandlers({

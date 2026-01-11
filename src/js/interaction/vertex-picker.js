@@ -5,7 +5,6 @@ export function vertexPicker(dependencies) {
 	const { state, mouse, camera } = dependencies;
 
 	if (state.activeMesh === -1 || !state.getActiveMesh()) {
-		document.getElementById("vertex-info").innerHTML = "no mesh loaded";
 		return;
 	}
 	const active = state.getActiveMesh().valueSets;
@@ -58,22 +57,17 @@ export function vertexPicker(dependencies) {
 		const scar = active.scar[intValuesIndex];
 		const groupid = active.groupid[intValuesIndex];
 
-		document.getElementById("vertex-info").innerHTML =
-			"<div class='vertex-info'>Unipolar: " +
-			formatNumber(unipolar) +
-			"</br>Bipolar: " +
-			formatNumber(bipolar) +
-			"</br>LAT: " +
-			formatNumber(lat) +
-			"</br>EML: " +
-			formatNumber(eml) +
-			"</br>ExtEML: " +
-			formatNumber(exteml) +
-			"</br>SCAR: " +
-			formatNumber(scar) +
-			"</br>groupID: " +
-			formatNumber(groupid) +
-			"</div>";
+		document.getElementById("unipolar-value").innerHTML =
+			formatNumber(unipolar);
+		document.getElementById("bipolar-value").innerHTML =
+			formatNumber(bipolar);
+		document.getElementById("lat-value").innerHTML = formatNumber(lat);
+		document.getElementById("eml-value").innerHTML = formatNumber(eml);
+		document.getElementById("exteml-value").innerHTML =
+			formatNumber(exteml);
+		document.getElementById("scar-value").innerHTML = formatNumber(scar);
+		document.getElementById("groupid-value").innerHTML =
+			formatNumber(groupid);
 
 		switch (state.activeQuality) {
 			case "unipolar":
@@ -92,6 +86,12 @@ export function vertexPicker(dependencies) {
 				return groupid;
 		}
 	} else {
-		document.getElementById("vertex-info").innerHTML = "";
+		document.getElementById("unipolar-value").innerHTML = "---";
+		document.getElementById("bipolar-value").innerHTML = "---";
+		document.getElementById("lat-value").innerHTML = "---";
+		document.getElementById("eml-value").innerHTML = "---";
+		document.getElementById("exteml-value").innerHTML = "---";
+		document.getElementById("scar-value").innerHTML = "---";
+		document.getElementById("groupid-value").innerHTML = "---";
 	}
 }

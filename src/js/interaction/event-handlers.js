@@ -35,7 +35,7 @@ export function setupEventHandlers(dependencies) {
 	};
 
 	window.addEventListener("resize", () => {
-		onViewportResize(camera, renderer);
+		onViewportResize(camera, renderer, state);
 	});
 
 	window.addEventListener("mousemove", (e) => {
@@ -43,7 +43,7 @@ export function setupEventHandlers(dependencies) {
 	});
 
 	document
-		.querySelector(".qualities-container")
+		.querySelector('[data-js="qualities-list"]')
 		.addEventListener("change", function (e) {
 			if (e.target.name === "quality") {
 				state.setActiveQuality(e.target.value);
@@ -53,7 +53,7 @@ export function setupEventHandlers(dependencies) {
 		});
 
 	document
-		.querySelector(".meshes-container")
+		.querySelector('[data-js="meshes-list"]')
 		.addEventListener("change", function (e) {
 			if (e.target.name === "loaded-mesh") {
 				state.setActiveMesh(e.target.value);
@@ -95,7 +95,7 @@ function cameraReset(state, camera, controls) {
 	controls.update();
 }
 
-function onViewportResize(camera, renderer) {
+function onViewportResize(camera, renderer, state) {
 	camera.aspect = viewport.clientWidth / viewport.clientHeight;
 	camera.updateProjectionMatrix();
 	renderer.setSize(viewport.clientWidth, viewport.clientHeight);
