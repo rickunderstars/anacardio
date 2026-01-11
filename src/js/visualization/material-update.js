@@ -43,6 +43,8 @@ export function updateActiveMaterial(dependencies) {
 		});
 	}
 
-	document.getElementById("min-value").innerText = formatNumber(min);
-	document.getElementById("max-value").innerText = formatNumber(max);
+	document.getElementById("min-value").innerHTML =
+		"min<br/>" + formatNumber(min);
+	document.getElementById("max-value").innerHTML =
+		"max<br/>" + formatNumber(max);
 }
