@@ -82,8 +82,26 @@ export function setupEventHandlers(dependencies) {
 			}
 		});
 
-	document.getElementById("add-test-meshes").addEventListener("click", () => {
-		addTestMesh({ state, shaders, scene, camera, controls, renderer });
+	const btnTestMesh = document.getElementById("add-test-meshes");
+
+	btnTestMesh.addEventListener("click", async () => {
+		btnTestMesh.textContent = "Loading...";
+		btnTestMesh.disabled = true;
+		document.body.style.cursor = "wait";
+		await new Promise((r) => setTimeout(r, 50));
+
+		await addTestMesh({
+			state,
+			shaders,
+			scene,
+			camera,
+			controls,
+			renderer,
+		});
+
+		btnTestMesh.textContent = "Add Test Mesh";
+		btnTestMesh.disabled = false;
+		document.body.style.cursor = "default";
 	});
 }
 
