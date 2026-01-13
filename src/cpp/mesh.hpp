@@ -25,8 +25,7 @@ class Mesh {
 
 	emscripten::val Uint32ArrayOfTriangles() const;
 	emscripten::val Float32ArrayOfTrianglesNormals() const;
-
-	emscripten::val Float32ArrayOfGroupID() const;
+	emscripten::val Float32ArrayOfBarycenters() const;
 
 	emscripten::val Float32ArrayOfUnipolar() const;
 	emscripten::val Float32ArrayOfBipolar() const;
@@ -34,4 +33,5 @@ class Mesh {
 	emscripten::val Float32ArrayOfEML() const;
 	emscripten::val Float32ArrayOfExtEML() const;
 	emscripten::val Float32ArrayOfSCAR() const;
+	emscripten::val Float32ArrayOfGroupID() const;
 };

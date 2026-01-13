@@ -180,6 +180,34 @@ emscripten::val Mesh::Float32ArrayOfTrianglesNormals() const {
 	return float32Array;
 }
 
+emscripten::val Mesh::Float32ArrayOfBarycenters() const {
+	std::vector<float> barycenters;
+	barycenters.reserve(triangles.size() * 3);
+
+	for (const auto &t : triangles) {
+
+		glm::vec3 v0 = vertices.at(t.vertices.at(0)).pos;
+		glm::vec3 v1 = vertices.at(t.vertices.at(1)).pos;
+		glm::vec3 v2 = vertices.at(t.vertices.at(2)).pos;
+
+		glm::vec3 barycenter = (v0 + v1 + v2) / 3.0f;
+
+		barycenters.push_back(barycenter.x);
+		barycenters.push_back(barycenter.y);
+		barycenters.push_back(barycenter.z);
+	}
+
+	emscripten::val float32Array =
+		emscripten::val::global("Float32Array").new_(barycenters.size());
+	emscripten::val memory = emscripten::val::module_property("HEAPF32");
+
+	float32Array.call<void>("set",
+							emscripten::val(emscripten::typed_memory_view(
+								barycenters.size(), barycenters.data())));
+
+	return float32Array;
+}
+
 emscripten::val Mesh::Float32ArrayOfUnipolar() const {
 	std::vector<float> valuesArray;
 	valuesArray.reserve(vertices.size());
