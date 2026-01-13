@@ -9,6 +9,7 @@
 #include <emscripten/val.h>
 #include <glm/detail/qualifier.hpp>
 #include <glm/ext/vector_float3.hpp>
+#include <glm/geometric.hpp>
 #include <iostream>
 #include <map>
 #include <set>
@@ -148,7 +149,7 @@ emscripten::val Mesh::Uint32ArrayOfTriangles() const {
 	return uint32Array;
 }
 
-emscripten::val Mesh::Float32ArrayOfTriangleNormals() const {
+emscripten::val Mesh::Float32ArrayOfTrianglesNormals() const {
 	std::vector<float> normals;
 	normals.reserve(triangles.size() * 3);
 

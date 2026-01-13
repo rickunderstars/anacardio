@@ -24,6 +24,7 @@ class Mesh {
 	emscripten::val Float32ArrayOfVertices() const;
 
 	emscripten::val Uint32ArrayOfTriangles() const;
+	emscripten::val Float32ArrayOfTrianglesNormals() const;
 
 	emscripten::val Float32ArrayOfGroupID() const;
 
