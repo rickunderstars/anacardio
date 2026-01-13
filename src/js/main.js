@@ -11,6 +11,7 @@ import { updateActiveMaterial } from "@js/visualization/material-update";
 import { loadShaders } from "@js/visualization/shader-update";
 import { setupEventHandlers } from "@js/interaction/event-handlers";
 import { colorizeGradient } from "@js/visualization/color-gauge";
+import { visMode } from "./state/state";
 
 const scene = createScene();
 const viewport = document.getElementById("viewport");
@@ -27,12 +28,12 @@ const mouse = new THREE.Vector2();
 
 export const controls = new OrbitControls(camera, renderer.domElement);
 controls.addEventListener("change", () => {
-	if (!state.timeMode) {
+	if (state.mode != visMode.ANIMATED) {
 		renderer.render(scene, camera);
 	}
 });
 
-if (!state.timeMode) {
+if (state.mode != visMode.ANIMATED) {
 	renderer.render(scene, camera);
 } else {
 	dynamicAnimate();
@@ -79,7 +80,7 @@ const fps = 120;
 const interval = 1000 / fps;
 
 function dynamicAnimate(timeStamp) {
-	if (!state.timeMode) {
+	if (state.mode != visMode.ANIMATED) {
 		renderer.render(scene, camera);
 		return;
 	}
@@ -104,15 +105,19 @@ function dynamicAnimate(timeStamp) {
 
 document.getElementById("dynamic-animation").addEventListener("click", () => {
 	if (state.activeMesh === -1 || !state.getActiveMesh()) return;
-
-	if (!state.timeMode) {
-		state.toggleTimeMode();
+	if (state.mode != visMode.ANIMATED) {
+		state.mode = visMode.ANIMATED;
 		updateActiveMaterial({ state, shaders });
 		clock.start();
 		lastTime = 0;
 		dynamicAnimate();
-	} else {
-		state.toggleTimeMode();
+	}
+});
+
+document.getElementById("color-ramp").addEventListener("click", () => {
+	if (state.activeMesh === -1 || !state.getActiveMesh()) return;
+	if (state.mode != visMode.COLOR_RAMP) {
+		state.mode = visMode.COLOR_RAMP;
 		updateActiveMaterial({ state, shaders });
 	}
 });
