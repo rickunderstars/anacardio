@@ -117,7 +117,7 @@ function onViewportResize(scene, camera, renderer, state) {
 	camera.aspect = viewport.clientWidth / viewport.clientHeight;
 	camera.updateProjectionMatrix();
 	renderer.setSize(viewport.clientWidth, viewport.clientHeight);
-	if (!state.timeMode) {
+	if (state.mode === visMode.ANIMATED) {
 		renderer.render(scene, camera);
 	}
 }

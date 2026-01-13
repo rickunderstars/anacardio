@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { getMax, get2Min, formatNumber } from "../utils/math-utils.js";
+import { visMode } from "../state/state.js";
 
 export function updateActiveMaterial(dependencies) {
 	const { state, shaders } = dependencies;
@@ -15,7 +16,7 @@ export function updateActiveMaterial(dependencies) {
 		new THREE.BufferAttribute(activeMesh.valueSets[quality], 1),
 	);
 	activeMesh.mesh.material.dispose();
-	if (!state.timeMode) {
+	if (state.mode === visMode.COLOR_RAMP) {
 		activeMesh.mesh.material = new THREE.ShaderMaterial({
 			uniforms: {
 				uOnlyTwo: { value: absMin - min == 0 ? 1.0 : 0.0 },
@@ -28,7 +29,7 @@ export function updateActiveMaterial(dependencies) {
 			fragmentShader: fShader,
 			side: THREE.DoubleSide,
 		});
-	} else {
+	} else if (state.mode === visMode.ANIMATED) {
 		activeMesh.mesh.material = new THREE.ShaderMaterial({
 			uniforms: {
 				uAbsMin: { value: absMin },

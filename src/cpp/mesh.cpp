@@ -7,6 +7,7 @@
 #include <boost/algorithm/string/constants.hpp>
 #include <cstdint>
 #include <emscripten/val.h>
+#include <glm/detail/qualifier.hpp>
 #include <glm/ext/vector_float3.hpp>
 #include <iostream>
 #include <map>
@@ -145,6 +146,37 @@ emscripten::val Mesh::Uint32ArrayOfTriangles() const {
 									  indices.size(), indices.data())));
 
 	return uint32Array;
+}
+
+emscripten::val Mesh::Float32ArrayOfTriangleNormals() const {
+	std::vector<float> normals;
+	normals.reserve(triangles.size() * 3);
+
+	for (const auto &t : triangles) {
+
+		glm::vec3 v0 = vertices.at(t.vertices.at(0)).pos;
+		glm::vec3 v1 = vertices.at(t.vertices.at(1)).pos;
+		glm::vec3 v2 = vertices.at(t.vertices.at(2)).pos;
+
+		glm::vec3 e1 = v1 - v0;
+		glm::vec3 e2 = v2 - v0;
+
+		glm::vec3 normal = glm::normalize(glm::cross(e1, e2));
+
+		normals.push_back(normal.x);
+		normals.push_back(normal.y);
+		normals.push_back(normal.z);
+	}
+
+	emscripten::val float32Array =
+		emscripten::val::global("Float32Array").new_(normals.size());
+	emscripten::val memory = emscripten::val::module_property("HEAPF32");
+
+	float32Array.call<void>(
+		"set", emscripten::val(emscripten::typed_memory_view(normals.size(),
+															 normals.data())));
+
+	return float32Array;
 }
 
 emscripten::val Mesh::Float32ArrayOfUnipolar() const {
