@@ -29,6 +29,7 @@ export function updateActiveMaterial(dependencies) {
 			fragmentShader: fShader,
 			side: THREE.DoubleSide,
 		});
+		state.getActiveMesh().normalsMesh.visible = false;
 	} else if (state.mode === visMode.ANIMATED) {
 		activeMesh.mesh.material = new THREE.ShaderMaterial({
 			uniforms: {
@@ -42,6 +43,23 @@ export function updateActiveMaterial(dependencies) {
 			fragmentShader: dynFShader,
 			side: THREE.DoubleSide,
 		});
+		state.getActiveMesh().normalsMesh.visible = false;
+	} else if (state.mode == visMode.TANGENT_FIELD) {
+		activeMesh.mesh.material = new THREE.ShaderMaterial({
+			uniforms: {
+				uOnlyTwo: { value: absMin - min == 0 ? 1.0 : 0.0 },
+				uAbsMin: { value: absMin },
+				uMin: { value: min },
+				uMax: { value: max },
+				uAmbientLightIntensity: {
+					value: state.ambientLightIntensity,
+				},
+			},
+			vertexShader: vShader,
+			fragmentShader: fShader,
+			side: THREE.DoubleSide,
+		});
+		state.getActiveMesh().normalsMesh.visible = true;
 	}
 
 	document.getElementById("min-value").innerHTML =

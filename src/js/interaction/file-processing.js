@@ -66,6 +66,7 @@ export function addMesh(dependencies) {
 			eml: mesh.Float32ArrayOfEML(),
 			exteml: mesh.Float32ArrayOfExtEML(),
 			scar: mesh.Float32ArrayOfSCAR(),
+			segmentNormals: mesh.Float32ArrayOfSegmentNormals(),
 		};
 
 		const geometry = new THREE.BufferGeometry();
@@ -80,6 +81,19 @@ export function addMesh(dependencies) {
 
 		const heart = new THREE.Mesh(geometry, material);
 
+		const normalGeometry = new THREE.BufferGeometry();
+		normalGeometry.setAttribute(
+			"position",
+			new THREE.BufferAttribute(valueSets.segmentNormals, 3),
+		);
+		const segmentMaterial = new THREE.LineBasicMaterial({
+			color: 0x000000,
+		});
+		const normalsMesh = new THREE.LineSegments(
+			normalGeometry,
+			segmentMaterial,
+		);
+
 		const box = new THREE.Box3().setFromObject(heart);
 		const boundingSphere = new THREE.Sphere();
 		box.getBoundingSphere(boundingSphere);
@@ -92,6 +106,7 @@ export function addMesh(dependencies) {
 
 		state.meshes.push({
 			mesh: heart,
+			normalsMesh: normalsMesh,
 			filename: filename,
 			valueSets: valueSets,
 			center: center,
@@ -104,10 +119,13 @@ export function addMesh(dependencies) {
 
 		state.meshes.forEach((meshData) => {
 			meshData.mesh.visible = false;
+			meshData.normalsMesh.visible = false;
 		});
 		scene.add(heart);
+		scene.add(normalsMesh);
 
 		heart.visible = true;
+		normalsMesh.visible = false;
 
 		renderer.render(scene, camera);
 
