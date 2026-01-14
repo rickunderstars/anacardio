@@ -119,5 +119,15 @@ document.getElementById("color-ramp").addEventListener("click", () => {
 	if (state.mode != visMode.COLOR_RAMP) {
 		state.mode = visMode.COLOR_RAMP;
 		updateActiveMaterial({ state, shaders });
+		renderer.render(scene, camera);
+	}
+});
+
+document.getElementById("tangent-field").addEventListener("click", () => {
+	if (state.activeMesh === -1 || !state.getActiveMesh()) return;
+	if (state.mode != visMode.TANGENT_FIELD) {
+		state.mode = visMode.TANGENT_FIELD;
+		updateActiveMaterial({ state, shaders });
+		renderer.render(scene, camera);
 	}
 });

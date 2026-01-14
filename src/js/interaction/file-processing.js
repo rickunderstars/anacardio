@@ -66,6 +66,7 @@ export function addMesh(dependencies) {
 			eml: mesh.Float32ArrayOfEML(),
 			exteml: mesh.Float32ArrayOfExtEML(),
 			scar: mesh.Float32ArrayOfSCAR(),
+			trianglesNormals: mesh.Float32ArrayOfSegmentNormals(),
 		};
 
 		const geometry = new THREE.BufferGeometry();

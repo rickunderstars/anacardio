@@ -44,9 +44,8 @@ EMSCRIPTEN_BINDINGS(heart_module) {
 		.function("fixNMEdges", &Mesh::fixNMEdges)
 		.function("Float32ArrayOfVertices", &Mesh::Float32ArrayOfVertices)
 		.function("Uint32ArrayOfTriangles", &Mesh::Uint32ArrayOfTriangles)
-		.function("Float32ArrayOfTrianglesNormals",
-				  &Mesh::Float32ArrayOfTrianglesNormals)
-		.function("Float32ArrayOfBarycenters", &Mesh::Float32ArrayOfBarycenters)
+		.function("Float32ArrayOfSegmentNormals",
+				  &Mesh::Float32ArrayOfSegmentNormals)
 		.function("Float32ArrayOfGroupID", &Mesh::Float32ArrayOfGroupID)
 		.function("Float32ArrayOfUnipolar", &Mesh::Float32ArrayOfUnipolar)
 		.function("Float32ArrayOfBipolar", &Mesh::Float32ArrayOfBipolar)

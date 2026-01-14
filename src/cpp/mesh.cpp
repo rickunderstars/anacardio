@@ -149,9 +149,9 @@ emscripten::val Mesh::Uint32ArrayOfTriangles() const {
 	return uint32Array;
 }
 
-emscripten::val Mesh::Float32ArrayOfTrianglesNormals() const {
-	std::vector<float> normals;
-	normals.reserve(triangles.size() * 3);
+emscripten::val Mesh::Float32ArrayOfSegmentNormals() const {
+	std::vector<float> segments;
+	segments.reserve(triangles.size() * 6);
 
 	for (const auto &t : triangles) {
 
@@ -162,48 +162,25 @@ emscripten::val Mesh::Float32ArrayOfTrianglesNormals() const {
 		glm::vec3 e1 = v1 - v0;
 		glm::vec3 e2 = v2 - v0;
 
+		glm::vec3 barycenter = (v0 + v1 + v2) / 3.0f;
 		glm::vec3 normal = glm::normalize(glm::cross(e1, e2));
+		glm::vec3 outerPoint = barycenter + normal;
 
-		normals.push_back(normal.x);
-		normals.push_back(normal.y);
-		normals.push_back(normal.z);
+		segments.push_back(barycenter.x);
+		segments.push_back(barycenter.y);
+		segments.push_back(barycenter.z);
+		segments.push_back(outerPoint.x);
+		segments.push_back(outerPoint.y);
+		segments.push_back(outerPoint.z);
 	}
 
 	emscripten::val float32Array =
-		emscripten::val::global("Float32Array").new_(normals.size());
+		emscripten::val::global("Float32Array").new_(segments.size());
 	emscripten::val memory = emscripten::val::module_property("HEAPF32");
 
 	float32Array.call<void>(
-		"set", emscripten::val(emscripten::typed_memory_view(normals.size(),
-															 normals.data())));
-
-	return float32Array;
-}
-
-emscripten::val Mesh::Float32ArrayOfBarycenters() const {
-	std::vector<float> barycenters;
-	barycenters.reserve(triangles.size() * 3);
-
-	for (const auto &t : triangles) {
-
-		glm::vec3 v0 = vertices.at(t.vertices.at(0)).pos;
-		glm::vec3 v1 = vertices.at(t.vertices.at(1)).pos;
-		glm::vec3 v2 = vertices.at(t.vertices.at(2)).pos;
-
-		glm::vec3 barycenter = (v0 + v1 + v2) / 3.0f;
-
-		barycenters.push_back(barycenter.x);
-		barycenters.push_back(barycenter.y);
-		barycenters.push_back(barycenter.z);
-	}
-
-	emscripten::val float32Array =
-		emscripten::val::global("Float32Array").new_(barycenters.size());
-	emscripten::val memory = emscripten::val::module_property("HEAPF32");
-
-	float32Array.call<void>("set",
-							emscripten::val(emscripten::typed_memory_view(
-								barycenters.size(), barycenters.data())));
+		"set", emscripten::val(emscripten::typed_memory_view(segments.size(),
+															 segments.data())));
 
 	return float32Array;
 }
