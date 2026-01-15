@@ -1,6 +1,6 @@
 import * as THREE from "three";
-import { getMax, get2Min, formatNumber } from "../utils/math-utils.js";
-import { visMode } from "../state/state.js";
+import { getMax, get2Min, formatNumber } from "@js/utils/math-utils.js";
+import { visMode } from "@js/state/state.js";
 
 export function updateActiveMaterial(dependencies) {
 	const { state, shaders } = dependencies;
@@ -15,6 +15,9 @@ export function updateActiveMaterial(dependencies) {
 		"value",
 		new THREE.BufferAttribute(activeMesh.valueSets[quality], 1),
 	);
+	state.meshes.forEach((meshData) => {
+		meshData.tangentFieldMesh.visible = false;
+	});
 	activeMesh.mesh.material.dispose();
 	if (state.mode === visMode.COLOR_RAMP) {
 		activeMesh.mesh.material = new THREE.ShaderMaterial({
@@ -29,7 +32,7 @@ export function updateActiveMaterial(dependencies) {
 			fragmentShader: fShader,
 			side: THREE.DoubleSide,
 		});
-		state.getActiveMesh().normalsMesh.visible = false;
+		state.getActiveMesh().tangentFieldMesh.visible = false;
 	} else if (state.mode === visMode.ANIMATED) {
 		activeMesh.mesh.material = new THREE.ShaderMaterial({
 			uniforms: {
@@ -43,7 +46,7 @@ export function updateActiveMaterial(dependencies) {
 			fragmentShader: dynFShader,
 			side: THREE.DoubleSide,
 		});
-		state.getActiveMesh().normalsMesh.visible = false;
+		state.getActiveMesh().tangentFieldMesh.visible = false;
 	} else if (state.mode == visMode.TANGENT_FIELD) {
 		activeMesh.mesh.material = new THREE.ShaderMaterial({
 			uniforms: {
@@ -59,7 +62,7 @@ export function updateActiveMaterial(dependencies) {
 			fragmentShader: fShader,
 			side: THREE.DoubleSide,
 		});
-		state.getActiveMesh().normalsMesh.visible = true;
+		state.getActiveMesh().tangentFieldMesh.visible = true;
 	}
 
 	document.getElementById("min-value").innerHTML =

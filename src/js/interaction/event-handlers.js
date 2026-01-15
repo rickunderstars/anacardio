@@ -104,7 +104,7 @@ export function setupEventHandlers(dependencies) {
 		btnTestMesh.disabled = false;
 		document.body.style.cursor = "default";
 	});
-}	
+}
 
 function cameraReset(state, camera, controls) {
 	const center = state.getActiveMesh().center;
