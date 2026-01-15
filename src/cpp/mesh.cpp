@@ -155,23 +155,31 @@ emscripten::val Mesh::Float32ArrayOfTangentFieldSegments() const {
 
 	for (const auto &t : triangles) {
 
-		glm::vec3 v0 = vertices.at(t.vertices.at(0)).pos;
-		glm::vec3 v1 = vertices.at(t.vertices.at(1)).pos;
-		glm::vec3 v2 = vertices.at(t.vertices.at(2)).pos;
+		Vertex v0 = vertices.at(t.vertices.at(0));
+		Vertex v1 = vertices.at(t.vertices.at(1));
+		Vertex v2 = vertices.at(t.vertices.at(2));
 
-		glm::vec3 e1 = v1 - v0;
-		glm::vec3 e2 = v2 - v0;
+		glm::vec3 e1 = v1.pos - v0.pos;
+		glm::vec3 e2 = v2.pos - v0.pos;
 
-		glm::vec3 barycenter = (v0 + v1 + v2) / 3.0f;
-		glm::vec3 normal = glm::normalize(glm::cross(e1, e2));
-		glm::vec3 outerPoint = barycenter + normal;
+		glm::vec3 barycenter = (v0.pos + v1.pos + v2.pos) / 3.0f;
+		glm::vec3 n = glm::normalize(glm::cross(e1, e2));
+
+		float d1 = v1.unipolar - v0.unipolar;
+		float d2 = v2.unipolar - v0.unipolar;
+
+		glm::vec3 gradientVector =
+			(d1 * (glm::cross(e2, n)) + d2 * (glm::cross(n, e1))) /
+			glm::length(glm::cross(e1, e2));
+
+		glm::vec3 secondPoint = barycenter + glm::normalize(gradientVector);
 
 		segments.push_back(barycenter.x);
 		segments.push_back(barycenter.y);
 		segments.push_back(barycenter.z);
-		segments.push_back(outerPoint.x);
-		segments.push_back(outerPoint.y);
-		segments.push_back(outerPoint.z);
+		segments.push_back(secondPoint.x);
+		segments.push_back(secondPoint.y);
+		segments.push_back(secondPoint.z);
 	}
 
 	emscripten::val float32Array =
