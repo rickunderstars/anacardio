@@ -3,6 +3,7 @@ import { vertexPicker } from "@js/interaction/vertex-picker.js";
 import { setGaugeLine } from "@js/visualization/color-gauge";
 import { updateActiveMaterial } from "@js/visualization/material-update";
 import { addTestMesh } from "@js/test-meshes/load-test-meshes";
+import { visMode } from "@js/state/state";
 
 export function setupEventHandlers(dependencies) {
 	const { camera, controls, renderer, scene, mouse, state, shaders } =
@@ -103,7 +104,7 @@ export function setupEventHandlers(dependencies) {
 		btnTestMesh.disabled = false;
 		document.body.style.cursor = "default";
 	});
-}
+}	
 
 function cameraReset(state, camera, controls) {
 	const center = state.getActiveMesh().center;
@@ -117,7 +118,7 @@ function onViewportResize(scene, camera, renderer, state) {
 	camera.aspect = viewport.clientWidth / viewport.clientHeight;
 	camera.updateProjectionMatrix();
 	renderer.setSize(viewport.clientWidth, viewport.clientHeight);
-	if (state.mode === visMode.ANIMATED) {
+	if (state.mode != visMode.ANIMATED) {
 		renderer.render(scene, camera);
 	}
 }

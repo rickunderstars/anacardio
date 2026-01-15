@@ -149,7 +149,7 @@ emscripten::val Mesh::Uint32ArrayOfTriangles() const {
 	return uint32Array;
 }
 
-emscripten::val Mesh::Float32ArrayOfSegmentNormals() const {
+emscripten::val Mesh::Float32ArrayOfTangentFieldSegments() const {
 	std::vector<float> segments;
 	segments.reserve(triangles.size() * 6);
 

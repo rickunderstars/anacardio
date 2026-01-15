@@ -66,7 +66,7 @@ export function addMesh(dependencies) {
 			eml: mesh.Float32ArrayOfEML(),
 			exteml: mesh.Float32ArrayOfExtEML(),
 			scar: mesh.Float32ArrayOfSCAR(),
-			segmentNormals: mesh.Float32ArrayOfSegmentNormals(),
+			tangentField: mesh.Float32ArrayOfTangentFieldSegments(),
 		};
 
 		const geometry = new THREE.BufferGeometry();
@@ -84,7 +84,7 @@ export function addMesh(dependencies) {
 		const normalGeometry = new THREE.BufferGeometry();
 		normalGeometry.setAttribute(
 			"position",
-			new THREE.BufferAttribute(valueSets.segmentNormals, 3),
+			new THREE.BufferAttribute(valueSets.tangentField, 3),
 		);
 		const segmentMaterial = new THREE.LineBasicMaterial({
 			color: 0x000000,
