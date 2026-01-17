@@ -7,9 +7,9 @@
 #include <string>
 
 Vertex::Vertex()
-	: pos(glm::vec3(0, 0, 0)), groupID(NULL_VALUE), unipolar(NULL_VALUE),
-	  bipolar(NULL_VALUE), LAT(NULL_VALUE), EML(NULL_VALUE), ExtEML(NULL_VALUE),
-	  SCAR(NULL_VALUE) {}
+	: pos(glm::vec3(0, 0, 0)), unipolar(NULL_VALUE), bipolar(NULL_VALUE),
+	  LAT(NULL_VALUE), EML(NULL_VALUE), ExtEML(NULL_VALUE), SCAR(NULL_VALUE),
+	  groupID(NULL_VALUE) {}
 Vertex::Vertex(glm::vec3 &pos) { this->pos = pos; }
 
 std::string Vertex::toObj() {

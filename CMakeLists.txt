@@ -11,6 +11,7 @@ set(SRC
     src/cpp/utils.hpp
     src/cpp/vertex.hpp
     src/cpp/triangle.hpp
+    src/cpp/globals.cpp
     src/cpp/main.cpp
     src/cpp/mesh.cpp
     src/cpp/utils.cpp
