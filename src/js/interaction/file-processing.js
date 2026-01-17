@@ -1,5 +1,6 @@
 import * as THREE from "three";
-import { updateActiveMaterial } from "../visualization/material-update.js";
+import { updateActiveMaterial } from "@js/visualization/material-update.js";
+import { visMode } from "@js/state/state.js";
 
 export function processFile(dependencies) {
 	const { file, state, shaders, scene, camera, controls, renderer } =
@@ -81,16 +82,16 @@ export function addMesh(dependencies) {
 
 		const heart = new THREE.Mesh(geometry, material);
 
-		const normalGeometry = new THREE.BufferGeometry();
-		normalGeometry.setAttribute(
+		const tangentFieldGeometry = new THREE.BufferGeometry();
+		tangentFieldGeometry.setAttribute(
 			"position",
 			new THREE.BufferAttribute(valueSets.tangentField, 3),
 		);
 		const segmentMaterial = new THREE.LineBasicMaterial({
 			color: 0x000000,
 		});
-		const normalsMesh = new THREE.LineSegments(
-			normalGeometry,
+		const tangentFieldMesh = new THREE.LineSegments(
+			tangentFieldGeometry,
 			segmentMaterial,
 		);
 
@@ -106,7 +107,7 @@ export function addMesh(dependencies) {
 
 		state.meshes.push({
 			mesh: heart,
-			normalsMesh: normalsMesh,
+			tangentFieldMesh: tangentFieldMesh,
 			filename: filename,
 			valueSets: valueSets,
 			center: center,
@@ -119,13 +120,17 @@ export function addMesh(dependencies) {
 
 		state.meshes.forEach((meshData) => {
 			meshData.mesh.visible = false;
-			meshData.normalsMesh.visible = false;
+			meshData.tangentFieldMesh.visible = false;
 		});
 		scene.add(heart);
-		scene.add(normalsMesh);
+		scene.add(tangentFieldMesh);
 
 		heart.visible = true;
-		normalsMesh.visible = false;
+		if (state.mode != visMode.TANGENT_FIELD) {
+			tangentFieldMesh.visible = false;
+		} else {
+			tangentFieldMesh.visible = true;
+		}
 
 		renderer.render(scene, camera);
 
