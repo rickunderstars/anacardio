@@ -60,13 +60,13 @@ export function addMesh(dependencies) {
 		const triangles = mesh.Uint32ArrayOfTriangles();
 
 		const valueSets = {
-			unipolar: mesh.Float32ArrayOfUnipolar(),
-			bipolar: mesh.Float32ArrayOfBipolar(),
-			lat: mesh.Float32ArrayOfLAT(),
-			groupid: mesh.Float32ArrayOfGroupID(),
-			eml: mesh.Float32ArrayOfEML(),
-			exteml: mesh.Float32ArrayOfExtEML(),
-			scar: mesh.Float32ArrayOfSCAR(),
+			unipolar: mesh.Float32ArrayOfVerticesValues("unipolar"),
+			bipolar: mesh.Float32ArrayOfVerticesValues("bipolar"),
+			lat: mesh.Float32ArrayOfVerticesValues("lat"),
+			groupid: mesh.Float32ArrayOfVerticesValues("groupid"),
+			eml: mesh.Float32ArrayOfVerticesValues("eml"),
+			exteml: mesh.Float32ArrayOfVerticesValues("exteml"),
+			scar: mesh.Float32ArrayOfVerticesValues("scar"),
 			tangentField: mesh.Float32ArrayOfTangentFieldSegments(),
 		};
 

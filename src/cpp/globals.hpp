@@ -1,11 +1,14 @@
 #pragma once
 
-#include "utils.hpp"
-
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 inline constexpr int NULL_VALUE = -99999;
 
-inline const std::vector<std::string> validQualities = {
-	"unipolar", "bipolar", "lat", "eml", "exteml", "scar"};
+class Vertex;
+
+extern const std::unordered_map<std::string, float Vertex::*>
+	floatVertexValueMap;
+
+extern const std::unordered_map<std::string, int Vertex::*> intVertexValueMap;

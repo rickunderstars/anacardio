@@ -1,4 +1,5 @@
 #include "vertex.hpp"
+#include "globals.hpp"
 
 #include <glm/ext/vector_float3.hpp>
 #include <glm/vec3.hpp>
@@ -7,9 +8,9 @@
 #include <string>
 
 Vertex::Vertex()
-	: pos(glm::vec3(0, 0, 0)), groupID(NULL_VALUE), unipolar(NULL_VALUE),
-	  bipolar(NULL_VALUE), LAT(NULL_VALUE), EML(NULL_VALUE), ExtEML(NULL_VALUE),
-	  SCAR(NULL_VALUE) {}
+	: pos(glm::vec3(0, 0, 0)), unipolar(NULL_VALUE), bipolar(NULL_VALUE),
+	  LAT(NULL_VALUE), EML(NULL_VALUE), ExtEML(NULL_VALUE), SCAR(NULL_VALUE),
+	  groupID(NULL_VALUE) {}
 Vertex::Vertex(glm::vec3 &pos) { this->pos = pos; }
 
 std::string Vertex::toObj() {
@@ -20,22 +21,16 @@ std::string Vertex::toObj() {
 
 std::string Vertex::toPly(std::string quality) {
 
-	std::string q;
+	std::string q = "-99999";
 
-	if (quality == "unipolar") {
-		q = std::to_string(this->unipolar);
-	} else if (quality == "bipolar") {
-		q = std::to_string(this->bipolar);
-	} else if (quality == "lat") {
-		q = std::to_string(this->LAT);
-	} else if (quality == "eml") {
-		q = std::to_string(this->EML);
-	} else if (quality == "exteml") {
-		q = std::to_string(this->ExtEML);
-	} else if (quality == "scar") {
-		q = std::to_string(this->SCAR);
+	auto floatIterator = floatVertexValueMap.find(quality);
+	if (floatIterator != floatVertexValueMap.end()) {
+		q = std::to_string(this->*(floatIterator->second));
 	} else {
-		q = "-1";
+		auto intIterator = intVertexValueMap.find(quality);
+		if (intIterator != intVertexValueMap.end()) {
+			q = std::to_string(this->*(intIterator->second));
+		}
 	}
 
 	std::ostringstream oss;

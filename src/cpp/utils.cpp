@@ -1,4 +1,5 @@
 #include "utils.hpp"
+#include "globals.hpp"
 #include "mesh.hpp"
 #include "triangle.hpp"
 
@@ -29,20 +30,6 @@ std::istream &getCleanLine(std::stringstream &file, std::string &line) {
 	} else {
 		return file;
 	}
-}
-
-bool checkQuality(std::string quality) {
-	for (char &c : quality) {
-		c = std::tolower(static_cast<unsigned char>(c));
-	}
-	bool quality_found =
-		std::any_of(validQualities.begin(), validQualities.end(),
-					[&](const std::string &s) { return s == quality; });
-
-	if (!quality_found) {
-		return false;
-	}
-	return true;
 }
 
 std::string fileToString(std::string filepath) {
@@ -77,6 +64,11 @@ bool stringToFile(std::string fileContent, std::string filename,
 		std::cerr << "Could not create " << extension << " file." << std::endl;
 		return false;
 	}
+}
+
+bool isValidVertexQuality(std::string quality) {
+	return floatVertexValueMap.count(quality) ||
+		   intVertexValueMap.count(quality);
 }
 
 Mesh sectionsHandler(std::stringstream &file) {
