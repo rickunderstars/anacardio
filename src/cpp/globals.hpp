@@ -8,8 +8,6 @@ inline constexpr int NULL_VALUE = -99999;
 
 class Vertex;
 
-extern const std::vector<std::string> validQualities;
-
 extern const std::unordered_map<std::string, float Vertex::*>
 	floatVertexValueMap;
 

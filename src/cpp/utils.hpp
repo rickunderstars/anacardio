@@ -7,7 +7,7 @@ class Mesh;
 class Vertex;
 class Triangle;
 
-bool checkQuality(std::string quality);
+bool isValidVertexQuality(std::string quality);
 
 bool isWhitespace(const std::string &str);
 
