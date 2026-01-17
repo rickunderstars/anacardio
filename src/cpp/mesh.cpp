@@ -152,42 +152,87 @@ emscripten::val Mesh::Uint32ArrayOfTriangles() const {
 	return uint32Array;
 }
 
-emscripten::val Mesh::Float32ArrayOfTangentFieldSegments() const {
+emscripten::val
+Mesh::Float32ArrayOfTangentFieldSegments(std::string quality) const {
+
+	std::transform(quality.begin(), quality.end(), quality.begin(),
+				   [](unsigned char c) { return std::tolower(c); });
+
 	std::vector<float> segments;
 	segments.reserve(triangles.size() * 6);
 
-	for (const auto &t : triangles) {
+	auto floatIterator = floatVertexValueMap.find(quality);
+	if (floatIterator != floatVertexValueMap.end()) {
+		auto valuePointer = floatIterator->second;
+		for (const auto &t : triangles) {
+			Vertex v0 = vertices.at(t.vertices.at(0));
+			Vertex v1 = vertices.at(t.vertices.at(1));
+			Vertex v2 = vertices.at(t.vertices.at(2));
 
-		Vertex v0 = vertices.at(t.vertices.at(0));
-		Vertex v1 = vertices.at(t.vertices.at(1));
-		Vertex v2 = vertices.at(t.vertices.at(2));
+			glm::vec3 e1 = v1.pos - v0.pos;
+			glm::vec3 e2 = v2.pos - v0.pos;
 
-		glm::vec3 e1 = v1.pos - v0.pos;
-		glm::vec3 e2 = v2.pos - v0.pos;
+			glm::vec3 barycenter = (v0.pos + v1.pos + v2.pos) / 3.0f;
+			glm::vec3 n = glm::normalize(glm::cross(e1, e2));
 
-		glm::vec3 barycenter = (v0.pos + v1.pos + v2.pos) / 3.0f;
-		glm::vec3 n = glm::normalize(glm::cross(e1, e2));
+			float d1 = v1.*valuePointer - v0.*valuePointer;
+			float d2 = v2.*valuePointer - v0.*valuePointer;
 
-		float d1 = v1.unipolar - v0.unipolar;
-		float d2 = v2.unipolar - v0.unipolar;
+			glm::vec3 gradientVector =
+				(d1 * (glm::cross(e2, n)) + d2 * (glm::cross(n, e1))) /
+				glm::length(glm::cross(e1, e2));
 
-		glm::vec3 gradientVector =
-			(d1 * (glm::cross(e2, n)) + d2 * (glm::cross(n, e1))) /
-			glm::length(glm::cross(e1, e2));
+			glm::vec3 secondPoint = barycenter + glm::normalize(gradientVector);
 
-		glm::vec3 secondPoint = barycenter + glm::normalize(gradientVector);
+			segments.push_back(barycenter.x);
+			segments.push_back(barycenter.y);
+			segments.push_back(barycenter.z);
+			segments.push_back(secondPoint.x);
+			segments.push_back(secondPoint.y);
+			segments.push_back(secondPoint.z);
+		}
+	} else {
+		auto intIterator = intVertexValueMap.find(quality);
+		if (intIterator != intVertexValueMap.end()) {
+			auto valuePointer = intIterator->second;
+			for (const auto &t : triangles) {
+				Vertex v0 = vertices.at(t.vertices.at(0));
+				Vertex v1 = vertices.at(t.vertices.at(1));
+				Vertex v2 = vertices.at(t.vertices.at(2));
 
-		segments.push_back(barycenter.x);
-		segments.push_back(barycenter.y);
-		segments.push_back(barycenter.z);
-		segments.push_back(secondPoint.x);
-		segments.push_back(secondPoint.y);
-		segments.push_back(secondPoint.z);
+				glm::vec3 e1 = v1.pos - v0.pos;
+				glm::vec3 e2 = v2.pos - v0.pos;
+
+				glm::vec3 barycenter = (v0.pos + v1.pos + v2.pos) / 3.0f;
+				glm::vec3 n = glm::normalize(glm::cross(e1, e2));
+
+				float d1 = static_cast<float>(v1.*valuePointer) -
+						   static_cast<float>(v0.*valuePointer);
+				float d2 = static_cast<float>(v2.*valuePointer) -
+						   static_cast<float>(v0.*valuePointer);
+
+				glm::vec3 gradientVector =
+					(d1 * (glm::cross(e2, n)) + d2 * (glm::cross(n, e1))) /
+					glm::length(glm::cross(e1, e2));
+
+				glm::vec3 secondPoint =
+					barycenter + glm::normalize(gradientVector);
+
+				segments.push_back(barycenter.x);
+				segments.push_back(barycenter.y);
+				segments.push_back(barycenter.z);
+				segments.push_back(secondPoint.x);
+				segments.push_back(secondPoint.y);
+				segments.push_back(secondPoint.z);
+			}
+		} else {
+			throw std::runtime_error("Quality '" + quality +
+									 "' was not found in global maps.");
+		}
 	}
 
 	emscripten::val float32Array =
 		emscripten::val::global("Float32Array").new_(segments.size());
-	emscripten::val memory = emscripten::val::module_property("HEAPF32");
 
 	float32Array.call<void>(
 		"set", emscripten::val(emscripten::typed_memory_view(segments.size(),

@@ -67,7 +67,7 @@ export function addMesh(dependencies) {
 			eml: mesh.Float32ArrayOfVerticesValues("eml"),
 			exteml: mesh.Float32ArrayOfVerticesValues("exteml"),
 			scar: mesh.Float32ArrayOfVerticesValues("scar"),
-			tangentField: mesh.Float32ArrayOfTangentFieldSegments(),
+			tangentField: mesh.Float32ArrayOfTangentFieldSegments("unipolar"),
 		};
 
 		const geometry = new THREE.BufferGeometry();
