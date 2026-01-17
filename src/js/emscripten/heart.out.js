@@ -6872,10 +6872,10 @@ function checkIncomingModuleAPI() {
 // Imports from the Wasm binary.
 var ___getTypeName = makeInvalidEarlyAccess('___getTypeName');
 var _main = Module['_main'] = makeInvalidEarlyAccess('_main');
+var _malloc = makeInvalidEarlyAccess('_malloc');
 var _fflush = makeInvalidEarlyAccess('_fflush');
 var _emscripten_stack_get_end = makeInvalidEarlyAccess('_emscripten_stack_get_end');
 var _emscripten_stack_get_base = makeInvalidEarlyAccess('_emscripten_stack_get_base');
-var _malloc = makeInvalidEarlyAccess('_malloc');
 var _strerror = makeInvalidEarlyAccess('_strerror');
 var _free = makeInvalidEarlyAccess('_free');
 var _setThrew = makeInvalidEarlyAccess('_setThrew');
@@ -6895,10 +6895,10 @@ var ___cxa_get_exception_ptr = makeInvalidEarlyAccess('___cxa_get_exception_ptr'
 function assignWasmExports(wasmExports) {
   ___getTypeName = createExportWrapper('__getTypeName', 1);
   Module['_main'] = _main = createExportWrapper('main', 2);
+  _malloc = createExportWrapper('malloc', 1);
   _fflush = createExportWrapper('fflush', 1);
   _emscripten_stack_get_end = wasmExports['emscripten_stack_get_end'];
   _emscripten_stack_get_base = wasmExports['emscripten_stack_get_base'];
-  _malloc = createExportWrapper('malloc', 1);
   _strerror = createExportWrapper('strerror', 1);
   _free = createExportWrapper('free', 1);
   _setThrew = createExportWrapper('setThrew', 2);
@@ -7017,6 +7017,8 @@ var wasmImports = {
   /** @export */
   invoke_iiiii,
   /** @export */
+  invoke_iiiiid,
+  /** @export */
   invoke_iiiiii,
   /** @export */
   invoke_iiiiiii,
@@ -7036,6 +7038,8 @@ var wasmImports = {
   invoke_vi,
   /** @export */
   invoke_vii,
+  /** @export */
+  invoke_viif,
   /** @export */
   invoke_viii,
   /** @export */
@@ -7138,6 +7142,17 @@ function invoke_viiii(index,a1,a2,a3,a4) {
 }
 
 function invoke_iiiiii(index,a1,a2,a3,a4,a5) {
+  var sp = stackSave();
+  try {
+    return getWasmTableEntry(index)(a1,a2,a3,a4,a5);
+  } catch(e) {
+    stackRestore(sp);
+    if (!(e instanceof EmscriptenEH)) throw e;
+    _setThrew(1, 0);
+  }
+}
+
+function invoke_iiiiid(index,a1,a2,a3,a4,a5) {
   var sp = stackSave();
   try {
     return getWasmTableEntry(index)(a1,a2,a3,a4,a5);
@@ -7285,6 +7300,17 @@ function invoke_viiiiiiiiiiiiiii(index,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11,a12,a1
   var sp = stackSave();
   try {
     getWasmTableEntry(index)(a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11,a12,a13,a14,a15);
+  } catch(e) {
+    stackRestore(sp);
+    if (!(e instanceof EmscriptenEH)) throw e;
+    _setThrew(1, 0);
+  }
+}
+
+function invoke_viif(index,a1,a2,a3) {
+  var sp = stackSave();
+  try {
+    getWasmTableEntry(index)(a1,a2,a3);
   } catch(e) {
     stackRestore(sp);
     if (!(e instanceof EmscriptenEH)) throw e;

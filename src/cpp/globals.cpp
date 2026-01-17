@@ -7,10 +7,10 @@ const std::vector<std::string> validQualities = {"unipolar", "bipolar", "lat",
 const std::unordered_map<std::string, float Vertex::*> floatVertexValueMap = {
 	{"unipolar", &Vertex::unipolar},
 	{"bipolar", &Vertex::bipolar},
-	{"LAT", &Vertex::LAT}};
+	{"lat", &Vertex::LAT}};
 
 const std::unordered_map<std::string, int Vertex::*> intVertexValueMap = {
-	{"EML", &Vertex::EML},
-	{"ExtEML", &Vertex::ExtEML},
-	{"SCAR", &Vertex::SCAR},
-	{"groupID", &Vertex::groupID}};
+	{"eml", &Vertex::EML},
+	{"exteml", &Vertex::ExtEML},
+	{"scar", &Vertex::SCAR},
+	{"groupid", &Vertex::groupID}};

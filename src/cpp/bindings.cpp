@@ -52,6 +52,6 @@ EMSCRIPTEN_BINDINGS(heart_module) {
 		.function("Float32ArrayOfLAT", &Mesh::Float32ArrayOfLAT)
 		.function("Float32ArrayOfEML", &Mesh::Float32ArrayOfEML)
 		.function("Float32ArrayOfExtEML", &Mesh::Float32ArrayOfExtEML)
-		.function("Float32ArrayOfSCAR", &Mesh::Float32ArrayOfSCAR);
-	;
+		.function("Float32ArrayOfSCAR", &Mesh::Float32ArrayOfSCAR)
+		.function("toPlyString", &Mesh::toPlyString);
 }
