@@ -32,11 +32,6 @@ std::istream &getCleanLine(std::stringstream &file, std::string &line) {
 	}
 }
 
-bool isValidVertexQuality(std::string quality) {
-	return floatVertexValueMap.count(quality) ||
-		   intVertexValueMap.count(quality);
-}
-
 std::string fileToString(std::string filepath) {
 	std::ifstream file(filepath);
 	if (!file.is_open()) {
@@ -69,6 +64,11 @@ bool stringToFile(std::string fileContent, std::string filename,
 		std::cerr << "Could not create " << extension << " file." << std::endl;
 		return false;
 	}
+}
+
+bool isValidVertexQuality(std::string quality) {
+	return floatVertexValueMap.count(quality) ||
+		   intVertexValueMap.count(quality);
 }
 
 Mesh sectionsHandler(std::stringstream &file) {
