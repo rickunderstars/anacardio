@@ -7,11 +7,11 @@ import { createScene } from "@js/visualization/scene.js";
 import { createRenderer } from "@js/visualization/renderer.js";
 import state from "@js/state/state.js";
 import { setupFileHandlers } from "@js/interaction/file-handlers.js";
-import { updateActiveMaterial } from "@js/visualization/material-update";
-import { loadShaders } from "@js/visualization/shader-update";
-import { setupEventHandlers } from "@js/interaction/event-handlers";
-import { colorizeGradient } from "@js/visualization/color-gauge";
-import { visMode } from "./state/state";
+import { updateActiveMesh } from "@js/visualization/mesh-update.js";
+import { loadShaders } from "@js/visualization/shader-update.js";
+import { setupEventHandlers } from "@js/interaction/event-handlers.js";
+import { colorizeGradient } from "@js/visualization/color-gauge.js";
+import { visMode } from "@js/state/state.js";
 
 const scene = createScene();
 const viewport = document.getElementById("viewport");
@@ -107,7 +107,7 @@ document.getElementById("dynamic-animation").addEventListener("click", () => {
 	if (state.activeMesh === -1 || !state.getActiveMesh()) return;
 	if (state.mode != visMode.ANIMATED) {
 		state.mode = visMode.ANIMATED;
-		updateActiveMaterial({ state, shaders });
+		updateActiveMesh({ state, shaders });
 		clock.start();
 		lastTime = 0;
 		dynamicAnimate();
@@ -118,7 +118,7 @@ document.getElementById("color-ramp").addEventListener("click", () => {
 	if (state.activeMesh === -1 || !state.getActiveMesh()) return;
 	if (state.mode != visMode.COLOR_RAMP) {
 		state.mode = visMode.COLOR_RAMP;
-		updateActiveMaterial({ state, shaders });
+		updateActiveMesh({ state, shaders });
 		renderer.render(scene, camera);
 	}
 });
@@ -127,7 +127,7 @@ document.getElementById("tangent-field").addEventListener("click", () => {
 	if (state.activeMesh === -1 || !state.getActiveMesh()) return;
 	if (state.mode != visMode.TANGENT_FIELD) {
 		state.mode = visMode.TANGENT_FIELD;
-		updateActiveMaterial({ state, shaders });
+		updateActiveMesh({ state, shaders });
 		renderer.render(scene, camera);
 	}
 });
