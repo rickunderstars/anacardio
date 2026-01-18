@@ -24,7 +24,8 @@ class Mesh {
 	emscripten::val Float32ArrayOfVertices() const;
 
 	emscripten::val Uint32ArrayOfTriangles() const;
-	emscripten::val Float32ArrayOfTangentFieldSegments() const;
+	emscripten::val
+	Float32ArrayOfTangentFieldSegments(std::string quality) const;
 
 	emscripten::val Float32ArrayOfVerticesValues(std::string quality) const;
 };

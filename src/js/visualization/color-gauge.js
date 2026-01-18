@@ -1,4 +1,4 @@
-import { turboColormap, get2Min, getMax } from "../utils/math-utils";
+import { turboColormap, get2Min, getMax } from "@js/utils/math-utils.js";
 
 export function colorizeGradient() {
 	const gradient = document.getElementById("gradient-bar");

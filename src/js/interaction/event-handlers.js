@@ -1,9 +1,9 @@
-import { reloadShaderMaterial } from "@js/visualization/shader-update";
+import { reloadShaderMaterial } from "@js/visualization/shader-update.js";
 import { vertexPicker } from "@js/interaction/vertex-picker.js";
-import { setGaugeLine } from "@js/visualization/color-gauge";
-import { updateActiveMaterial } from "@js/visualization/material-update";
-import { addTestMesh } from "@js/test-meshes/load-test-meshes";
-import { visMode } from "@js/state/state";
+import { setGaugeLine } from "@js/visualization/color-gauge.js";
+import { updateActiveMesh } from "@js/visualization/mesh-update.js";
+import { addTestMesh } from "@js/test-meshes/load-test-meshes.js";
+import { visMode } from "@js/state/state.js";
 
 export function setupEventHandlers(dependencies) {
 	const { camera, controls, renderer, scene, mouse, state, shaders } =
@@ -48,7 +48,7 @@ export function setupEventHandlers(dependencies) {
 		.addEventListener("change", function (e) {
 			if (e.target.name === "quality") {
 				state.setActiveQuality(e.target.value);
-				updateActiveMaterial({ state, shaders });
+				updateActiveMesh({ state, shaders });
 				renderer.render(scene, camera);
 			}
 		});
@@ -58,7 +58,7 @@ export function setupEventHandlers(dependencies) {
 		.addEventListener("change", function (e) {
 			if (e.target.name === "loaded-mesh") {
 				state.setActiveMesh(e.target.value);
-				updateActiveMaterial({ state, shaders });
+				updateActiveMesh({ state, shaders });
 
 				for (let i = 0; i < state.meshes.length; i++) {
 					if (i != state.activeMesh) {
