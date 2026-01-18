@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { updateActiveMesh } from "@js/visualization/mesh-update.js";
 import { visMode } from "@js/state/state.js";
+import state from "@js/state/state";
 
 export const FIELD_KEYS = [
 	"unipolar",
@@ -13,8 +14,7 @@ export const FIELD_KEYS = [
 ];
 
 export function processFile(dependencies) {
-	const { file, state, shaders, scene, camera, controls, renderer } =
-		dependencies;
+	const { file, shaders, scene, camera, controls, renderer } = dependencies;
 
 	const fileElement = document.getElementById("filename");
 	if (state.meshes.some((item) => item.filename === file.name)) {
@@ -39,7 +39,6 @@ export function processFile(dependencies) {
 
 			const filename = file.name;
 			addMesh({
-				state,
 				mesh,
 				filename,
 				shaders,
@@ -54,16 +53,8 @@ export function processFile(dependencies) {
 }
 
 export function addMesh(dependencies) {
-	const {
-		state,
-		mesh,
-		filename,
-		shaders,
-		scene,
-		camera,
-		controls,
-		renderer,
-	} = dependencies;
+	const { mesh, filename, shaders, scene, camera, controls, renderer } =
+		dependencies;
 
 	HeartModule().then(() => {
 		const vertices = mesh.Float32ArrayOfVertices();
@@ -124,7 +115,7 @@ export function addMesh(dependencies) {
 		});
 
 		state.setActiveMesh(state.meshes.length - 1);
-		updateActiveMesh({ state, shaders });
+		updateActiveMesh({ shaders });
 
 		state.meshes.forEach((meshData) => {
 			meshData.mesh.visible = false;

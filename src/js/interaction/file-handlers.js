@@ -1,7 +1,8 @@
 import { processFile } from "./file-processing.js";
+import state from "@js/state/state";
 
 export function setupFileHandlers(dependencies) {
-	const { state, shaders, scene, camera, controls, viewport, renderer } =
+	const { shaders, scene, camera, controls, viewport, renderer } =
 		dependencies;
 
 	document
@@ -11,7 +12,7 @@ export function setupFileHandlers(dependencies) {
 				const file = e.target.files[0];
 				processFile({
 					file,
-					state,
+
 					shaders,
 					scene,
 					camera,
@@ -54,7 +55,7 @@ export function setupFileHandlers(dependencies) {
 			Array.from(files).forEach((file) => {
 				processFile({
 					file,
-					state,
+
 					shaders,
 					scene,
 					camera,

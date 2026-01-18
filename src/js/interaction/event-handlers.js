@@ -4,18 +4,18 @@ import { setGaugeLine } from "@js/visualization/color-gauge.js";
 import { updateActiveMesh } from "@js/visualization/mesh-update.js";
 import { addTestMesh } from "@js/test-meshes/load-test-meshes.js";
 import { visMode } from "@js/state/state.js";
+import state from "@js/state/state";
 
 export function setupEventHandlers(dependencies) {
-	const { camera, controls, renderer, scene, mouse, state, shaders } =
-		dependencies;
+	const { camera, controls, renderer, scene, mouse, shaders } = dependencies;
 
 	document.getElementById("camera-reset").addEventListener("click", () => {
-		cameraReset(state, camera, controls);
+		cameraReset(camera, controls);
 	});
 
 	document.addEventListener("keydown", (k) => {
 		if (k.key.toLowerCase() === "r") {
-			cameraReset(state, camera, controls);
+			cameraReset(camera, controls);
 		}
 	});
 
@@ -48,7 +48,7 @@ export function setupEventHandlers(dependencies) {
 		.addEventListener("change", function (e) {
 			if (e.target.name === "quality") {
 				state.setActiveQuality(e.target.value);
-				updateActiveMesh({ state, shaders });
+				updateActiveMesh({ shaders });
 				renderer.render(scene, camera);
 			}
 		});
@@ -58,7 +58,7 @@ export function setupEventHandlers(dependencies) {
 		.addEventListener("change", function (e) {
 			if (e.target.name === "loaded-mesh") {
 				state.setActiveMesh(e.target.value);
-				updateActiveMesh({ state, shaders });
+				updateActiveMesh({ shaders });
 
 				for (let i = 0; i < state.meshes.length; i++) {
 					if (i != state.activeMesh) {
@@ -92,7 +92,6 @@ export function setupEventHandlers(dependencies) {
 		await new Promise((r) => setTimeout(r, 50));
 
 		await addTestMesh({
-			state,
 			shaders,
 			scene,
 			camera,
@@ -106,7 +105,7 @@ export function setupEventHandlers(dependencies) {
 	});
 }
 
-function cameraReset(state, camera, controls) {
+function cameraReset(camera, controls) {
 	const center = state.getActiveMesh().center;
 	const radius = state.getActiveMesh().radius;
 	camera.position.set(center.x, center.y, center.z + radius * 2.5);
@@ -127,6 +126,6 @@ function onMouseMove(e, camera, renderer, mouse, state) {
 	const rect = renderer.domElement.getBoundingClientRect();
 	mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
 	mouse.y = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
-	const value = vertexPicker({ state, mouse, camera });
+	const value = vertexPicker({ mouse, camera });
 	setGaugeLine(value, state);
 }
