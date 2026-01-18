@@ -1,13 +1,18 @@
 #include "mesh.hpp"
+#include "globals.hpp"
 #include "triangle.hpp"
 #include "utils.hpp"
 #include "vertex.hpp"
 
+#include <algorithm>
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/constants.hpp>
+#include <cctype>
 #include <cstdint>
 #include <emscripten/val.h>
+#include <glm/detail/qualifier.hpp>
 #include <glm/ext/vector_float3.hpp>
+#include <glm/geometric.hpp>
 #include <iostream>
 #include <map>
 #include <set>
@@ -147,130 +152,124 @@ emscripten::val Mesh::Uint32ArrayOfTriangles() const {
 	return uint32Array;
 }
 
-emscripten::val Mesh::Float32ArrayOfUnipolar() const {
-	std::vector<float> valuesArray;
-	valuesArray.reserve(vertices.size());
+emscripten::val
+Mesh::Float32ArrayOfTangentFieldSegments(std::string quality) const {
 
-	for (const auto &v : vertices) {
-		valuesArray.push_back(v.unipolar);
+	std::transform(quality.begin(), quality.end(), quality.begin(),
+				   [](unsigned char c) { return std::tolower(c); });
+
+	std::vector<float> segments;
+	segments.reserve(triangles.size() * 6);
+
+	auto floatIterator = floatVertexValueMap.find(quality);
+	if (floatIterator != floatVertexValueMap.end()) {
+		auto valuePointer = floatIterator->second;
+		for (const auto &t : triangles) {
+			Vertex v0 = vertices.at(t.vertices.at(0));
+			Vertex v1 = vertices.at(t.vertices.at(1));
+			Vertex v2 = vertices.at(t.vertices.at(2));
+
+			glm::vec3 e1 = v1.pos - v0.pos;
+			glm::vec3 e2 = v2.pos - v0.pos;
+
+			glm::vec3 barycenter = (v0.pos + v1.pos + v2.pos) / 3.0f;
+			glm::vec3 n = glm::normalize(glm::cross(e1, e2));
+
+			float d1 = v1.*valuePointer - v0.*valuePointer;
+			float d2 = v2.*valuePointer - v0.*valuePointer;
+
+			glm::vec3 gradientVector =
+				(d1 * (glm::cross(e2, n)) + d2 * (glm::cross(n, e1))) /
+				glm::length(glm::cross(e1, e2));
+
+			glm::vec3 secondPoint = barycenter + glm::normalize(gradientVector);
+
+			segments.push_back(barycenter.x);
+			segments.push_back(barycenter.y);
+			segments.push_back(barycenter.z);
+			segments.push_back(secondPoint.x);
+			segments.push_back(secondPoint.y);
+			segments.push_back(secondPoint.z);
+		}
+	} else {
+		auto intIterator = intVertexValueMap.find(quality);
+		if (intIterator != intVertexValueMap.end()) {
+			auto valuePointer = intIterator->second;
+			for (const auto &t : triangles) {
+				Vertex v0 = vertices.at(t.vertices.at(0));
+				Vertex v1 = vertices.at(t.vertices.at(1));
+				Vertex v2 = vertices.at(t.vertices.at(2));
+
+				glm::vec3 e1 = v1.pos - v0.pos;
+				glm::vec3 e2 = v2.pos - v0.pos;
+
+				glm::vec3 barycenter = (v0.pos + v1.pos + v2.pos) / 3.0f;
+				glm::vec3 n = glm::normalize(glm::cross(e1, e2));
+
+				float d1 = static_cast<float>(v1.*valuePointer) -
+						   static_cast<float>(v0.*valuePointer);
+				float d2 = static_cast<float>(v2.*valuePointer) -
+						   static_cast<float>(v0.*valuePointer);
+
+				glm::vec3 gradientVector =
+					(d1 * (glm::cross(e2, n)) + d2 * (glm::cross(n, e1))) /
+					glm::length(glm::cross(e1, e2));
+
+				glm::vec3 secondPoint =
+					barycenter + glm::normalize(gradientVector);
+
+				segments.push_back(barycenter.x);
+				segments.push_back(barycenter.y);
+				segments.push_back(barycenter.z);
+				segments.push_back(secondPoint.x);
+				segments.push_back(secondPoint.y);
+				segments.push_back(secondPoint.z);
+			}
+		} else {
+			throw std::runtime_error("Quality '" + quality +
+									 "' was not found in global maps.");
+		}
 	}
 
 	emscripten::val float32Array =
-		emscripten::val::global("Float32Array").new_(valuesArray.size());
-	emscripten::val memory = emscripten::val::module_property("HEAPF32");
+		emscripten::val::global("Float32Array").new_(segments.size());
 
-	float32Array.call<void>("set",
-							emscripten::val(emscripten::typed_memory_view(
-								valuesArray.size(), valuesArray.data())));
+	float32Array.call<void>(
+		"set", emscripten::val(emscripten::typed_memory_view(segments.size(),
+															 segments.data())));
 
 	return float32Array;
 }
 
-emscripten::val Mesh::Float32ArrayOfBipolar() const {
+emscripten::val Mesh::Float32ArrayOfVerticesValues(std::string quality) const {
+
+	std::transform(quality.begin(), quality.end(), quality.begin(),
+				   [](unsigned char c) { return std::tolower(c); });
+
 	std::vector<float> valuesArray;
 	valuesArray.reserve(vertices.size());
 
-	for (const auto &v : vertices) {
-		valuesArray.push_back(v.bipolar);
+	auto floatIterator = floatVertexValueMap.find(quality);
+	if (floatIterator != floatVertexValueMap.end()) {
+		auto valuePointer = floatIterator->second;
+		for (const auto &v : vertices) {
+			valuesArray.push_back(v.*valuePointer);
+		}
+	} else {
+		auto intIterator = intVertexValueMap.find(quality);
+		if (intIterator != intVertexValueMap.end()) {
+			auto valuePointer = intIterator->second;
+			for (const auto &v : vertices) {
+				valuesArray.push_back(static_cast<float>(v.*valuePointer));
+			}
+		} else {
+			throw std::runtime_error("Quality '" + quality +
+									 "' was not found in global maps.");
+		}
 	}
 
 	emscripten::val float32Array =
 		emscripten::val::global("Float32Array").new_(valuesArray.size());
-	emscripten::val memory = emscripten::val::module_property("HEAPF32");
-
-	float32Array.call<void>("set",
-							emscripten::val(emscripten::typed_memory_view(
-								valuesArray.size(), valuesArray.data())));
-
-	return float32Array;
-}
-
-emscripten::val Mesh::Float32ArrayOfLAT() const {
-	std::vector<float> valuesArray;
-	valuesArray.reserve(vertices.size());
-
-	for (const auto &v : vertices) {
-		valuesArray.push_back(v.LAT);
-	}
-
-	emscripten::val float32Array =
-		emscripten::val::global("Float32Array").new_(valuesArray.size());
-	emscripten::val memory = emscripten::val::module_property("HEAPF32");
-
-	float32Array.call<void>("set",
-							emscripten::val(emscripten::typed_memory_view(
-								valuesArray.size(), valuesArray.data())));
-
-	return float32Array;
-}
-
-emscripten::val Mesh::Float32ArrayOfEML() const {
-	std::vector<float> valuesArray;
-	valuesArray.reserve(vertices.size());
-
-	for (const auto &v : vertices) {
-		valuesArray.push_back(static_cast<float>(v.EML));
-	}
-
-	emscripten::val float32Array =
-		emscripten::val::global("Float32Array").new_(valuesArray.size());
-	emscripten::val memory = emscripten::val::module_property("HEAPF32");
-
-	float32Array.call<void>("set",
-							emscripten::val(emscripten::typed_memory_view(
-								valuesArray.size(), valuesArray.data())));
-
-	return float32Array;
-}
-
-emscripten::val Mesh::Float32ArrayOfExtEML() const {
-	std::vector<float> valuesArray;
-	valuesArray.reserve(vertices.size());
-
-	for (const auto &v : vertices) {
-		valuesArray.push_back(static_cast<float>(v.ExtEML));
-	}
-
-	emscripten::val float32Array =
-		emscripten::val::global("Float32Array").new_(valuesArray.size());
-	emscripten::val memory = emscripten::val::module_property("HEAPF32");
-
-	float32Array.call<void>("set",
-							emscripten::val(emscripten::typed_memory_view(
-								valuesArray.size(), valuesArray.data())));
-
-	return float32Array;
-}
-
-emscripten::val Mesh::Float32ArrayOfSCAR() const {
-	std::vector<float> valuesArray;
-	valuesArray.reserve(vertices.size());
-
-	for (const auto &v : vertices) {
-		valuesArray.push_back(static_cast<float>(v.SCAR));
-	}
-
-	emscripten::val float32Array =
-		emscripten::val::global("Float32Array").new_(valuesArray.size());
-	emscripten::val memory = emscripten::val::module_property("HEAPF32");
-
-	float32Array.call<void>("set",
-							emscripten::val(emscripten::typed_memory_view(
-								valuesArray.size(), valuesArray.data())));
-
-	return float32Array;
-}
-emscripten::val Mesh::Float32ArrayOfGroupID() const {
-	std::vector<float> valuesArray;
-	valuesArray.reserve(vertices.size());
-
-	for (const auto &v : vertices) {
-		valuesArray.push_back(static_cast<float>(v.groupID));
-	}
-
-	emscripten::val float32Array =
-		emscripten::val::global("Float32Array").new_(valuesArray.size());
-	emscripten::val memory = emscripten::val::module_property("HEAPF32");
 
 	float32Array.call<void>("set",
 							emscripten::val(emscripten::typed_memory_view(

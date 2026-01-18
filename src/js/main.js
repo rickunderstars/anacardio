@@ -7,10 +7,11 @@ import { createScene } from "@js/visualization/scene.js";
 import { createRenderer } from "@js/visualization/renderer.js";
 import state from "@js/state/state.js";
 import { setupFileHandlers } from "@js/interaction/file-handlers.js";
-import { updateActiveMaterial } from "@js/visualization/material-update";
-import { loadShaders } from "@js/visualization/shader-update";
-import { setupEventHandlers } from "@js/interaction/event-handlers";
-import { colorizeGradient } from "@js/visualization/color-gauge";
+import { updateActiveMesh } from "@js/visualization/mesh-update.js";
+import { loadShaders } from "@js/visualization/shader-update.js";
+import { setupEventHandlers } from "@js/interaction/event-handlers.js";
+import { colorizeGradient } from "@js/visualization/color-gauge.js";
+import { visMode } from "@js/state/state.js";
 
 const scene = createScene();
 const viewport = document.getElementById("viewport");
@@ -27,12 +28,12 @@ const mouse = new THREE.Vector2();
 
 export const controls = new OrbitControls(camera, renderer.domElement);
 controls.addEventListener("change", () => {
-	if (!state.timeMode) {
+	if (state.mode != visMode.ANIMATED) {
 		renderer.render(scene, camera);
 	}
 });
 
-if (!state.timeMode) {
+if (state.mode != visMode.ANIMATED) {
 	renderer.render(scene, camera);
 } else {
 	dynamicAnimate();
@@ -79,7 +80,7 @@ const fps = 120;
 const interval = 1000 / fps;
 
 function dynamicAnimate(timeStamp) {
-	if (!state.timeMode) {
+	if (state.mode != visMode.ANIMATED) {
 		renderer.render(scene, camera);
 		return;
 	}
@@ -104,15 +105,29 @@ function dynamicAnimate(timeStamp) {
 
 document.getElementById("dynamic-animation").addEventListener("click", () => {
 	if (state.activeMesh === -1 || !state.getActiveMesh()) return;
-
-	if (!state.timeMode) {
-		state.toggleTimeMode();
-		updateActiveMaterial({ state, shaders });
+	if (state.mode != visMode.ANIMATED) {
+		state.mode = visMode.ANIMATED;
+		updateActiveMesh({ state, shaders });
 		clock.start();
 		lastTime = 0;
 		dynamicAnimate();
-	} else {
-		state.toggleTimeMode();
-		updateActiveMaterial({ state, shaders });
+	}
+});
+
+document.getElementById("color-ramp").addEventListener("click", () => {
+	if (state.activeMesh === -1 || !state.getActiveMesh()) return;
+	if (state.mode != visMode.COLOR_RAMP) {
+		state.mode = visMode.COLOR_RAMP;
+		updateActiveMesh({ state, shaders });
+		renderer.render(scene, camera);
+	}
+});
+
+document.getElementById("tangent-field").addEventListener("click", () => {
+	if (state.activeMesh === -1 || !state.getActiveMesh()) return;
+	if (state.mode != visMode.TANGENT_FIELD) {
+		state.mode = visMode.TANGENT_FIELD;
+		updateActiveMesh({ state, shaders });
+		renderer.render(scene, camera);
 	}
 });

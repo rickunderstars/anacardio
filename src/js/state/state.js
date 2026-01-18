@@ -2,7 +2,7 @@ class State {
 	meshes = [];
 	activeMesh = -1;
 	activeQuality = "unipolar";
-	timeMode = false;
+	mode = visMode.COLOR_RAMP;
 	ambientLightIntensity = 0.6;
 
 	getActiveMesh() {
@@ -17,8 +17,8 @@ class State {
 		this.activeQuality = quality;
 	}
 
-	toggleTimeMode() {
-		state.timeMode = !state.timeMode;
+	setMode(mode) {
+		this.mode = mode;
 	}
 
 	setAmbientLightIntensity(intensity) {
@@ -32,6 +32,12 @@ class State {
 			intensity;
 	}
 }
+
+export const visMode = Object.freeze({
+	COLOR_RAMP: "color-ramp",
+	ANIMATED: "animated",
+	TANGENT_FIELD: "tangent-field",
+});
 
 const state = new State();
 

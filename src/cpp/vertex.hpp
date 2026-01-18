@@ -11,14 +11,13 @@ class Vertex {
   public:
 	glm::vec3 pos = glm::vec3();
 
-	int groupID = NULL_VALUE;
-
 	float unipolar = NULL_VALUE;
 	float bipolar = NULL_VALUE;
 	float LAT = NULL_VALUE;
 	int EML = NULL_VALUE;
 	int ExtEML = NULL_VALUE;
 	int SCAR = NULL_VALUE;
+	int groupID = NULL_VALUE;
 
 	Vertex();
 	Vertex(glm::vec3 &pos);

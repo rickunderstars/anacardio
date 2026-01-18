@@ -1,5 +1,16 @@
 import * as THREE from "three";
-import { updateActiveMaterial } from "../visualization/material-update.js";
+import { updateActiveMesh } from "@js/visualization/mesh-update.js";
+import { visMode } from "@js/state/state.js";
+
+export const FIELD_KEYS = [
+	"unipolar",
+	"bipolar",
+	"lat",
+	"eml",
+	"exteml",
+	"scar",
+	"groupid",
+];
 
 export function processFile(dependencies) {
 	const { file, state, shaders, scene, camera, controls, renderer } =
@@ -58,15 +69,29 @@ export function addMesh(dependencies) {
 		const vertices = mesh.Float32ArrayOfVertices();
 		const triangles = mesh.Uint32ArrayOfTriangles();
 
-		const valueSets = {
-			unipolar: mesh.Float32ArrayOfUnipolar(),
-			bipolar: mesh.Float32ArrayOfBipolar(),
-			lat: mesh.Float32ArrayOfLAT(),
-			groupid: mesh.Float32ArrayOfGroupID(),
-			eml: mesh.Float32ArrayOfEML(),
-			exteml: mesh.Float32ArrayOfExtEML(),
-			scar: mesh.Float32ArrayOfSCAR(),
-		};
+		const valueSets = {};
+		FIELD_KEYS.forEach((key) => {
+			valueSets[key] = mesh.Float32ArrayOfVerticesValues(key);
+		});
+
+		const tangentFieldMeshes = {};
+		const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
+
+		FIELD_KEYS.forEach((key) => {
+			const fieldSegments = mesh.Float32ArrayOfTangentFieldSegments(key);
+
+			if (fieldSegments && fieldSegments.length > 0) {
+				const geometry = new THREE.BufferGeometry();
+				geometry.setAttribute(
+					"position",
+					new THREE.BufferAttribute(fieldSegments, 3),
+				);
+				tangentFieldMeshes[key] = new THREE.LineSegments(
+					geometry,
+					lineMaterial,
+				);
+			}
+		});
 
 		const geometry = new THREE.BufferGeometry();
 		geometry.setAttribute(
@@ -77,7 +102,6 @@ export function addMesh(dependencies) {
 		geometry.computeVertexNormals();
 
 		const material = new THREE.MeshBasicMaterial();
-
 		const heart = new THREE.Mesh(geometry, material);
 
 		const box = new THREE.Box3().setFromObject(heart);
@@ -94,23 +118,30 @@ export function addMesh(dependencies) {
 			mesh: heart,
 			filename: filename,
 			valueSets: valueSets,
+			tangentFieldMeshes: tangentFieldMeshes,
 			center: center,
 			radius: radius,
 		});
 
 		state.setActiveMesh(state.meshes.length - 1);
-
-		updateActiveMaterial({ state, shaders });
+		updateActiveMesh({ state, shaders });
 
 		state.meshes.forEach((meshData) => {
 			meshData.mesh.visible = false;
+			Object.values(meshData.tangentFieldMeshes).forEach((segMesh) => {
+				scene.add(segMesh);
+				segMesh.visible = false;
+			});
 		});
-		scene.add(heart);
 
+		scene.add(heart);
 		heart.visible = true;
 
-		renderer.render(scene, camera);
+		if (state.mode === visMode.TANGENT_FIELD) {
+			tangentFieldMeshes[state.activeQuality].visible = true;
+		}
 
+		renderer.render(scene, camera);
 		updateMeshesList(state);
 
 		console.log(
