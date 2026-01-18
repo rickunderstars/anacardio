@@ -4,6 +4,7 @@ class State {
 	activeQuality = "unipolar";
 	mode = visMode.COLOR_RAMP;
 	ambientLightIntensity = 0.6;
+	lastCameraVersor = null;
 
 	getActiveMesh() {
 		return this.meshes[this.activeMesh] ?? null;

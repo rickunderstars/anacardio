@@ -1,3 +1,5 @@
+import * as THREE from "three";
+
 import { reloadShaderMaterial } from "@js/visualization/shader-update.js";
 import { vertexPicker } from "@js/interaction/vertex-picker.js";
 import { setGaugeLine } from "@js/visualization/color-gauge.js";
@@ -5,6 +7,10 @@ import { updateActiveMesh } from "@js/visualization/mesh-update.js";
 import { addTestMesh } from "@js/test-meshes/load-test-meshes.js";
 import { visMode } from "@js/state/state.js";
 import state from "@js/state/state";
+import {
+	saveCameraVersor,
+	setCameraLastVersor,
+} from "@js/visualization/camera.js";
 
 export function setupEventHandlers(dependencies) {
 	const { camera, controls, renderer, scene, mouse, shaders } = dependencies;
@@ -57,29 +63,31 @@ export function setupEventHandlers(dependencies) {
 		.querySelector('[data-js="meshes-list"]')
 		.addEventListener("change", function (e) {
 			if (e.target.name === "loaded-mesh") {
+				saveCameraVersor(camera, controls);
+
 				state.setActiveMesh(e.target.value);
 				updateActiveMesh({ shaders });
+
+				let activeMesh = null;
 
 				for (let i = 0; i < state.meshes.length; i++) {
 					if (i != state.activeMesh) {
 						state.meshes[i].mesh.visible = false;
 					} else {
 						state.meshes[i].mesh.visible = true;
+						activeMesh = state.meshes[i].mesh;
 					}
 				}
-				const activeMesh = state.getActiveMesh();
 
-				camera.position.set(
-					activeMesh.center.x,
-					activeMesh.center.y,
-					activeMesh.center.z + activeMesh.radius * 2.5,
-				);
-				controls.target.set(
-					activeMesh.center.x,
-					activeMesh.center.y,
-					activeMesh.center.z,
-				);
-				controls.update();
+				const box = new THREE.Box3().setFromObject(activeMesh);
+				const center = new THREE.Vector3();
+				box.getCenter(center);
+
+				const size = new THREE.Vector3();
+				box.getSize(size);
+				const maxDim = Math.max(size.x, size.y, size.z);
+
+				setCameraLastVersor(camera, controls, center, maxDim);
 			}
 		});
 

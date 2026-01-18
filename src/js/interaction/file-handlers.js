@@ -12,7 +12,6 @@ export function setupFileHandlers(dependencies) {
 				const file = e.target.files[0];
 				processFile({
 					file,
-
 					shaders,
 					scene,
 					camera,
@@ -55,7 +54,6 @@ export function setupFileHandlers(dependencies) {
 			Array.from(files).forEach((file) => {
 				processFile({
 					file,
-
 					shaders,
 					scene,
 					camera,
