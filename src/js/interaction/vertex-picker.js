@@ -1,17 +1,16 @@
 import * as THREE from "three";
 import { formatNumber } from "../utils/math-utils";
-import state from "@js/state/state";
 
 export function vertexPicker(dependencies) {
-	const { mouse, camera } = dependencies;
+	const { mouse, camera, state } = dependencies;
 
-	if (state.activeMesh === -1 || !state.getActiveMesh()) {
+	if (state.activeMeshIndex === -1 || !state.activeMesh) {
 		return;
 	}
-	const active = state.getActiveMesh().valueSets;
+	const active = state.activeMesh.valueSets;
 	const raycaster = new THREE.Raycaster();
 	raycaster.setFromCamera(mouse, camera);
-	const intersects = raycaster.intersectObject(state.getActiveMesh().mesh);
+	const intersects = raycaster.intersectObject(state.activeMesh.mesh);
 
 	if (intersects.length > 0) {
 		const firstHit = intersects[0];

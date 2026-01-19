@@ -32,9 +32,10 @@ export async function loadShaders() {
 	return { vShader, fShader, dynVShader, dynFShader };
 }
 
-export async function reloadShaderMaterial(state) {
+export async function reloadShaderMaterial(dependencies) {
+	const { state } = dependencies;
 	const shaders = await loadShaders();
 
-	updateActiveMesh({ shaders });
+	updateActiveMesh({ shaders, state });
 	return;
 }

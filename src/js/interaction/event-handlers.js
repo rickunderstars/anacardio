@@ -5,31 +5,26 @@ import { vertexPicker } from "@js/interaction/vertex-picker.js";
 import { setGaugeLine } from "@js/visualization/color-gauge.js";
 import { updateActiveMesh } from "@js/visualization/mesh-update.js";
 import { addTestMesh } from "@js/test-meshes/load-test-meshes.js";
-import { visMode } from "@js/state/state.js";
-import state from "@js/state/state";
-import {
-	saveCameraVersor,
-	setCameraLastVersor,
-} from "@js/visualization/camera.js";
+import { VisMode } from "@js/core/state-manager.js";
 
 export function setupEventHandlers(dependencies) {
-	const { camera, controls, renderer, scene, mouse, shaders, sceneManager } = dependencies;
+	const { sceneManager, mouse, shaders, state } = dependencies;
 
 	document.getElementById("camera-reset").addEventListener("click", () => {
-		cameraReset(camera, controls);
+		cameraReset(sceneManager, state);
 	});
 
 	document.addEventListener("keydown", (k) => {
 		if (k.key.toLowerCase() === "r") {
-			cameraReset(camera, controls);
+			cameraReset(sceneManager, state);
 		}
 	});
 
 	document.addEventListener("keydown", (k) => {
 		if (k.key.toLowerCase() === "s") {
 			console.log("loading shaders...");
-			reloadShaderMaterial(state).then(() => {
-				renderer.render(scene, camera);
+			reloadShaderMaterial({ shaders, state }).then(() => {
+				sceneManager.render();
 			});
 			console.log("shaders loaded!!");
 		}
@@ -37,8 +32,8 @@ export function setupEventHandlers(dependencies) {
 
 	document.getElementById("light-slider").oninput = function () {
 		const intensity = this.value / 100;
-		state.setAmbientLightIntensity(intensity);
-		renderer.render(scene, camera);
+		state.ambientLightIntensity = intensity;
+		sceneManager.render();
 	};
 
 	window.addEventListener("resize", () => {
@@ -46,16 +41,16 @@ export function setupEventHandlers(dependencies) {
 	});
 
 	window.addEventListener("mousemove", (e) => {
-		onMouseMove(e, camera, renderer, mouse, state);
+		onMouseMove(e, sceneManager, mouse, state);
 	});
 
 	document
 		.querySelector('[data-js="qualities-list"]')
 		.addEventListener("change", function (e) {
 			if (e.target.name === "quality") {
-				state.setActiveQuality(e.target.value);
-				updateActiveMesh({ shaders });
-				renderer.render(scene, camera);
+				state.activeQuality = e.target.value;
+				updateActiveMesh({ shaders, state });
+				sceneManager.render();
 			}
 		});
 
@@ -63,15 +58,15 @@ export function setupEventHandlers(dependencies) {
 		.querySelector('[data-js="meshes-list"]')
 		.addEventListener("change", function (e) {
 			if (e.target.name === "loaded-mesh") {
-				saveCameraVersor(camera, controls);
+				sceneManager.saveCameraVersor(state);
 
-				state.setActiveMesh(e.target.value);
-				updateActiveMesh({ shaders });
+				state.activeMeshIndex = parseInt(e.target.value);
+				updateActiveMesh({ shaders, state });
 
 				let activeMesh = null;
 
 				for (let i = 0; i < state.meshes.length; i++) {
-					if (i != state.activeMesh) {
+					if (i != state.activeMeshIndex) {
 						state.meshes[i].mesh.visible = false;
 					} else {
 						state.meshes[i].mesh.visible = true;
@@ -87,7 +82,7 @@ export function setupEventHandlers(dependencies) {
 				box.getSize(size);
 				const maxDim = Math.max(size.x, size.y, size.z);
 
-				setCameraLastVersor(camera, controls, center, maxDim);
+				sceneManager.restoreCameraVersor(center, maxDim, state);
 			}
 		});
 
@@ -101,10 +96,8 @@ export function setupEventHandlers(dependencies) {
 
 		await addTestMesh({
 			shaders,
-			scene,
-			camera,
-			controls,
-			renderer,
+			sceneManager,
+			state,
 		});
 
 		btnTestMesh.textContent = "Add Test Mesh";
@@ -113,18 +106,17 @@ export function setupEventHandlers(dependencies) {
 	});
 }
 
-function cameraReset(camera, controls) {
-	const center = state.getActiveMesh().center;
-	const radius = state.getActiveMesh().radius;
-	camera.position.set(center.x, center.y, center.z + radius * 2.5);
-	controls.target.set(center.x, center.y, center.z);
-	controls.update();
+function cameraReset(sceneManager, state) {
+	if (!state.activeMesh) return;
+	const center = state.activeMesh.center;
+	const radius = state.activeMesh.radius;
+	sceneManager.resetCamera(center, radius);
 }
 
-function onMouseMove(e, camera, renderer, mouse, state) {
-	const rect = renderer.domElement.getBoundingClientRect();
+function onMouseMove(e, sceneManager, mouse, state) {
+	const rect = sceneManager.renderer.domElement.getBoundingClientRect();
 	mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
 	mouse.y = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
-	const value = vertexPicker({ mouse, camera });
+	const value = vertexPicker({ mouse, camera: sceneManager.camera, state });
 	setGaugeLine(value, state);
 }

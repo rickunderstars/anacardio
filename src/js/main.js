@@ -3,26 +3,26 @@ import "@css/styles.css";
 import * as THREE from "three";
 
 import { SceneManager } from "@js/visualization/scene-manager.js";
-import state from "@js/state/state.js";
+import { StateManager, VisMode } from "@js/core/state-manager.js";
 import { setupFileHandlers } from "@js/interaction/file-handlers.js";
 import { updateActiveMesh } from "@js/visualization/mesh-update.js";
 import { loadShaders } from "@js/visualization/shader-update.js";
 import { setupEventHandlers } from "@js/interaction/event-handlers.js";
 import { colorizeGradient } from "@js/visualization/color-gauge.js";
-import { visMode } from "@js/state/state.js";
 
 const viewport = document.getElementById("viewport");
 export const sceneManager = new SceneManager(viewport);
+export const state = new StateManager();
 
 const mouse = new THREE.Vector2();
 
 sceneManager.controls.addEventListener("change", () => {
-	if (state.mode != visMode.ANIMATED) {
+	if (state.mode != VisMode.ANIMATED) {
 		sceneManager.render();
 	}
 });
 
-if (state.mode != visMode.ANIMATED) {
+if (state.mode != VisMode.ANIMATED) {
 	sceneManager.render();
 } else {
 	dynamicAnimate();
@@ -30,34 +30,24 @@ if (state.mode != visMode.ANIMATED) {
 
 let shaders = await loadShaders();
 
-state.meshes = [];
+state.activeMeshIndex = -1;
 
-state.setActiveMesh(-1);
-
-state.setActiveQuality(
-	document.querySelector(
-		'[data-js="qualities-list"] input[name="quality"]:checked',
-	).value,
-);
+state.activeQuality = document.querySelector(
+	'[data-js="qualities-list"] input[name="quality"]:checked',
+).value;
 
 setupFileHandlers({
 	shaders,
-	scene: sceneManager.scene,
-	camera: sceneManager.camera,
-	controls: sceneManager.controls,
+	sceneManager,
+	state,
 	viewport,
-	renderer: sceneManager.renderer,
 });
 
 setupEventHandlers({
 	sceneManager,
-	camera: sceneManager.camera,
-	controls: sceneManager.controls,
-	renderer: sceneManager.renderer,
-	scene: sceneManager.scene,
 	mouse,
-
 	shaders,
+	state,
 });
 
 colorizeGradient();
@@ -67,7 +57,7 @@ const fps = 120;
 const interval = 1000 / fps;
 
 function dynamicAnimate(timeStamp) {
-	if (state.mode != visMode.ANIMATED) {
+	if (state.mode != VisMode.ANIMATED) {
 		sceneManager.render();
 		return;
 	}
@@ -81,8 +71,8 @@ function dynamicAnimate(timeStamp) {
 	if (delta > interval) {
 		lastTime = timeStamp - (delta % interval);
 
-		if (state.activeMesh !== -1 && state.getActiveMesh()) {
-			state.getActiveMesh().mesh.material.uniforms.uTime.value =
+		if (state.activeMeshIndex !== -1 && state.activeMesh) {
+			state.activeMesh.mesh.material.uniforms.uTime.value =
 				sceneManager.getElapsedTime();
 		}
 
@@ -91,10 +81,10 @@ function dynamicAnimate(timeStamp) {
 }
 
 document.getElementById("dynamic-animation").addEventListener("click", () => {
-	if (state.activeMesh === -1 || !state.getActiveMesh()) return;
-	if (state.mode != visMode.ANIMATED) {
-		state.mode = visMode.ANIMATED;
-		updateActiveMesh({ shaders });
+	if (state.activeMeshIndex === -1 || !state.activeMesh) return;
+	if (state.mode != VisMode.ANIMATED) {
+		state.mode = VisMode.ANIMATED;
+		updateActiveMesh({ shaders, state });
 		sceneManager.startClock();
 		lastTime = 0;
 		dynamicAnimate();
@@ -102,19 +92,19 @@ document.getElementById("dynamic-animation").addEventListener("click", () => {
 });
 
 document.getElementById("color-ramp").addEventListener("click", () => {
-	if (state.activeMesh === -1 || !state.getActiveMesh()) return;
-	if (state.mode != visMode.COLOR_RAMP) {
-		state.mode = visMode.COLOR_RAMP;
-		updateActiveMesh({ shaders });
+	if (state.activeMeshIndex === -1 || !state.activeMesh) return;
+	if (state.mode != VisMode.COLOR_RAMP) {
+		state.mode = VisMode.COLOR_RAMP;
+		updateActiveMesh({ shaders, state });
 		sceneManager.render();
 	}
 });
 
 document.getElementById("tangent-field").addEventListener("click", () => {
-	if (state.activeMesh === -1 || !state.getActiveMesh()) return;
-	if (state.mode != visMode.TANGENT_FIELD) {
-		state.mode = visMode.TANGENT_FIELD;
-		updateActiveMesh({ shaders });
+	if (state.activeMeshIndex === -1 || !state.activeMesh) return;
+	if (state.mode != VisMode.TANGENT_FIELD) {
+		state.mode = VisMode.TANGENT_FIELD;
+		updateActiveMesh({ shaders, state });
 		sceneManager.render();
 	}
 });
