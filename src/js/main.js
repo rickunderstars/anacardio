@@ -2,13 +2,13 @@ import "@css/styles.css";
 
 import * as THREE from "three";
 
-import { SceneManager } from "@js/visualization/scene-manager.js";
+import { SceneManager } from "@js/engine/scene-manager.js";
 import { StateManager, VisMode } from "@js/core/state-manager.js";
-import { setupFileHandlers } from "@js/interaction/file-handlers.js";
-import { updateActiveMesh } from "@js/visualization/mesh-update.js";
-import { loadShaders } from "@js/visualization/shader-update.js";
-import { setupEventHandlers } from "@js/interaction/event-handlers.js";
-import { colorizeGradient } from "@js/visualization/color-gauge.js";
+import { setupFileHandlers } from "@js/ui/ui-file-handlers.js";
+import { updateActiveMesh } from "@js/engine/mesh-renderer.js";
+import { loadShaders } from "@js/engine/shader-loader.js";
+import { setupEventHandlers } from "@js/ui/ui-event-handlers.js";
+import { colorizeGradient } from "@js/ui/color-gauge.js";
 
 const viewport = document.getElementById("viewport");
 export const sceneManager = new SceneManager(viewport);

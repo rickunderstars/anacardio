@@ -1,4 +1,4 @@
-import { updateActiveMesh } from "./mesh-update.js";
+import { updateActiveMesh } from "./mesh-renderer.js";
 
 import staticVertexShader from "@glsl/static-vertex.glsl";
 import staticFragmentShader from "@glsl/static-fragment.glsl";

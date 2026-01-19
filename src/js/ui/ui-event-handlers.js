@@ -1,10 +1,10 @@
 import * as THREE from "three";
 
-import { reloadShaderMaterial } from "@js/visualization/shader-update.js";
-import { vertexPicker } from "@js/interaction/vertex-picker.js";
-import { setGaugeLine } from "@js/visualization/color-gauge.js";
-import { updateActiveMesh } from "@js/visualization/mesh-update.js";
-import { addTestMesh } from "@js/test-meshes/load-test-meshes.js";
+import { reloadShaderMaterial } from "@js/engine/shader-loader.js";
+import { vertexPicker } from "@js/engine/raycaster.js";
+import { setGaugeLine } from "@js/ui/color-gauge.js";
+import { updateActiveMesh } from "@js/engine/mesh-renderer.js";
+import { addTestMesh } from "@js/io/test-loader.js";
 import { VisMode } from "@js/core/state-manager.js";
 
 export function setupEventHandlers(dependencies) {

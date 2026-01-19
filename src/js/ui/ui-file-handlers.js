@@ -1,4 +1,4 @@
-import { processFile } from "./file-processing.js";
+import { processFile } from "@js/io/file-loader.js";
 
 export function setupFileHandlers(dependencies) {
 	const { shaders, sceneManager, state } = dependencies;

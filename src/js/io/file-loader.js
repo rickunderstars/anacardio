@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { updateActiveMesh } from "@js/visualization/mesh-update.js";
+import { updateActiveMesh } from "@js/engine/mesh-renderer.js";
 import { VisMode } from "@js/core/state-manager.js";
 
 export const FIELD_KEYS = [
