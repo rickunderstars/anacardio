@@ -1,7 +1,6 @@
 import * as THREE from "three";
-import { updateActiveMesh } from "@js/visualization/mesh-update.js";
-import { visMode } from "@js/state/state.js";
-import state from "@js/state/state";
+import { updateActiveMesh } from "@js/engine/mesh-renderer.js";
+import { VisMode } from "@js/core/state-manager.js";
 
 export const FIELD_KEYS = [
 	"unipolar",
@@ -14,7 +13,7 @@ export const FIELD_KEYS = [
 ];
 
 export function processFile(dependencies) {
-	const { file, shaders, scene, camera, controls, renderer } = dependencies;
+	const { file, shaders, sceneManager, state } = dependencies;
 
 	const fileElement = document.getElementById("filename");
 	if (state.meshes.some((item) => item.filename === file.name)) {
@@ -42,10 +41,8 @@ export function processFile(dependencies) {
 				mesh,
 				filename,
 				shaders,
-				scene,
-				camera,
-				controls,
-				renderer,
+				sceneManager,
+				state,
 			});
 		};
 		reader.readAsText(file);
@@ -53,7 +50,7 @@ export function processFile(dependencies) {
 }
 
 export function addMesh(dependencies) {
-	const { mesh, filename, shaders, scene, camera, controls, renderer } =
+	const { mesh, filename, shaders, sceneManager, state } =
 		dependencies;
 
 	HeartModule().then(() => {
@@ -101,38 +98,38 @@ export function addMesh(dependencies) {
 		const center = boundingSphere.center;
 		const radius = boundingSphere.radius;
 
-		camera.position.set(center.x, center.y, center.z + radius * 2.5);
-		controls.target.set(center.x, center.y, center.z);
-		controls.update();
+		sceneManager.resetCamera(center, radius);
 
-		state.meshes.push({
+		const meshData = {
 			mesh: heart,
 			filename: filename,
 			valueSets: valueSets,
 			tangentFieldMeshes: tangentFieldMeshes,
 			center: center,
 			radius: radius,
-		});
+		};
+        
+        // This pushes and sets active index
+		state.addMesh(meshData);
 
-		state.setActiveMesh(state.meshes.length - 1);
-		updateActiveMesh({ shaders });
+		updateActiveMesh({ shaders, state });
 
-		state.meshes.forEach((meshData) => {
-			meshData.mesh.visible = false;
-			Object.values(meshData.tangentFieldMeshes).forEach((segMesh) => {
-				scene.add(segMesh);
+		state.meshes.forEach((m) => {
+			m.mesh.visible = false;
+			Object.values(m.tangentFieldMeshes).forEach((segMesh) => {
+				sceneManager.scene.add(segMesh);
 				segMesh.visible = false;
 			});
 		});
 
-		scene.add(heart);
+		sceneManager.scene.add(heart);
 		heart.visible = true;
 
-		if (state.mode === visMode.TANGENT_FIELD) {
+		if (state.mode === VisMode.TANGENT_FIELD) {
 			tangentFieldMeshes[state.activeQuality].visible = true;
 		}
 
-		renderer.render(scene, camera);
+		sceneManager.render();
 		updateMeshesList(state);
 
 		console.log(
@@ -148,12 +145,12 @@ function updateMeshesList(state) {
 	for (const m of state.meshes) {
 		let corners = "";
 		let checked = "";
-		if (state.activeMesh === 0 && state.meshes.length - 1 === 0) {
+		if (state.activeMeshIndex === 0 && state.meshes.length - 1 === 0) {
 			corners = " class='mesh-top mesh-bottom' ";
 			checked = "checked";
 		} else if (meshValue === 0) {
 			corners = " class='mesh-top' ";
-		} else if (state.activeMesh === state.meshes.length - 1) {
+		} else if (state.activeMeshIndex === state.meshes.length - 1) {
 			corners = " class='mesh-bottom' ";
 			checked = "checked";
 		}

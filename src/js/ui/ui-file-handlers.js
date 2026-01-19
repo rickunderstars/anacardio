@@ -1,9 +1,8 @@
-import { processFile } from "./file-processing.js";
-import state from "@js/state/state";
+import { processFile } from "@js/io/file-loader.js";
 
 export function setupFileHandlers(dependencies) {
-	const { shaders, scene, camera, controls, viewport, renderer } =
-		dependencies;
+	const { shaders, sceneManager, state } = dependencies;
+	const viewport = sceneManager.viewport;
 
 	document
 		.getElementById("raw-mesh")
@@ -13,10 +12,8 @@ export function setupFileHandlers(dependencies) {
 				processFile({
 					file,
 					shaders,
-					scene,
-					camera,
-					controls,
-					renderer,
+					sceneManager,
+					state,
 				});
 			}
 		});
@@ -55,10 +52,8 @@ export function setupFileHandlers(dependencies) {
 				processFile({
 					file,
 					shaders,
-					scene,
-					camera,
-					controls,
-					renderer,
+					sceneManager,
+					state,
 				});
 			});
 		}

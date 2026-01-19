@@ -14,15 +14,15 @@ export function colorizeGradient() {
 }
 
 export function setGaugeLine(value, state) {
-	if (!state.getActiveMesh()) {
+	if (!state.activeMesh) {
 		return;
 	}
 	const line = document.getElementById("gauge-line");
 
 	const [, min] = get2Min(
-		state.getActiveMesh().valueSets[state.activeQuality],
+		state.activeMesh.valueSets[state.activeQuality],
 	);
-	const max = getMax(state.getActiveMesh().valueSets[state.activeQuality]);
+	const max = getMax(state.activeMesh.valueSets[state.activeQuality]);
 
 	if (value > max) {
 		line.style.bottom = `100%`;
