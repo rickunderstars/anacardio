@@ -1,10 +1,8 @@
 import "@css/styles.css";
 
 import * as THREE from "three";
-import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
-import { createScene } from "@js/visualization/scene.js";
-import { createRenderer } from "@js/visualization/renderer.js";
+import { SceneManager } from "@js/visualization/scene-manager.js";
 import state from "@js/state/state.js";
 import { setupFileHandlers } from "@js/interaction/file-handlers.js";
 import { updateActiveMesh } from "@js/visualization/mesh-update.js";
@@ -13,33 +11,22 @@ import { setupEventHandlers } from "@js/interaction/event-handlers.js";
 import { colorizeGradient } from "@js/visualization/color-gauge.js";
 import { visMode } from "@js/state/state.js";
 
-const scene = createScene();
 const viewport = document.getElementById("viewport");
-const camera = new THREE.PerspectiveCamera(
-	50,
-	viewport.clientWidth / viewport.clientHeight,
-);
-camera.position.z = 5;
-
-const renderer = createRenderer(viewport);
-viewport.append(renderer.domElement);
+export const sceneManager = new SceneManager(viewport);
 
 const mouse = new THREE.Vector2();
 
-export const controls = new OrbitControls(camera, renderer.domElement);
-controls.addEventListener("change", () => {
+sceneManager.controls.addEventListener("change", () => {
 	if (state.mode != visMode.ANIMATED) {
-		renderer.render(scene, camera);
+		sceneManager.render();
 	}
 });
 
 if (state.mode != visMode.ANIMATED) {
-	renderer.render(scene, camera);
+	sceneManager.render();
 } else {
 	dynamicAnimate();
 }
-
-const clock = new THREE.Clock();
 
 let shaders = await loadShaders();
 
@@ -55,18 +42,19 @@ state.setActiveQuality(
 
 setupFileHandlers({
 	shaders,
-	scene,
-	camera,
-	controls,
+	scene: sceneManager.scene,
+	camera: sceneManager.camera,
+	controls: sceneManager.controls,
 	viewport,
-	renderer,
+	renderer: sceneManager.renderer,
 });
 
 setupEventHandlers({
-	camera,
-	controls,
-	renderer,
-	scene,
+	sceneManager,
+	camera: sceneManager.camera,
+	controls: sceneManager.controls,
+	renderer: sceneManager.renderer,
+	scene: sceneManager.scene,
 	mouse,
 
 	shaders,
@@ -80,7 +68,7 @@ const interval = 1000 / fps;
 
 function dynamicAnimate(timeStamp) {
 	if (state.mode != visMode.ANIMATED) {
-		renderer.render(scene, camera);
+		sceneManager.render();
 		return;
 	}
 
@@ -95,10 +83,10 @@ function dynamicAnimate(timeStamp) {
 
 		if (state.activeMesh !== -1 && state.getActiveMesh()) {
 			state.getActiveMesh().mesh.material.uniforms.uTime.value =
-				clock.getElapsedTime();
+				sceneManager.getElapsedTime();
 		}
 
-		renderer.render(scene, camera);
+		sceneManager.render();
 	}
 }
 
@@ -107,7 +95,7 @@ document.getElementById("dynamic-animation").addEventListener("click", () => {
 	if (state.mode != visMode.ANIMATED) {
 		state.mode = visMode.ANIMATED;
 		updateActiveMesh({ shaders });
-		clock.start();
+		sceneManager.startClock();
 		lastTime = 0;
 		dynamicAnimate();
 	}
@@ -118,7 +106,7 @@ document.getElementById("color-ramp").addEventListener("click", () => {
 	if (state.mode != visMode.COLOR_RAMP) {
 		state.mode = visMode.COLOR_RAMP;
 		updateActiveMesh({ shaders });
-		renderer.render(scene, camera);
+		sceneManager.render();
 	}
 });
 
@@ -127,6 +115,6 @@ document.getElementById("tangent-field").addEventListener("click", () => {
 	if (state.mode != visMode.TANGENT_FIELD) {
 		state.mode = visMode.TANGENT_FIELD;
 		updateActiveMesh({ shaders });
-		renderer.render(scene, camera);
+		sceneManager.render();
 	}
 });

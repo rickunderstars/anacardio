@@ -13,7 +13,7 @@ import {
 } from "@js/visualization/camera.js";
 
 export function setupEventHandlers(dependencies) {
-	const { camera, controls, renderer, scene, mouse, shaders } = dependencies;
+	const { camera, controls, renderer, scene, mouse, shaders, sceneManager } = dependencies;
 
 	document.getElementById("camera-reset").addEventListener("click", () => {
 		cameraReset(camera, controls);
@@ -42,7 +42,7 @@ export function setupEventHandlers(dependencies) {
 	};
 
 	window.addEventListener("resize", () => {
-		onViewportResize(scene, camera, renderer, state);
+		sceneManager.onWindowResize();
 	});
 
 	window.addEventListener("mousemove", (e) => {
@@ -119,15 +119,6 @@ function cameraReset(camera, controls) {
 	camera.position.set(center.x, center.y, center.z + radius * 2.5);
 	controls.target.set(center.x, center.y, center.z);
 	controls.update();
-}
-
-function onViewportResize(scene, camera, renderer, state) {
-	camera.aspect = viewport.clientWidth / viewport.clientHeight;
-	camera.updateProjectionMatrix();
-	renderer.setSize(viewport.clientWidth, viewport.clientHeight);
-	if (state.mode != visMode.ANIMATED) {
-		renderer.render(scene, camera);
-	}
 }
 
 function onMouseMove(e, camera, renderer, mouse, state) {
