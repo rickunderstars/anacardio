@@ -35,6 +35,6 @@ export async function loadShaders() {
 export async function reloadShaderMaterial(state) {
 	const shaders = await loadShaders();
 
-	updateActiveMesh({ state, shaders });
+	updateActiveMesh({ shaders });
 	return;
 }

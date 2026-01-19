@@ -1,8 +1,9 @@
 import * as THREE from "three";
 import { formatNumber } from "../utils/math-utils";
+import state from "@js/state/state";
 
 export function vertexPicker(dependencies) {
-	const { state, mouse, camera } = dependencies;
+	const { mouse, camera } = dependencies;
 
 	if (state.activeMesh === -1 || !state.getActiveMesh()) {
 		return;

@@ -54,7 +54,6 @@ state.setActiveQuality(
 );
 
 setupFileHandlers({
-	state,
 	shaders,
 	scene,
 	camera,
@@ -69,7 +68,7 @@ setupEventHandlers({
 	renderer,
 	scene,
 	mouse,
-	state,
+
 	shaders,
 });
 
@@ -107,7 +106,7 @@ document.getElementById("dynamic-animation").addEventListener("click", () => {
 	if (state.activeMesh === -1 || !state.getActiveMesh()) return;
 	if (state.mode != visMode.ANIMATED) {
 		state.mode = visMode.ANIMATED;
-		updateActiveMesh({ state, shaders });
+		updateActiveMesh({ shaders });
 		clock.start();
 		lastTime = 0;
 		dynamicAnimate();
@@ -118,7 +117,7 @@ document.getElementById("color-ramp").addEventListener("click", () => {
 	if (state.activeMesh === -1 || !state.getActiveMesh()) return;
 	if (state.mode != visMode.COLOR_RAMP) {
 		state.mode = visMode.COLOR_RAMP;
-		updateActiveMesh({ state, shaders });
+		updateActiveMesh({ shaders });
 		renderer.render(scene, camera);
 	}
 });
@@ -127,7 +126,7 @@ document.getElementById("tangent-field").addEventListener("click", () => {
 	if (state.activeMesh === -1 || !state.getActiveMesh()) return;
 	if (state.mode != visMode.TANGENT_FIELD) {
 		state.mode = visMode.TANGENT_FIELD;
-		updateActiveMesh({ state, shaders });
+		updateActiveMesh({ shaders });
 		renderer.render(scene, camera);
 	}
 });

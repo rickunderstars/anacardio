@@ -4,7 +4,7 @@ import { visMode } from "@js/state/state.js";
 import state from "@js/state/state.js";
 
 export function updateActiveMesh(dependencies) {
-	const { state, shaders } = dependencies;
+	const { shaders } = dependencies;
 
 	const { vShader, fShader, dynVShader, dynFShader } = shaders;
 

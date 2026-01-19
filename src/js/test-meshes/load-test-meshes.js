@@ -1,4 +1,5 @@
 import { addMesh } from "@js/interaction/file-processing.js";
+import state from "@js/state/state";
 
 import testMesh1 from "@assets/test-meshes/2-LA.mesh?raw";
 import testMesh2 from "@assets/test-meshes/2-LA-FA.mesh?raw";
@@ -9,7 +10,7 @@ const testMeshes = [
 ];
 
 export function addTestMesh(dependencies) {
-	const { state, shaders, scene, camera, controls, renderer } = dependencies;
+	const { shaders, scene, camera, controls, renderer } = dependencies;
 
 	const fileElement = document.getElementById("filename");
 	if (testMeshes.length === 0) {
@@ -37,7 +38,6 @@ export function addTestMesh(dependencies) {
 		}
 
 		addMesh({
-			state,
 			mesh,
 			filename,
 			shaders,
