@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { VisMode } from "@js/core/state-manager.js";
 
 export class SceneManager {
 	constructor(viewport) {
@@ -16,6 +17,10 @@ export class SceneManager {
 		this.clock = new THREE.Clock();
 
 		this.viewport.append(this.renderer.domElement);
+
+		this.fps = 120;
+		this.interval = 1000 / this.fps;
+		this.lastTime = 0;
 	}
 
 	#createRenderer() {
@@ -54,6 +59,39 @@ export class SceneManager {
 
 	startClock() {
 		this.clock.start();
+	}
+
+	resetAnimationState() {
+		this.lastTime = 0;
+	}
+
+	runAnimationLoop(state, timeStamp = 0) {
+		if (state.mode != VisMode.ANIMATED) {
+			this.render();
+			return;
+		}
+
+		requestAnimationFrame((t) => this.runAnimationLoop(state, t));
+
+		if (!this.lastTime) this.lastTime = timeStamp;
+
+		const delta = timeStamp - this.lastTime;
+
+		if (delta > this.interval) {
+			this.lastTime = timeStamp - (delta % this.interval);
+
+			if (state.activeMeshIndex !== -1 && state.activeMesh) {
+				if (
+					state.activeMesh.mesh.material.uniforms &&
+					state.activeMesh.mesh.material.uniforms.uTime
+				) {
+					state.activeMesh.mesh.material.uniforms.uTime.value =
+						this.getElapsedTime();
+				}
+			}
+
+			this.render();
+		}
 	}
 
 	saveCameraVersor(state) {

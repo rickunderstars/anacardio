@@ -25,7 +25,7 @@ sceneManager.controls.addEventListener("change", () => {
 if (state.mode != VisMode.ANIMATED) {
 	sceneManager.render();
 } else {
-	dynamicAnimate();
+	sceneManager.runAnimationLoop(state);
 }
 
 let shaders = await loadShaders();
@@ -52,42 +52,14 @@ setupEventHandlers({
 
 colorizeGradient();
 
-let lastTime = 0;
-const fps = 120;
-const interval = 1000 / fps;
-
-function dynamicAnimate(timeStamp) {
-	if (state.mode != VisMode.ANIMATED) {
-		sceneManager.render();
-		return;
-	}
-
-	requestAnimationFrame(dynamicAnimate);
-
-	if (!lastTime) lastTime = timeStamp;
-
-	const delta = timeStamp - lastTime;
-
-	if (delta > interval) {
-		lastTime = timeStamp - (delta % interval);
-
-		if (state.activeMeshIndex !== -1 && state.activeMesh) {
-			state.activeMesh.mesh.material.uniforms.uTime.value =
-				sceneManager.getElapsedTime();
-		}
-
-		sceneManager.render();
-	}
-}
-
 document.getElementById("dynamic-animation").addEventListener("click", () => {
 	if (state.activeMeshIndex === -1 || !state.activeMesh) return;
 	if (state.mode != VisMode.ANIMATED) {
 		state.mode = VisMode.ANIMATED;
 		updateActiveMesh({ shaders, state });
 		sceneManager.startClock();
-		lastTime = 0;
-		dynamicAnimate();
+		sceneManager.resetAnimationState();
+		sceneManager.runAnimationLoop(state);
 	}
 });
 
