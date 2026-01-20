@@ -92,33 +92,23 @@ export function renderMeshDropdown(state) {
 
 export function updateMeshesList(state) {
 	renderMeshDropdown(state);
-	let meshValue = 0;
-	document.getElementById("loaded-meshes").innerHTML = "";
-	for (const m of state.meshes) {
-		let corners = "";
-		let checked = "";
-		if (state.activeMeshIndex === 0 && state.meshes.length - 1 === 0) {
-			corners = " class='mesh-top mesh-bottom' ";
-			checked = "checked";
-		} else if (meshValue === 0) {
-			corners = " class='mesh-top' ";
-		} else if (state.activeMeshIndex === state.meshes.length - 1) {
-			corners = " class='mesh-bottom' ";
-			checked = "checked";
-		}
-		document.getElementById("loaded-meshes").innerHTML +=
-			"<label" +
-			corners +
-			">" +
-			"<input type='radio' name='loaded-mesh' value='" +
-			meshValue +
-			"' " +
-			checked +
-			"/>" +
-			"<span>" +
-			m.filename +
-			"</span>" +
-			"</label¨>";
-		meshValue++;
+	const dropdown = document.getElementById("loaded-meshes-dropdown");
+	dropdown.innerHTML = "";
+
+	if (state.meshes.length === 0) {
+		dropdown.classList.add("hidden");
+		return;
 	}
+
+	dropdown.classList.remove("hidden");
+
+	state.meshes.forEach((mesh, index) => {
+		const option = document.createElement("option");
+		option.value = index;
+		option.text = mesh.filename;
+		if (index === state.activeMeshIndex) {
+			option.selected = true;
+		}
+		dropdown.appendChild(option);
+	});
 }

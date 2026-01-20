@@ -63,29 +63,28 @@ export function setupEventHandlers(dependencies) {
 		onMouseMove(e, sceneManager, mouse, state);
 	});
 
-	document
-		.querySelector('[data-js="qualities-list"]')
-		.addEventListener("change", function (e) {
-			if (e.target.name === "quality") {
-				state.activeQuality = e.target.value;
-				const { min, max } = updateActiveMesh({ shaders, state });
-				updateMinMaxUI(min, max);
-				sceneManager.render();
-			}
-		});
-
-	document
-		.querySelector('[data-js="meshes-list"]')
-		.addEventListener("change", function (e) {
-			if (e.target.name === "loaded-mesh") {
+			document
+			.querySelector('[data-js="qualities-list"]')
+			.addEventListener("change", function (e) {
+				if (e.target.name === "quality") {
+					state.activeQuality = e.target.value;
+					const { min, max } = updateActiveMesh({ shaders, state });
+					updateMinMaxUI(min, max);
+					sceneManager.render();
+				}
+			});
+	
+		document
+			.getElementById("loaded-meshes-dropdown")
+			.addEventListener("change", function (e) {
 				sceneManager.saveCameraVersor(state);
-
+	
 				state.activeMeshIndex = parseInt(e.target.value);
 				const { min, max } = updateActiveMesh({ shaders, state });
 				updateMinMaxUI(min, max);
-
+	
 				let activeMesh = null;
-
+	
 				for (let i = 0; i < state.meshes.length; i++) {
 					if (i != state.activeMeshIndex) {
 						state.meshes[i].mesh.visible = false;
@@ -94,21 +93,19 @@ export function setupEventHandlers(dependencies) {
 						activeMesh = state.meshes[i].mesh;
 					}
 				}
-
+	
 				const box = new THREE.Box3().setFromObject(activeMesh);
 				const center = new THREE.Vector3();
 				box.getCenter(center);
-
+	
 				const size = new THREE.Vector3();
 				box.getSize(size);
 				const maxDim = Math.max(size.x, size.y, size.z);
-
+	
 				sceneManager.restoreCameraVersor(center, maxDim, state);
-			}
-		});
-
-	const meshDropdown = document.getElementById("add-mesh-dropdown");
-
+			});
+	
+		const meshDropdown = document.getElementById("add-mesh-dropdown");
 	meshDropdown.addEventListener("change", async (e) => {
 		const value = e.target.value;
 
