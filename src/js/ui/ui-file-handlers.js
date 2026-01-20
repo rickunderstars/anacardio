@@ -1,8 +1,11 @@
 import { processFile } from "@js/io/file-loader.js";
+import { testMeshes } from "@js/io/test-loader.js";
 
 export function setupFileHandlers(dependencies) {
 	const { shaders, sceneManager, state } = dependencies;
 	const viewport = sceneManager.viewport;
+
+	renderMeshDropdown(state);
 
 	document
 		.getElementById("raw-mesh")
@@ -17,14 +20,6 @@ export function setupFileHandlers(dependencies) {
 				});
 			}
 		});
-
-	document.addEventListener("keydown", (e) => {
-		if (e.key.toLowerCase() === "u") {
-			e.preventDefault();
-			const upload = document.getElementById("raw-mesh");
-			upload.click();
-		}
-	});
 
 	["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
 		viewport.addEventListener(eventName, (e) => {
@@ -69,7 +64,34 @@ export function updateFilenameUI(filename, isError = false) {
 	}
 }
 
+export function renderMeshDropdown(state) {
+	const dropdown = document.getElementById("add-mesh-dropdown");
+	dropdown.innerHTML = "";
+
+	const placeholder = document.createElement("option");
+	placeholder.value = "";
+	placeholder.text = "Add Mesh";
+	placeholder.hidden = true;
+	placeholder.selected = true;
+	dropdown.appendChild(placeholder);
+
+	const fileOption = document.createElement("option");
+	fileOption.value = "file";
+	fileOption.text = "Select local file...";
+	dropdown.appendChild(fileOption);
+
+	testMeshes.forEach((tm) => {
+		if (!state.meshes.some((m) => m.filename === tm.filename)) {
+			const option = document.createElement("option");
+			option.value = tm.filename;
+			option.text = "Load '" + tm.filename + "'";
+			dropdown.appendChild(option);
+		}
+	});
+}
+
 export function updateMeshesList(state) {
+	renderMeshDropdown(state);
 	let meshValue = 0;
 	document.getElementById("loaded-meshes").innerHTML = "";
 	for (const m of state.meshes) {

@@ -1,7 +1,7 @@
 import { addMesh } from "@js/io/file-loader.js";
 import { updateFilenameUI } from "@js/ui/ui-file-handlers.js";
 
-const testMeshes = [
+export const testMeshes = [
 	{
 		filename: "2-LA.mesh",
 		load: () => import("@assets/test-meshes/2-LA.mesh?raw"),
@@ -12,16 +12,18 @@ const testMeshes = [
 	},
 ];
 
-export async function addTestMesh(dependencies) {
+export async function addTestMesh(dependencies, meshFilename) {
 	const { shaders, sceneManager, state } = dependencies;
 
-	if (testMeshes.length === 0) {
-		updateFilenameUI("No more test meshes available.", true);
+	const selectedMesh = testMeshes.find((m) => m.filename === meshFilename);
+
+	if (!selectedMesh) {
+		updateFilenameUI("Mesh not found.", true);
 		return;
 	}
 
 	const cpp = await HeartModule();
-	const { filename, load } = testMeshes.pop();
+	const { filename, load } = selectedMesh;
 	const meshModule = await load();
 	const testMesh = meshModule.default;
 

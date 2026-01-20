@@ -7,6 +7,7 @@ import { updateActiveMesh } from "@js/engine/mesh-renderer.js";
 import { addTestMesh } from "@js/io/test-loader.js";
 import { VisMode } from "@js/core/state-manager.js";
 import { formatNumber } from "@js/utils/math-utils.js";
+import { processFile } from "@js/io/file-loader.js";
 
 export function updateMinMaxUI(min, max) {
 	document.getElementById("min-value").innerHTML =
@@ -106,24 +107,55 @@ export function setupEventHandlers(dependencies) {
 			}
 		});
 
-	const btnTestMesh = document.getElementById("add-test-meshes");
+	const meshDropdown = document.getElementById("add-mesh-dropdown");
 
-	btnTestMesh.addEventListener("click", async () => {
-		btnTestMesh.textContent = "Loading...";
-		btnTestMesh.disabled = true;
+	meshDropdown.addEventListener("change", async (e) => {
+		const value = e.target.value;
+
+		if (value === "file") {
+			document.getElementById("raw-mesh").click();
+			meshDropdown.value = "";
+			return;
+		}
+
 		document.body.style.cursor = "wait";
-		await new Promise((r) => setTimeout(r, 50));
+		meshDropdown.disabled = true;
 
-		await addTestMesh({
-			shaders,
-			sceneManager,
-			state,
-		});
+		const placeholder = meshDropdown.querySelector('option[value=""]');
+		if (placeholder) placeholder.text = "Loading...";
 
-		btnTestMesh.textContent = "Add Test Mesh";
-		btnTestMesh.disabled = false;
-		document.body.style.cursor = "default";
+		try {
+			await addTestMesh(
+				{
+					shaders,
+					sceneManager,
+					state,
+				},
+				value,
+			);
+		} catch (error) {
+			console.error("Failed to load test mesh: ", error);
+		} finally {
+			meshDropdown.disabled = false;
+			meshDropdown.value = "";
+			if (placeholder) placeholder.text = "Add Mesh";
+			document.body.style.cursor = "default";
+		}
 	});
+	document
+		.getElementById("raw-mesh")
+		.addEventListener("change", function (e) {
+			if (e.target.files.length > 0) {
+				const file = e.target.files[0];
+				processFile({
+					file,
+					shaders,
+					sceneManager,
+					state,
+				});
+				e.target.value = "";
+			}
+		});
 
 	sceneManager.controls.addEventListener("change", () => {
 		if (state.mode != VisMode.ANIMATED) {
@@ -177,22 +209,36 @@ function onMouseMove(e, sceneManager, mouse, state) {
 	const rect = sceneManager.renderer.domElement.getBoundingClientRect();
 	mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
 	mouse.y = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
-	const result = surfaceSampler({ mouse, camera: sceneManager.camera, state });
+	const result = surfaceSampler({
+		mouse,
+		camera: sceneManager.camera,
+		state,
+	});
 
 	if (result && result.hovered) {
 		const { values, activeValue } = result;
 
-		document.getElementById("unipolar-value").innerHTML =
-			formatNumber(values.unipolar);
-		document.getElementById("bipolar-value").innerHTML =
-			formatNumber(values.bipolar);
-		document.getElementById("lat-value").innerHTML = formatNumber(values.lat);
-		document.getElementById("eml-value").innerHTML = formatNumber(values.eml);
-		document.getElementById("exteml-value").innerHTML =
-			formatNumber(values.exteml);
-		document.getElementById("scar-value").innerHTML = formatNumber(values.scar);
-		document.getElementById("groupid-value").innerHTML =
-			formatNumber(values.groupid);
+		document.getElementById("unipolar-value").innerHTML = formatNumber(
+			values.unipolar,
+		);
+		document.getElementById("bipolar-value").innerHTML = formatNumber(
+			values.bipolar,
+		);
+		document.getElementById("lat-value").innerHTML = formatNumber(
+			values.lat,
+		);
+		document.getElementById("eml-value").innerHTML = formatNumber(
+			values.eml,
+		);
+		document.getElementById("exteml-value").innerHTML = formatNumber(
+			values.exteml,
+		);
+		document.getElementById("scar-value").innerHTML = formatNumber(
+			values.scar,
+		);
+		document.getElementById("groupid-value").innerHTML = formatNumber(
+			values.groupid,
+		);
 
 		setGaugeLine(activeValue, state);
 	} else {
