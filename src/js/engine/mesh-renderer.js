@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { getMax, get2Min, formatNumber } from "@js/utils/math-utils.js";
+import { getMax, get2Min } from "@js/utils/math-utils.js";
 import { VisMode } from "@js/core/state-manager.js";
 
 export function updateActiveMesh(dependencies) {
@@ -37,7 +37,8 @@ export function updateActiveMesh(dependencies) {
 		if (state.mode === VisMode.TANGENT_FIELD) {
 			state.activeMesh.tangentFieldMeshes[quality].visible = true;
 		}
-	} else if (state.mode === VisMode.ANIMATED) {
+	}
+	if (state.mode === VisMode.ANIMATED) {
 		hideAllTangentFields(state);
 		activeMesh.mesh.material = new THREE.ShaderMaterial({
 			uniforms: {
@@ -53,10 +54,7 @@ export function updateActiveMesh(dependencies) {
 		});
 	}
 
-	document.getElementById("min-value").innerHTML =
-		"min<br/>" + formatNumber(min);
-	document.getElementById("max-value").innerHTML =
-		"max<br/>" + formatNumber(max);
+	return { min, max };
 }
 
 export function hideAllTangentFields(state) {

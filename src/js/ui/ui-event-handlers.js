@@ -1,11 +1,19 @@
 import * as THREE from "three";
 
 import { reloadShaderMaterial } from "@js/engine/shader-loader.js";
-import { vertexPicker } from "@js/engine/raycaster.js";
+import { surfaceSampler } from "@js/engine/raycaster.js";
 import { setGaugeLine } from "@js/ui/color-gauge.js";
 import { updateActiveMesh } from "@js/engine/mesh-renderer.js";
 import { addTestMesh } from "@js/io/test-loader.js";
 import { VisMode } from "@js/core/state-manager.js";
+import { formatNumber } from "@js/utils/math-utils.js";
+
+export function updateMinMaxUI(min, max) {
+	document.getElementById("min-value").innerHTML =
+		"min<br/>" + formatNumber(min);
+	document.getElementById("max-value").innerHTML =
+		"max<br/>" + formatNumber(max);
+}
 
 export function setupEventHandlers(dependencies) {
 	const { sceneManager, mouse, shaders, state } = dependencies;
@@ -23,7 +31,8 @@ export function setupEventHandlers(dependencies) {
 	document.addEventListener("keydown", (k) => {
 		if (k.key.toLowerCase() === "s") {
 			console.log("loading shaders...");
-			reloadShaderMaterial({ shaders, state }).then(() => {
+			reloadShaderMaterial({ shaders, state }).then((res) => {
+				if (res) updateMinMaxUI(res.min, res.max);
 				sceneManager.render();
 			});
 			console.log("shaders loaded!!");
@@ -58,7 +67,8 @@ export function setupEventHandlers(dependencies) {
 		.addEventListener("change", function (e) {
 			if (e.target.name === "quality") {
 				state.activeQuality = e.target.value;
-				updateActiveMesh({ shaders, state });
+				const { min, max } = updateActiveMesh({ shaders, state });
+				updateMinMaxUI(min, max);
 				sceneManager.render();
 			}
 		});
@@ -70,7 +80,8 @@ export function setupEventHandlers(dependencies) {
 				sceneManager.saveCameraVersor(state);
 
 				state.activeMeshIndex = parseInt(e.target.value);
-				updateActiveMesh({ shaders, state });
+				const { min, max } = updateActiveMesh({ shaders, state });
+				updateMinMaxUI(min, max);
 
 				let activeMesh = null;
 
@@ -113,6 +124,46 @@ export function setupEventHandlers(dependencies) {
 		btnTestMesh.disabled = false;
 		document.body.style.cursor = "default";
 	});
+
+	sceneManager.controls.addEventListener("change", () => {
+		if (state.mode != VisMode.ANIMATED) {
+			sceneManager.render();
+		}
+	});
+
+	document
+		.getElementById("dynamic-animation")
+		.addEventListener("click", () => {
+			if (state.activeMeshIndex === -1 || !state.activeMesh) return;
+			if (state.mode != VisMode.ANIMATED) {
+				state.mode = VisMode.ANIMATED;
+				const { min, max } = updateActiveMesh({ shaders, state });
+				updateMinMaxUI(min, max);
+				sceneManager.startClock();
+				sceneManager.resetAnimationState();
+				sceneManager.runAnimationLoop(state);
+			}
+		});
+
+	document.getElementById("color-ramp").addEventListener("click", () => {
+		if (state.activeMeshIndex === -1 || !state.activeMesh) return;
+		if (state.mode != VisMode.COLOR_RAMP) {
+			state.mode = VisMode.COLOR_RAMP;
+			const { min, max } = updateActiveMesh({ shaders, state });
+			updateMinMaxUI(min, max);
+			sceneManager.render();
+		}
+	});
+
+	document.getElementById("tangent-field").addEventListener("click", () => {
+		if (state.activeMeshIndex === -1 || !state.activeMesh) return;
+		if (state.mode != VisMode.TANGENT_FIELD) {
+			state.mode = VisMode.TANGENT_FIELD;
+			const { min, max } = updateActiveMesh({ shaders, state });
+			updateMinMaxUI(min, max);
+			sceneManager.render();
+		}
+	});
 }
 
 function cameraReset(sceneManager, state) {
@@ -126,6 +177,31 @@ function onMouseMove(e, sceneManager, mouse, state) {
 	const rect = sceneManager.renderer.domElement.getBoundingClientRect();
 	mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
 	mouse.y = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
-	const value = vertexPicker({ mouse, camera: sceneManager.camera, state });
-	setGaugeLine(value, state);
+	const result = surfaceSampler({ mouse, camera: sceneManager.camera, state });
+
+	if (result && result.hovered) {
+		const { values, activeValue } = result;
+
+		document.getElementById("unipolar-value").innerHTML =
+			formatNumber(values.unipolar);
+		document.getElementById("bipolar-value").innerHTML =
+			formatNumber(values.bipolar);
+		document.getElementById("lat-value").innerHTML = formatNumber(values.lat);
+		document.getElementById("eml-value").innerHTML = formatNumber(values.eml);
+		document.getElementById("exteml-value").innerHTML =
+			formatNumber(values.exteml);
+		document.getElementById("scar-value").innerHTML = formatNumber(values.scar);
+		document.getElementById("groupid-value").innerHTML =
+			formatNumber(values.groupid);
+
+		setGaugeLine(activeValue, state);
+	} else {
+		document.getElementById("unipolar-value").innerHTML = "---";
+		document.getElementById("bipolar-value").innerHTML = "---";
+		document.getElementById("lat-value").innerHTML = "---";
+		document.getElementById("eml-value").innerHTML = "---";
+		document.getElementById("exteml-value").innerHTML = "---";
+		document.getElementById("scar-value").innerHTML = "---";
+		document.getElementById("groupid-value").innerHTML = "---";
+	}
 }

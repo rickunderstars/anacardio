@@ -1,11 +1,10 @@
 import * as THREE from "three";
-import { formatNumber } from "../utils/math-utils";
 
-export function vertexPicker(dependencies) {
+export function surfaceSampler(dependencies) {
 	const { mouse, camera, state } = dependencies;
 
 	if (state.activeMeshIndex === -1 || !state.activeMesh) {
-		return;
+		return null;
 	}
 	const active = state.activeMesh.valueSets;
 	const raycaster = new THREE.Raycaster();
@@ -57,41 +56,45 @@ export function vertexPicker(dependencies) {
 		const scar = active.scar[intValuesIndex];
 		const groupid = active.groupid[intValuesIndex];
 
-		document.getElementById("unipolar-value").innerHTML =
-			formatNumber(unipolar);
-		document.getElementById("bipolar-value").innerHTML =
-			formatNumber(bipolar);
-		document.getElementById("lat-value").innerHTML = formatNumber(lat);
-		document.getElementById("eml-value").innerHTML = formatNumber(eml);
-		document.getElementById("exteml-value").innerHTML =
-			formatNumber(exteml);
-		document.getElementById("scar-value").innerHTML = formatNumber(scar);
-		document.getElementById("groupid-value").innerHTML =
-			formatNumber(groupid);
-
+		let activeValue;
 		switch (state.activeQuality) {
 			case "unipolar":
-				return unipolar;
+				activeValue = unipolar;
+				break;
 			case "bipolar":
-				return bipolar;
+				activeValue = bipolar;
+				break;
 			case "lat":
-				return lat;
+				activeValue = lat;
+				break;
 			case "eml":
-				return eml;
+				activeValue = eml;
+				break;
 			case "exteml":
-				return exteml;
+				activeValue = exteml;
+				break;
 			case "scar":
-				return scar;
+				activeValue = scar;
+				break;
 			case "groupid":
-				return groupid;
+				activeValue = groupid;
+				break;
 		}
+
+		return {
+			hovered: true,
+			values: {
+				unipolar,
+				bipolar,
+				lat,
+				eml,
+				exteml,
+				scar,
+				groupid,
+			},
+			activeValue,
+		};
 	} else {
-		document.getElementById("unipolar-value").innerHTML = "---";
-		document.getElementById("bipolar-value").innerHTML = "---";
-		document.getElementById("lat-value").innerHTML = "---";
-		document.getElementById("eml-value").innerHTML = "---";
-		document.getElementById("exteml-value").innerHTML = "---";
-		document.getElementById("scar-value").innerHTML = "---";
-		document.getElementById("groupid-value").innerHTML = "---";
+		return null;
 	}
 }
