@@ -50,94 +50,87 @@ export function processFile(dependencies) {
 	});
 }
 
-export function addMesh(dependencies) {
+export async function addMesh(dependencies) {
 	const { mesh, filename, shaders, sceneManager, state } = dependencies;
 
-	HeartModule().then(() => {
-		const vertices = mesh.Float32ArrayOfVertices();
-		const triangles = mesh.Uint32ArrayOfTriangles();
+	const cpp = await HeartModule();
+	const vertices = mesh.Float32ArrayOfVertices();
+	const triangles = mesh.Uint32ArrayOfTriangles();
 
-		const valueSets = {};
-		FIELD_KEYS.forEach((key) => {
-			valueSets[key] = mesh.Float32ArrayOfVerticesValues(key);
-		});
-
-		const tangentFieldMeshes = {};
-		const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
-
-		FIELD_KEYS.forEach((key) => {
-			const fieldSegments = mesh.Float32ArrayOfTangentFieldSegments(
-				key,
-				2.7,
-			);
-
-			if (fieldSegments && fieldSegments.length > 0) {
-				const geometry = new THREE.BufferGeometry();
-				geometry.setAttribute(
-					"position",
-					new THREE.BufferAttribute(fieldSegments, 3),
-				);
-				tangentFieldMeshes[key] = new THREE.LineSegments(
-					geometry,
-					lineMaterial,
-				);
-			}
-		});
-
-		const geometry = new THREE.BufferGeometry();
-		geometry.setAttribute(
-			"position",
-			new THREE.BufferAttribute(vertices, 3),
-		);
-		geometry.setIndex(new THREE.BufferAttribute(triangles, 1));
-		geometry.computeVertexNormals();
-
-		const material = new THREE.MeshBasicMaterial();
-		const heart = new THREE.Mesh(geometry, material);
-
-		const box = new THREE.Box3().setFromObject(heart);
-		const boundingSphere = new THREE.Sphere();
-		box.getBoundingSphere(boundingSphere);
-		const center = boundingSphere.center;
-		const radius = boundingSphere.radius;
-
-		sceneManager.resetCamera(center, radius);
-
-		const meshData = {
-			mesh: heart,
-			filename: filename,
-			valueSets: valueSets,
-			tangentFieldMeshes: tangentFieldMeshes,
-			center: center,
-			radius: radius,
-		};
-
-		state.addMesh(meshData);
-
-		const { min, max } = updateActiveMesh({ shaders, state });
-		updateMinMaxUI(min, max);
-
-		state.meshes.forEach((m) => {
-			m.mesh.visible = false;
-			Object.values(m.tangentFieldMeshes).forEach((segMesh) => {
-				sceneManager.scene.add(segMesh);
-				segMesh.visible = false;
-			});
-		});
-
-		sceneManager.scene.add(heart);
-		heart.visible = true;
-
-		if (state.mode === VisMode.TANGENT_FIELD) {
-			tangentFieldMeshes[state.activeQuality].visible = true;
-		}
-
-		sceneManager.render();
-		updateMeshesList(state);
-
-		console.log(
-			"Mesh loaded successfully. Meshes loaded:",
-			state.meshes.length,
-		);
+	const valueSets = {};
+	FIELD_KEYS.forEach((key) => {
+		valueSets[key] = mesh.Float32ArrayOfVerticesValues(key);
 	});
+
+	const tangentFieldMeshes = {};
+	const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
+
+	FIELD_KEYS.forEach((key) => {
+		const fieldSegments = mesh.Float32ArrayOfTangentFieldSegments(key, 2.7);
+
+		if (fieldSegments && fieldSegments.length > 0) {
+			const geometry = new THREE.BufferGeometry();
+			geometry.setAttribute(
+				"position",
+				new THREE.BufferAttribute(fieldSegments, 3),
+			);
+			tangentFieldMeshes[key] = new THREE.LineSegments(
+				geometry,
+				lineMaterial,
+			);
+		}
+	});
+
+	const geometry = new THREE.BufferGeometry();
+	geometry.setAttribute("position", new THREE.BufferAttribute(vertices, 3));
+	geometry.setIndex(new THREE.BufferAttribute(triangles, 1));
+	geometry.computeVertexNormals();
+
+	const material = new THREE.MeshBasicMaterial();
+	const heart = new THREE.Mesh(geometry, material);
+
+	const box = new THREE.Box3().setFromObject(heart);
+	const boundingSphere = new THREE.Sphere();
+	box.getBoundingSphere(boundingSphere);
+	const center = boundingSphere.center;
+	const radius = boundingSphere.radius;
+
+	sceneManager.resetCamera(center, radius);
+
+	const meshData = {
+		mesh: heart,
+		filename: filename,
+		valueSets: valueSets,
+		tangentFieldMeshes: tangentFieldMeshes,
+		center: center,
+		radius: radius,
+	};
+
+	state.addMesh(meshData);
+
+	const { min, max } = updateActiveMesh({ shaders, state });
+	updateMinMaxUI(min, max);
+
+	state.meshes.forEach((m) => {
+		m.mesh.visible = false;
+		Object.values(m.tangentFieldMeshes).forEach((segMesh) => {
+			sceneManager.scene.add(segMesh);
+			segMesh.visible = false;
+		});
+	});
+
+	sceneManager.scene.add(heart);
+	heart.visible = true;
+
+	if (state.mode === VisMode.TANGENT_FIELD) {
+		tangentFieldMeshes[state.activeQuality].visible = true;
+	}
+
+	sceneManager.render();
+	updateMeshesList(state);
+
+	console.log(
+		"Mesh loaded successfully. Meshes loaded:",
+		state.meshes.length,
+	);
 }
