@@ -153,13 +153,38 @@ emscripten::val Mesh::Uint32ArrayOfTriangles() const {
 }
 
 emscripten::val
-Mesh::Float32ArrayOfTangentFieldSegments(std::string quality) const {
+Mesh::Float32ArrayOfTangentFieldSegments(std::string quality,
+										 float iqrThreshold) const {
 
 	std::transform(quality.begin(), quality.end(), quality.begin(),
 				   [](unsigned char c) { return std::tolower(c); });
 
-	std::vector<float> segments;
-	segments.reserve(triangles.size() * 6);
+	struct SegmentData {
+		glm::vec3 center;
+		glm::vec3 vector;
+	};
+	std::vector<SegmentData> tempSegments;
+	tempSegments.reserve(triangles.size());
+
+	auto computeAndStore = [&](Vertex v0, Vertex v1, Vertex v2, float val0,
+							   float val1, float val2) {
+		glm::vec3 e1 = v1.pos - v0.pos;
+		glm::vec3 e2 = v2.pos - v0.pos;
+		glm::vec3 barycenter = (v0.pos + v1.pos + v2.pos) / 3.0f;
+		glm::vec3 n = glm::normalize(glm::cross(e1, e2));
+
+		float d1 = val1 - val0;
+		float d2 = val2 - val0;
+
+		float crossLen = glm::length(glm::cross(e1, e2));
+		if (crossLen < 1e-6f)
+			return;
+
+		glm::vec3 gradientVector =
+			(d1 * (glm::cross(e2, n)) + d2 * (glm::cross(n, e1))) / crossLen;
+
+		tempSegments.push_back({barycenter, gradientVector});
+	};
 
 	auto floatIterator = floatVertexValueMap.find(quality);
 	if (floatIterator != floatVertexValueMap.end()) {
@@ -168,28 +193,8 @@ Mesh::Float32ArrayOfTangentFieldSegments(std::string quality) const {
 			Vertex v0 = vertices.at(t.vertices.at(0));
 			Vertex v1 = vertices.at(t.vertices.at(1));
 			Vertex v2 = vertices.at(t.vertices.at(2));
-
-			glm::vec3 e1 = v1.pos - v0.pos;
-			glm::vec3 e2 = v2.pos - v0.pos;
-
-			glm::vec3 barycenter = (v0.pos + v1.pos + v2.pos) / 3.0f;
-			glm::vec3 n = glm::normalize(glm::cross(e1, e2));
-
-			float d1 = v1.*valuePointer - v0.*valuePointer;
-			float d2 = v2.*valuePointer - v0.*valuePointer;
-
-			glm::vec3 gradientVector =
-				(d1 * (glm::cross(e2, n)) + d2 * (glm::cross(n, e1))) /
-				glm::length(glm::cross(e1, e2));
-
-			glm::vec3 secondPoint = barycenter + gradientVector * 3.0f;
-
-			segments.push_back(barycenter.x);
-			segments.push_back(barycenter.y);
-			segments.push_back(barycenter.z);
-			segments.push_back(secondPoint.x);
-			segments.push_back(secondPoint.y);
-			segments.push_back(secondPoint.z);
+			computeAndStore(v0, v1, v2, v0.*valuePointer, v1.*valuePointer,
+							v2.*valuePointer);
 		}
 	} else {
 		auto intIterator = intVertexValueMap.find(quality);
@@ -199,35 +204,72 @@ Mesh::Float32ArrayOfTangentFieldSegments(std::string quality) const {
 				Vertex v0 = vertices.at(t.vertices.at(0));
 				Vertex v1 = vertices.at(t.vertices.at(1));
 				Vertex v2 = vertices.at(t.vertices.at(2));
-
-				glm::vec3 e1 = v1.pos - v0.pos;
-				glm::vec3 e2 = v2.pos - v0.pos;
-
-				glm::vec3 barycenter = (v0.pos + v1.pos + v2.pos) / 3.0f;
-				glm::vec3 n = glm::normalize(glm::cross(e1, e2));
-
-				float d1 = static_cast<float>(v1.*valuePointer) -
-						   static_cast<float>(v0.*valuePointer);
-				float d2 = static_cast<float>(v2.*valuePointer) -
-						   static_cast<float>(v0.*valuePointer);
-
-				glm::vec3 gradientVector =
-					(d1 * (glm::cross(e2, n)) + d2 * (glm::cross(n, e1))) /
-					glm::length(glm::cross(e1, e2));
-
-				glm::vec3 secondPoint =
-					barycenter + glm::normalize(gradientVector);
-
-				segments.push_back(barycenter.x);
-				segments.push_back(barycenter.y);
-				segments.push_back(barycenter.z);
-				segments.push_back(secondPoint.x);
-				segments.push_back(secondPoint.y);
-				segments.push_back(secondPoint.z);
+				computeAndStore(v0, v1, v2,
+								static_cast<float>(v0.*valuePointer),
+								static_cast<float>(v1.*valuePointer),
+								static_cast<float>(v2.*valuePointer));
 			}
 		} else {
 			throw std::runtime_error("Quality '" + quality +
 									 "' was not found in global maps.");
+		}
+	}
+
+	if (tempSegments.empty()) {
+		return emscripten::val::global("Float32Array").new_(0);
+	}
+
+	std::vector<float> lengths;
+	lengths.reserve(tempSegments.size());
+	for (const auto &seg : tempSegments) {
+		lengths.push_back(glm::length(seg.vector));
+	}
+
+	std::sort(lengths.begin(), lengths.end());
+
+	size_t n = lengths.size();
+	float q1 = lengths[n / 4];
+	float q3 = lengths[(n * 3) / 4];
+	float iqr = q3 - q1;
+	float upperFence = q3 + (iqrThreshold * iqr);
+
+	float maxValidLength = 0.0f;
+	for (auto it = lengths.rbegin(); it != lengths.rend(); ++it) {
+		if (*it <= upperFence) {
+			maxValidLength = *it;
+			break;
+		}
+	}
+
+	std::vector<float> segments;
+	segments.reserve(tempSegments.size() * 6);
+
+	const float TARGET_MAX_LENGTH = 3.0f;
+
+	float scaleFactor =
+		(maxValidLength > 1e-6f) ? (TARGET_MAX_LENGTH / maxValidLength) : 0.0f;
+
+	for (const auto &item : tempSegments) {
+		float currentLen = glm::length(item.vector);
+
+		if (currentLen > upperFence) {
+
+			segments.push_back(item.center.x);
+			segments.push_back(item.center.y);
+			segments.push_back(item.center.z);
+			segments.push_back(item.center.x);
+			segments.push_back(item.center.y);
+			segments.push_back(item.center.z);
+		} else {
+			glm::vec3 finalVector = item.vector * scaleFactor;
+			glm::vec3 secondPoint = item.center + finalVector;
+
+			segments.push_back(item.center.x);
+			segments.push_back(item.center.y);
+			segments.push_back(item.center.z);
+			segments.push_back(secondPoint.x);
+			segments.push_back(secondPoint.y);
+			segments.push_back(secondPoint.z);
 		}
 	}
 
