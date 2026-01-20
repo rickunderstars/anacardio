@@ -1,6 +1,8 @@
 import * as THREE from "three";
 import { updateActiveMesh } from "@js/engine/mesh-renderer.js";
 import { VisMode } from "@js/core/state-manager.js";
+import { updateMeshesList, updateFilenameUI } from "@js/ui/ui-file-handlers.js";
+import { updateMinMaxUI } from "@js/ui/ui-event-handlers.js";
 
 export const FIELD_KEYS = [
 	"unipolar",
@@ -15,7 +17,6 @@ export const FIELD_KEYS = [
 export function processFile(dependencies) {
 	const { file, shaders, sceneManager, state } = dependencies;
 
-	const fileElement = document.getElementById("filename");
 	if (state.meshes.some((item) => item.filename === file.name)) {
 		console.log("Mesh already uploaded");
 		return;
@@ -31,10 +32,10 @@ export function processFile(dependencies) {
 				mesh = cpp.importMesh(fileContent);
 			} catch (e) {
 				console.error("Error: ", e.message);
-				fileElement.innerHTML = "Could not load: " + file.name;
+				updateFilenameUI(file.name, true);
 				return;
 			}
-			fileElement.innerHTML = "Last upload: " + file.name;
+			updateFilenameUI(file.name);
 
 			const filename = file.name;
 			addMesh({
@@ -65,7 +66,10 @@ export function addMesh(dependencies) {
 		const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
 
 		FIELD_KEYS.forEach((key) => {
-			const fieldSegments = mesh.Float32ArrayOfTangentFieldSegments(key);
+			const fieldSegments = mesh.Float32ArrayOfTangentFieldSegments(
+				key,
+				2.7,
+			);
 
 			if (fieldSegments && fieldSegments.length > 0) {
 				const geometry = new THREE.BufferGeometry();
@@ -110,7 +114,8 @@ export function addMesh(dependencies) {
 
 		state.addMesh(meshData);
 
-		updateActiveMesh({ shaders, state });
+		const { min, max } = updateActiveMesh({ shaders, state });
+		updateMinMaxUI(min, max);
 
 		state.meshes.forEach((m) => {
 			m.mesh.visible = false;
@@ -135,36 +140,4 @@ export function addMesh(dependencies) {
 			state.meshes.length,
 		);
 	});
-}
-
-function updateMeshesList(state) {
-	let meshValue = 0;
-	document.getElementById("loaded-meshes").innerHTML = "";
-	for (const m of state.meshes) {
-		let corners = "";
-		let checked = "";
-		if (state.activeMeshIndex === 0 && state.meshes.length - 1 === 0) {
-			corners = " class='mesh-top mesh-bottom' ";
-			checked = "checked";
-		} else if (meshValue === 0) {
-			corners = " class='mesh-top' ";
-		} else if (state.activeMeshIndex === state.meshes.length - 1) {
-			corners = " class='mesh-bottom' ";
-			checked = "checked";
-		}
-		document.getElementById("loaded-meshes").innerHTML +=
-			"<label" +
-			corners +
-			">" +
-			"<input type='radio' name='loaded-mesh' value='" +
-			meshValue +
-			"' " +
-			checked +
-			"/>" +
-			"<span>" +
-			m.filename +
-			"</span>" +
-			"</label¨>";
-		meshValue++;
-	}
 }

@@ -1,4 +1,5 @@
 import { addMesh } from "@js/io/file-loader.js";
+import { updateFilenameUI } from "@js/ui/ui-file-handlers.js";
 
 import testMesh1 from "@assets/test-meshes/2-LA.mesh?raw";
 import testMesh2 from "@assets/test-meshes/2-LA-FA.mesh?raw";
@@ -11,9 +12,8 @@ const testMeshes = [
 export function addTestMesh(dependencies) {
 	const { shaders, sceneManager, state } = dependencies;
 
-	const fileElement = document.getElementById("filename");
 	if (testMeshes.length === 0) {
-		fileElement.innerHTML = "No more test meshes available.";
+		updateFilenameUI("No more test meshes available.", true);
 		return;
 	}
 
@@ -43,6 +43,6 @@ export function addTestMesh(dependencies) {
 			sceneManager,
 			state,
 		});
-		fileElement.innerHTML = "Last upload: " + filename;
+		updateFilenameUI(filename);
 	});
 }
