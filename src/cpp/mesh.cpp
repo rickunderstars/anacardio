@@ -182,7 +182,7 @@ Mesh::Float32ArrayOfTangentFieldSegments(std::string quality) const {
 				(d1 * (glm::cross(e2, n)) + d2 * (glm::cross(n, e1))) /
 				glm::length(glm::cross(e1, e2));
 
-			glm::vec3 secondPoint = barycenter + glm::normalize(gradientVector);
+			glm::vec3 secondPoint = barycenter + gradientVector * 3.0f;
 
 			segments.push_back(barycenter.x);
 			segments.push_back(barycenter.y);
