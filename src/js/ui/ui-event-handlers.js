@@ -33,6 +33,15 @@ export function setupEventHandlers(dependencies) {
 	document.getElementById("light-slider").oninput = function () {
 		const intensity = this.value / 100;
 		state.ambientLightIntensity = intensity;
+		if (
+			state.activeMesh &&
+			state.activeMesh.mesh &&
+			state.activeMesh.mesh.material.uniforms &&
+			state.activeMesh.mesh.material.uniforms.uAmbientLightIntensity
+		) {
+			state.activeMesh.mesh.material.uniforms.uAmbientLightIntensity.value =
+				intensity;
+		}
 		sceneManager.render();
 	};
 
