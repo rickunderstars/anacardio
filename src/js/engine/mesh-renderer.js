@@ -1,14 +1,12 @@
 import * as THREE from "three";
-import { getMax, get2Min, formatNumber } from "@js/utils/math-utils.js";
-import { visMode } from "@js/state/state.js";
-import state from "@js/state/state.js";
+import { getMax, get2Min } from "@js/utils/math-utils.js";
+import { VisMode } from "@js/core/state-manager.js";
 
 export function updateActiveMesh(dependencies) {
-	const { state, shaders } = dependencies;
-
+	const { shaders, state } = dependencies;
 	const { vShader, fShader, dynVShader, dynFShader } = shaders;
 
-	const activeMesh = state.getActiveMesh();
+	const activeMesh = state.activeMesh;
 	const quality = state.activeQuality;
 	const [absMin, min] = get2Min(activeMesh.valueSets[quality]);
 	const max = getMax(activeMesh.valueSets[quality]);
@@ -20,8 +18,8 @@ export function updateActiveMesh(dependencies) {
 	activeMesh.mesh.material.dispose();
 
 	if (
-		state.mode === visMode.COLOR_RAMP ||
-		state.mode === visMode.TANGENT_FIELD
+		state.mode === VisMode.COLOR_RAMP ||
+		state.mode === VisMode.TANGENT_FIELD
 	) {
 		activeMesh.mesh.material = new THREE.ShaderMaterial({
 			uniforms: {
@@ -35,12 +33,13 @@ export function updateActiveMesh(dependencies) {
 			fragmentShader: fShader,
 			side: THREE.DoubleSide,
 		});
-		hideAllTangentFields();
-		if (state.mode === visMode.TANGENT_FIELD) {
-			state.getActiveMesh().tangentFieldMeshes[quality].visible = true;
+		hideAllTangentFields(state);
+		if (state.mode === VisMode.TANGENT_FIELD) {
+			state.activeMesh.tangentFieldMeshes[quality].visible = true;
 		}
-	} else if (state.mode === visMode.ANIMATED) {
-		hideAllTangentFields();
+	}
+	if (state.mode === VisMode.ANIMATED) {
+		hideAllTangentFields(state);
 		activeMesh.mesh.material = new THREE.ShaderMaterial({
 			uniforms: {
 				uAbsMin: { value: absMin },
@@ -55,13 +54,10 @@ export function updateActiveMesh(dependencies) {
 		});
 	}
 
-	document.getElementById("min-value").innerHTML =
-		"min<br/>" + formatNumber(min);
-	document.getElementById("max-value").innerHTML =
-		"max<br/>" + formatNumber(max);
+	return { min, max };
 }
 
-export function hideAllTangentFields() {
+export function hideAllTangentFields(state) {
 	state.meshes.forEach((meshData) => {
 		Object.values(meshData.tangentFieldMeshes).forEach((segMesh) => {
 			segMesh.visible = false;

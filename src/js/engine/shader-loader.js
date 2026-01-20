@@ -1,4 +1,4 @@
-import { updateActiveMesh } from "./mesh-update.js";
+import { updateActiveMesh } from "./mesh-renderer.js";
 
 import staticVertexShader from "@glsl/static-vertex.glsl";
 import staticFragmentShader from "@glsl/static-fragment.glsl";
@@ -32,9 +32,8 @@ export async function loadShaders() {
 	return { vShader, fShader, dynVShader, dynFShader };
 }
 
-export async function reloadShaderMaterial(state) {
+export async function reloadShaderMaterial(dependencies) {
+	const { state } = dependencies;
 	const shaders = await loadShaders();
-
-	updateActiveMesh({ state, shaders });
-	return;
+	return updateActiveMesh({ shaders, state });
 }

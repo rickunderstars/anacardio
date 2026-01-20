@@ -9,6 +9,7 @@ node_modules/
 .cache/
 compile_commands.json
 .emscripten_cache/
+.direnv/
 
 *.bak
 *~

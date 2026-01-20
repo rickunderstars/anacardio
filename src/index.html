@@ -24,6 +24,20 @@
 						/>
 					</div>
 
+					<select
+						id="add-mesh-dropdown"
+						class="block w-1/3 p-2 bg-blue-600 text-center rounded-md cursor-pointer font-medium appearance-none focus:outline-none"
+					></select>
+
+					<div
+						id="filename"
+						class="block w-1/3 text-sm italic align-middle self-center"
+					>
+						No file selected
+					</div>
+				</div>
+
+				<div class="flex gap-2">
 					<input
 						type="file"
 						id="raw-mesh"
@@ -31,31 +45,10 @@
 						class="hidden"
 					/>
 					<label
-						for="raw-mesh"
-						class="block w-1/3 p-2 bg-blue-600 hover:bg-blue-500 text-center rounded-md cursor-pointer transition-colors font-medium"
-					>
-						Upload Raw Mesh File
-					</label>
-					<div
-						id="filename"
-						class="block w-1/3 text-sm italic align-middle"
-					>
-						No file selected
-					</div>
-				</div>
-
-				<div class="flex gap-2">
-					<label
 						id="camera-reset"
 						class="flex-1 p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer transition-all border border-slate-600"
 					>
 						Camera Reset
-					</label>
-					<label
-						id="add-test-meshes"
-						class="flex-1 p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer transition-all border border-slate-600"
-					>
-						Add Test Mesh
 					</label>
 				</div>
 
@@ -263,11 +256,10 @@
 							</label>
 						</div>
 
-						<div
-							id="loaded-meshes"
-							data-js="meshes-list"
-							class="flex flex-col gap-2 overflow-y-auto mt-auto"
-						></div>
+						<select
+							id="loaded-meshes-dropdown"
+							class="hidden block w-full p-2 bg-slate-700 hover:bg-slate-600 text-center rounded-md cursor-pointer transition-colors font-medium text-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 mt-auto"
+						></select>
 					</div>
 
 					<div
