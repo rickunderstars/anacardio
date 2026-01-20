@@ -19,9 +19,7 @@ export function setGaugeLine(value, state) {
 	}
 	const line = document.getElementById("gauge-line");
 
-	const [, min] = get2Min(
-		state.activeMesh.valueSets[state.activeQuality],
-	);
+	const [, min] = get2Min(state.activeMesh.valueSets[state.activeQuality]);
 	const max = getMax(state.activeMesh.valueSets[state.activeQuality]);
 
 	if (value > max) {
@@ -32,7 +30,7 @@ export function setGaugeLine(value, state) {
 		return;
 	}
 
-	const position = (value - min) / (max - min) - 0.15 / 42; // - gauge-line heght / gradient height
+	const position = (value - min) / (max - min) - 0.15 / 42; // - gauge-line height / gradient height
 
 	line.style.bottom = `${position * 100}%`;
 }

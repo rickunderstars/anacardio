@@ -50,8 +50,7 @@ export function processFile(dependencies) {
 }
 
 export function addMesh(dependencies) {
-	const { mesh, filename, shaders, sceneManager, state } =
-		dependencies;
+	const { mesh, filename, shaders, sceneManager, state } = dependencies;
 
 	HeartModule().then(() => {
 		const vertices = mesh.Float32ArrayOfVertices();
@@ -108,8 +107,7 @@ export function addMesh(dependencies) {
 			center: center,
 			radius: radius,
 		};
-        
-        // This pushes and sets active index
+
 		state.addMesh(meshData);
 
 		updateActiveMesh({ shaders, state });

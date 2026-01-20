@@ -48,66 +48,33 @@ export class SceneManager {
 		this.render();
 	}
 
-		getElapsedTime() {
-
-			return this.clock.getElapsedTime();
-
-		}
-
-	    
-
-	    startClock() {
-
-	        this.clock.start();
-
-	    }
-
-	
-
-		saveCameraVersor(state) {
-
-			const versor = new THREE.Vector3();
-
-			versor.subVectors(this.camera.position, this.controls.target).normalize();
-
-			state.lastCameraVersor = versor;
-
-		}
-
-	
-
-		restoreCameraVersor(center, objectSize, state) {
-
-			this.controls.target.copy(center);
-
-	
-
-			const distance = objectSize * 1.8;
-
-	
-
-			const offset = state.lastCameraVersor.clone().multiplyScalar(distance);
-
-			this.camera.position.copy(center).add(offset);
-
-	
-
-			this.controls.update();
-
-		}
-
-	
-
-		resetCamera(center, radius) {
-
-			this.camera.position.set(center.x, center.y, center.z + radius * 2.5);
-
-			this.controls.target.set(center.x, center.y, center.z);
-
-			this.controls.update();
-
-		}
-
+	getElapsedTime() {
+		return this.clock.getElapsedTime();
 	}
 
-	
+	startClock() {
+		this.clock.start();
+	}
+
+	saveCameraVersor(state) {
+		const versor = new THREE.Vector3();
+		versor
+			.subVectors(this.camera.position, this.controls.target)
+			.normalize();
+		state.lastCameraVersor = versor;
+	}
+
+	restoreCameraVersor(center, objectSize, state) {
+		this.controls.target.copy(center);
+		const distance = objectSize * 1.8;
+		const offset = state.lastCameraVersor.clone().multiplyScalar(distance);
+		this.camera.position.copy(center).add(offset);
+		this.controls.update();
+	}
+
+	resetCamera(center, radius) {
+		this.camera.position.set(center.x, center.y, center.z + radius * 2.5);
+		this.controls.target.set(center.x, center.y, center.z);
+		this.controls.update();
+	}
+}
