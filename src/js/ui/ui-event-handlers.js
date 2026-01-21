@@ -68,6 +68,10 @@ export function setupEventHandlers(dependencies) {
 		.addEventListener("change", function (e) {
 			if (e.target.name === "quality") {
 				state.activeQuality = e.target.value;
+				const selectedMode = document.querySelector(
+					'[data-js="modes-list"] input[name="mode"]:checked',
+				).value;
+				state.mode = selectedMode;
 				const { min, max } = updateActiveMesh({ shaders, state });
 				updateMinMaxUI(min, max);
 				sceneManager.render();
@@ -164,6 +168,12 @@ export function setupEventHandlers(dependencies) {
 		.querySelector('[data-js="modes-list"]')
 		.addEventListener("change", function (e) {
 			if (e.target.name === "mode") {
+				const mixedToggle =
+					document.getElementById("mixed-mode-toggle");
+				if (mixedToggle.checked) {
+					mixedToggle.checked = false;
+				}
+
 				if (state.activeMeshIndex === -1 || !state.activeMesh) return;
 
 				const newMode = e.target.value;
@@ -179,6 +189,40 @@ export function setupEventHandlers(dependencies) {
 					} else {
 						sceneManager.render();
 					}
+				}
+			}
+		});
+
+	document
+		.getElementById("mixed-mode-toggle")
+		.addEventListener("change", function (e) {
+			if (state.activeMeshIndex === -1 || !state.activeMesh) {
+				e.target.checked = !e.target.checked;
+				return;
+			}
+
+			if (e.target.checked) {
+				state.mode = VisMode.MIXED_MODE;
+				const { min, max } = updateActiveMesh({ shaders, state });
+				updateMinMaxUI(min, max);
+
+				sceneManager.startClock();
+				sceneManager.resetAnimationState();
+				sceneManager.runAnimationLoop(state);
+			} else {
+				const selectedMode = document.querySelector(
+					'[data-js="modes-list"] input[name="mode"]:checked',
+				).value;
+				state.mode = selectedMode;
+				const { min, max } = updateActiveMesh({ shaders, state });
+				updateMinMaxUI(min, max);
+
+				if (selectedMode === VisMode.ANIMATED) {
+					sceneManager.startClock();
+					sceneManager.resetAnimationState();
+					sceneManager.runAnimationLoop(state);
+				} else {
+					sceneManager.render();
 				}
 			}
 		});
