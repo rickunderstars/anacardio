@@ -13,6 +13,14 @@ const viewport = document.getElementById("viewport");
 export const sceneManager = new SceneManager(viewport);
 export const state = new StateManager();
 
+state.activeQuality = document.querySelector(
+	'[data-js="qualities-list"] input[name="quality"]:checked',
+).value;
+
+state.mode = document.querySelector(
+	'[data-js="modes-list"] input[name="mode"]:checked',
+).value;
+
 const mouse = new THREE.Vector2();
 
 if (state.mode != VisMode.ANIMATED) {
@@ -24,10 +32,6 @@ if (state.mode != VisMode.ANIMATED) {
 let shaders = await loadShaders();
 
 state.activeMeshIndex = -1;
-
-state.activeQuality = document.querySelector(
-	'[data-js="qualities-list"] input[name="quality"]:checked',
-).value;
 
 setupFileHandlers({
 	shaders,
