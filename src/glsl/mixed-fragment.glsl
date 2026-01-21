@@ -12,7 +12,7 @@ varying vec3 vNormal;
 
 vec3 gradientWave(float t, vec3 colorStart, vec3 colorEnd) {
 	t = 1.0 - t;
-	t = t * t * t;
+	t = t * t;
 	return mix(colorStart, colorEnd, t);
 }
 
@@ -35,7 +35,7 @@ void main() {
 				   light3Diffuse * vec3(0.7) + light4Diffuse * vec3(0.7);
 	lambert = lambert / vec3(4.0);
 
-	vec3 white = vec3(1.0, 1.0, 1.0);
+	vec3 burns = vec3(1.0, 0.0, 1.0);
 	vec3 nullColor = vec3(0.45, 0.45, 0.45);
 	vec3 waveColor = mix(vec3(0.0, 0.0, 1.0), vec3(0.0, 1.0, 0.0), bip);
 	vec3 color = gradientWave(phase, vec3(0.2, 0.2, 0.2), waveColor);
@@ -45,12 +45,15 @@ void main() {
 
 	vec3 nullAmbient = nullColor * uAmbientLightIntensity;
 	vec3 nullDiffuse = nullColor * lambert * (1.0 - uAmbientLightIntensity);
-	vec3 whiteAmbient = white * uAmbientLightIntensity;
-	vec3 whiteDiffuse = white * lambert * (1.0 - uAmbientLightIntensity);
+	vec3 burnsAmbient = burns * uAmbientLightIntensity;
+	vec3 burnsDiffuse = burns * lambert * (1.0 - uAmbientLightIntensity);
+
+	float binaryIsNull = step(0.1, vIsNull);
+	float binaryXtml = step(0.1, xtml);
 
 	vec3 finalColor =
-		mix(mix(ambient + diffuse, nullAmbient + nullDiffuse, vIsNull),
-			whiteAmbient + whiteDiffuse, xtml);
+		mix(mix(ambient + diffuse, nullAmbient + nullDiffuse, binaryIsNull),
+			burnsAmbient + burnsDiffuse, binaryXtml);
 	gl_FragColor = vec4(finalColor, 1.0);
 
 	/*

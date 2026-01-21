@@ -68,6 +68,10 @@ export function setupEventHandlers(dependencies) {
 		.addEventListener("change", function (e) {
 			if (e.target.name === "quality") {
 				state.activeQuality = e.target.value;
+				const selectedMode = document.querySelector(
+					'[data-js="modes-list"] input[name="mode"]:checked',
+				).value;
+				state.mode = selectedMode;
 				const { min, max } = updateActiveMesh({ shaders, state });
 				updateMinMaxUI(min, max);
 				sceneManager.render();
