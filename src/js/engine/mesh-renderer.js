@@ -4,7 +4,12 @@ import { VisMode } from "@js/core/state-manager.js";
 
 export function updateActiveMesh(dependencies) {
 	const { shaders, state } = dependencies;
-	const { vShader, fShader, dynVShader, dynFShader } = shaders;
+	const { vShader, fShader, dynVShader, dynFShader, mixVShader, mixFShader } =
+		shaders;
+
+	if (state.activeMeshIndex < 0) {
+		return;
+	}
 
 	const activeMesh = state.activeMesh;
 	const quality = state.activeQuality;
@@ -37,8 +42,7 @@ export function updateActiveMesh(dependencies) {
 		if (state.mode === VisMode.TANGENT_FIELD) {
 			state.activeMesh.tangentFieldMeshes[quality].visible = true;
 		}
-	}
-	if (state.mode === VisMode.ANIMATED) {
+	} else if (state.mode === VisMode.ANIMATED) {
 		hideAllTangentFields(state);
 		activeMesh.mesh.material = new THREE.ShaderMaterial({
 			uniforms: {
@@ -50,6 +54,42 @@ export function updateActiveMesh(dependencies) {
 			},
 			vertexShader: dynVShader,
 			fragmentShader: dynFShader,
+			side: THREE.DoubleSide,
+		});
+	} else if (state.mode === VisMode.MIXED_MODE) {
+		const activeMesh = state.activeMesh;
+		const [bipAbsMin, bipMin] = get2Min(activeMesh.valueSets["bipolar"]);
+		const bipMax = getMax(activeMesh.valueSets["bipolar"]);
+		const [latAbsMin, latMin] = get2Min(activeMesh.valueSets["lat"]);
+		const latMax = getMax(activeMesh.valueSets["lat"]);
+
+		activeMesh.mesh.geometry.setAttribute(
+			"bipolar",
+			new THREE.BufferAttribute(activeMesh.valueSets["bipolar"], 1),
+		);
+		activeMesh.mesh.geometry.setAttribute(
+			"lat",
+			new THREE.BufferAttribute(activeMesh.valueSets["lat"], 1),
+		);
+		activeMesh.mesh.geometry.setAttribute(
+			"exteml",
+			new THREE.BufferAttribute(activeMesh.valueSets["exteml"], 1),
+		);
+
+		hideAllTangentFields(state);
+		activeMesh.mesh.material = new THREE.ShaderMaterial({
+			uniforms: {
+				uBipAbsMin: { value: bipAbsMin },
+				uBipMin: { value: bipMin },
+				uBipMax: { value: bipMax },
+				uLatAbsMin: { value: latAbsMin },
+				uLatMin: { value: latMin },
+				uLatMax: { value: latMax },
+				uTime: { value: 0 },
+				uAmbientLightIntensity: { value: state.ambientLightIntensity },
+			},
+			vertexShader: mixVShader,
+			fragmentShader: mixFShader,
 			side: THREE.DoubleSide,
 		});
 	}

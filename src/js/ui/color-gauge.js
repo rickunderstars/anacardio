@@ -30,7 +30,7 @@ export function setGaugeLine(value, state) {
 		return;
 	}
 
-	const position = (value - min) / (max - min) - 0.15 / 42; // - gauge-line height / gradient height
+	const position = (value - min) / (max - min);
 
 	line.style.bottom = `${position * 100}%`;
 }
