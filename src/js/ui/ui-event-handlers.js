@@ -161,38 +161,27 @@ export function setupEventHandlers(dependencies) {
 	});
 
 	document
-		.getElementById("dynamic-animation")
-		.addEventListener("click", () => {
-			if (state.activeMeshIndex === -1 || !state.activeMesh) return;
-			if (state.mode != VisMode.ANIMATED) {
-				state.mode = VisMode.ANIMATED;
-				const { min, max } = updateActiveMesh({ shaders, state });
-				updateMinMaxUI(min, max);
-				sceneManager.startClock();
-				sceneManager.resetAnimationState();
-				sceneManager.runAnimationLoop(state);
+		.querySelector('[data-js="modes-list"]')
+		.addEventListener("change", function (e) {
+			if (e.target.name === "mode") {
+				if (state.activeMeshIndex === -1 || !state.activeMesh) return;
+
+				const newMode = e.target.value;
+				if (state.mode != newMode) {
+					state.mode = newMode;
+					const { min, max } = updateActiveMesh({ shaders, state });
+					updateMinMaxUI(min, max);
+
+					if (newMode === VisMode.ANIMATED) {
+						sceneManager.startClock();
+						sceneManager.resetAnimationState();
+						sceneManager.runAnimationLoop(state);
+					} else {
+						sceneManager.render();
+					}
+				}
 			}
 		});
-
-	document.getElementById("color-ramp").addEventListener("click", () => {
-		if (state.activeMeshIndex === -1 || !state.activeMesh) return;
-		if (state.mode != VisMode.COLOR_RAMP) {
-			state.mode = VisMode.COLOR_RAMP;
-			const { min, max } = updateActiveMesh({ shaders, state });
-			updateMinMaxUI(min, max);
-			sceneManager.render();
-		}
-	});
-
-	document.getElementById("tangent-field").addEventListener("click", () => {
-		if (state.activeMeshIndex === -1 || !state.activeMesh) return;
-		if (state.mode != VisMode.TANGENT_FIELD) {
-			state.mode = VisMode.TANGENT_FIELD;
-			const { min, max } = updateActiveMesh({ shaders, state });
-			updateMinMaxUI(min, max);
-			sceneManager.render();
-		}
-	});
 }
 
 function cameraReset(sceneManager, state) {

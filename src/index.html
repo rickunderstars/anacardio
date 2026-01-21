@@ -54,10 +54,71 @@
 
 				<div class="flex flex-grow gap-4">
 					<div class="flex flex-col flex-grow gap-4">
-						<div
-							data-js="qualities-list"
-							class="flex flex-col border border-slate-700 rounded-md overflow-hidden divide-y divide-slate-700 w-1/2 ml-auto"
-						>
+						<div class="flex flex-row gap-4">
+							<div
+								data-js="modes-list"
+								class="flex flex-col border border-slate-700 rounded-md overflow-hidden divide-y divide-slate-700 w-1/2"
+							>
+								<label class="flex-grow cursor-pointer group flex flex-col">
+									<input
+										type="radio"
+										name="mode"
+										value="color-ramp"
+										class="sr-only peer"
+										checked
+									/>
+									<div
+										class="flex-grow flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+									>
+										<div
+											class="px-4 text-left text-md font-medium truncate"
+										>
+											Color Ramp
+										</div>
+									</div>
+								</label>
+
+								<label class="flex-grow cursor-pointer group flex flex-col">
+									<input
+										type="radio"
+										name="mode"
+										value="animated"
+										class="sr-only peer"
+									/>
+									<div
+										class="flex-grow flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+									>
+										<div
+											class="px-4 text-left text-md font-medium truncate"
+										>
+											Dynamic Animation
+										</div>
+									</div>
+								</label>
+
+								<label class="flex-grow cursor-pointer group flex flex-col">
+									<input
+										type="radio"
+										name="mode"
+										value="tangent-field"
+										class="sr-only peer"
+									/>
+									<div
+										class="flex-grow flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+									>
+										<div
+											class="px-4 text-left text-md font-medium truncate"
+										>
+											Tangent Field
+										</div>
+									</div>
+								</label>
+							</div>
+
+							<div
+								data-js="qualities-list"
+								class="flex flex-col border border-slate-700 rounded-md overflow-hidden divide-y divide-slate-700 w-1/2"
+							>
 							<label class="cursor-pointer group">
 								<input
 									type="radio"
@@ -185,6 +246,7 @@
 								</div>
 							</label>
 						</div>
+					</div>
 
 						<select
 							id="loaded-meshes-dropdown"
@@ -224,26 +286,6 @@
 				</div>
 
 				<div class="flex flex-col gap-4 pt-4 border-t border-slate-700">
-					<div class="flex flex-row gap-3">
-						<label
-							id="color-ramp"
-							class="block w-1/3 p-2 bg-blue-600 hover:bg-blue-500 text-center rounded-md cursor-pointer transition-colors font-medium"
-						>
-							Color Ramp
-						</label>
-						<label
-							id="dynamic-animation"
-							class="block w-1/3 p-2 bg-blue-600 hover:bg-blue-500 text-center rounded-md cursor-pointer transition-colors font-medium"
-						>
-							Dynamic Animation
-						</label>
-						<label
-							id="tangent-field"
-							class="block w-1/3 p-2 bg-blue-600 hover:bg-blue-500 text-center rounded-md cursor-pointer transition-colors font-medium"
-						>
-							Tangent Field
-						</label>
-					</div>
 					<div class="flex flex-col gap-2">
 						<div class="text-sm text-slate-500 font-bold">
 							Lighting Intensity
