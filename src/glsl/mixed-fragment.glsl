@@ -6,6 +6,7 @@ const int NumWaves = 10;
 
 varying float lt;
 varying float bip;
+varying float xtml;
 varying float vIsNull;
 varying vec3 vNormal;
 
@@ -34,18 +35,22 @@ void main() {
 				   light3Diffuse * vec3(0.7) + light4Diffuse * vec3(0.7);
 	lambert = lambert / vec3(4.0);
 
-	vec3 nullColor = vec3(0.45, 0.45, 0.45); // grey
-	vec3 color =
-		gradientWave(phase, vec3(0.2, 0.2, 0.2),
-					 mix(vec3(0.0, 1.0, 0.0), vec3(0.0, 0.0, 1.0), bip));
+	vec3 white = vec3(1.0, 1.0, 1.0);
+	vec3 nullColor = vec3(0.45, 0.45, 0.45);
+	vec3 waveColor = mix(vec3(0.0, 0.0, 1.0), vec3(0.0, 1.0, 0.0), bip);
+	vec3 color = gradientWave(phase, vec3(0.2, 0.2, 0.2), waveColor);
 
 	vec3 ambient = color * uAmbientLightIntensity;
 	vec3 diffuse = color * lambert * (1.0 - uAmbientLightIntensity);
+
 	vec3 nullAmbient = nullColor * uAmbientLightIntensity;
 	vec3 nullDiffuse = nullColor * lambert * (1.0 - uAmbientLightIntensity);
+	vec3 whiteAmbient = white * uAmbientLightIntensity;
+	vec3 whiteDiffuse = white * lambert * (1.0 - uAmbientLightIntensity);
 
 	vec3 finalColor =
-		mix(ambient + diffuse, nullAmbient + nullDiffuse, vIsNull);
+		mix(mix(ambient + diffuse, nullAmbient + nullDiffuse, vIsNull),
+			whiteAmbient + whiteDiffuse, xtml);
 	gl_FragColor = vec4(finalColor, 1.0);
 
 	/*

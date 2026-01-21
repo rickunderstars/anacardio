@@ -1,5 +1,6 @@
 attribute float bipolar;
 attribute float lat;
+attribute float exteml;
 
 uniform float uBipAbsMin;
 uniform float uBipMin;
@@ -10,6 +11,7 @@ uniform float uLatMax;
 
 varying float lt;
 varying float bip;
+varying float xtml;
 varying float vIsNull;
 varying vec3 vNormal;
 
@@ -21,6 +23,7 @@ void main() {
 
 	lt = normalizeValue(lat, uLatMin, uLatMax);
 	bip = normalizeValue(bipolar, uBipMin, uBipMax);
+	xtml = step(0.5, exteml);
 
 	float epsilon = 0.0001;
 	vIsNull = step(lat, uLatMin + epsilon);

@@ -7,6 +7,10 @@ export function updateActiveMesh(dependencies) {
 	const { vShader, fShader, dynVShader, dynFShader, mixVShader, mixFShader } =
 		shaders;
 
+	if (state.activeMeshIndex < 0) {
+		return;
+	}
+
 	const activeMesh = state.activeMesh;
 	const quality = state.activeQuality;
 	const [absMin, min] = get2Min(activeMesh.valueSets[quality]);
@@ -66,6 +70,10 @@ export function updateActiveMesh(dependencies) {
 		activeMesh.mesh.geometry.setAttribute(
 			"lat",
 			new THREE.BufferAttribute(activeMesh.valueSets["lat"], 1),
+		);
+		activeMesh.mesh.geometry.setAttribute(
+			"exteml",
+			new THREE.BufferAttribute(activeMesh.valueSets["exteml"], 1),
 		);
 
 		hideAllTangentFields(state);
