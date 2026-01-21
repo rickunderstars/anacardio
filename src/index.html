@@ -13,7 +13,7 @@
 			<div
 				class="flex-grow w-2/5 flex flex-col gap-6 p-4 bg-slate-800 overflow-y-auto"
 			>
-				<div class="flex gap-3 overflow-auto">
+				<div class="flex gap-3 h-1/20 overflow-auto">
 					<div
 						class="flex flex-none w-1/2 items-center gap-2 text-4xl font-bold text-shadow-xl"
 					>
@@ -59,7 +59,9 @@
 								data-js="modes-list"
 								class="flex flex-col border border-slate-700 rounded-md overflow-hidden divide-y divide-slate-700 w-1/2"
 							>
-								<label class="flex-grow cursor-pointer group flex flex-col">
+								<label
+									class="flex-grow cursor-pointer group flex flex-col"
+								>
 									<input
 										type="radio"
 										name="mode"
@@ -71,14 +73,16 @@
 										class="flex-grow flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 									>
 										<div
-											class="px-4 text-left text-md font-medium truncate"
+											class="px-4 text-center text-md font-medium w-full"
 										>
 											Color Ramp
 										</div>
 									</div>
 								</label>
 
-								<label class="flex-grow cursor-pointer group flex flex-col">
+								<label
+									class="flex-grow cursor-pointer group flex flex-col"
+								>
 									<input
 										type="radio"
 										name="mode"
@@ -89,14 +93,16 @@
 										class="flex-grow flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 									>
 										<div
-											class="px-4 text-left text-md font-medium truncate"
+											class="px-4 text-center text-md font-medium w-full"
 										>
 											Dynamic Animation
 										</div>
 									</div>
 								</label>
 
-								<label class="flex-grow cursor-pointer group flex flex-col">
+								<label
+									class="flex-grow cursor-pointer group flex flex-col"
+								>
 									<input
 										type="radio"
 										name="mode"
@@ -107,7 +113,7 @@
 										class="flex-grow flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 									>
 										<div
-											class="px-4 text-left text-md font-medium truncate"
+											class="px-4 text-center text-md font-medium w-full"
 										>
 											Tangent Field
 										</div>
@@ -119,134 +125,140 @@
 								data-js="qualities-list"
 								class="flex flex-col border border-slate-700 rounded-md overflow-hidden divide-y divide-slate-700 w-1/2"
 							>
-							<label class="cursor-pointer group">
-								<input
-									type="radio"
-									name="quality"
-									value="unipolar"
-									class="sr-only peer"
-									checked
-								/>
-								<div
-									class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
-								>
+								<label class="cursor-pointer group">
+									<input
+										type="radio"
+										name="quality"
+										value="unipolar"
+										class="sr-only peer"
+										checked
+									/>
 									<div
-										class="px-4 text-left text-md font-medium truncate"
+										class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 									>
-										Unipolar
+										<div
+											class="px-4 text-left text-md font-medium"
+										>
+											Unipolar
+										</div>
 									</div>
-								</div>
-							</label>
+								</label>
 
-							<label class="cursor-pointer group">
-								<input
-									type="radio"
-									name="quality"
-									value="bipolar"
-									class="sr-only peer"
-								/>
-								<div
-									class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
-								>
+								<label class="cursor-pointer group">
+									<input
+										type="radio"
+										name="quality"
+										value="bipolar"
+										class="sr-only peer"
+									/>
 									<div
-										class="px-4 text-left text-md font-medium truncate"
+										class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 									>
-										Bipolar
+										<div
+											class="px-4 text-left text-md font-medium"
+										>
+											Bipolar
+										</div>
 									</div>
-								</div>
-							</label>
+								</label>
 
-							<label class="cursor-pointer group">
-								<input
-									type="radio"
-									name="quality"
-									value="lat"
-									class="sr-only peer"
-								/>
-								<div
-									class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
-								>
+								<label class="cursor-pointer group">
+									<input
+										type="radio"
+										name="quality"
+										value="lat"
+										class="sr-only peer"
+									/>
 									<div
-										class="px-4 text-left text-md font-medium truncate"
+										class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 									>
-										LAT
+										<div
+											class="px-4 text-left text-md font-medium"
+										>
+											LAT
+										</div>
 									</div>
-								</div>
-							</label>
+								</label>
 
-							<label class="cursor-pointer group">
-								<input
-									type="radio"
-									name="quality"
-									value="eml"
-									class="sr-only peer"
-								/>
-								<div
-									class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
-								>
+								<label class="cursor-pointer group">
+									<input
+										type="radio"
+										name="quality"
+										value="eml"
+										class="sr-only peer"
+									/>
 									<div
-										class="px-4 text-left text-md font-medium truncate"
+										class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 									>
-										EML
+										<div
+											class="px-4 text-left text-md font-medium"
+										>
+											EML
+										</div>
 									</div>
-								</div>
-							</label>
+								</label>
 
-							<label class="cursor-pointer group">
-								<input
-									type="radio"
-									name="quality"
-									value="exteml"
-									class="sr-only peer"
-								/>
-								<div
-									class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
-								>
+								<label class="cursor-pointer group">
+									<input
+										type="radio"
+										name="quality"
+										value="exteml"
+										class="sr-only peer"
+									/>
 									<div
-										class="px-4 text-left text-md font-medium truncate"
+										class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 									>
-										ExtEML
+										<div
+											class="px-4 text-left text-md font-medium"
+										>
+											ExtEML
+										</div>
 									</div>
-								</div>
-							</label>
+								</label>
 
-							<label class="cursor-pointer group">
-								<input
-									type="radio"
-									name="quality"
-									value="scar"
-									class="sr-only peer"
-								/>
-								<div
-									class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
-								>
+								<label class="cursor-pointer group">
+									<input
+										type="radio"
+										name="quality"
+										value="scar"
+										class="sr-only peer"
+									/>
 									<div
-										class="px-4 text-left text-md font-medium truncate"
+										class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 									>
-										SCAR
+										<div
+											class="px-4 text-left text-md font-medium"
+										>
+											SCAR
+										</div>
 									</div>
-								</div>
-							</label>
+								</label>
 
-							<label class="cursor-pointer group">
-								<input
-									type="radio"
-									name="quality"
-									value="groupid"
-									class="sr-only peer"
-								/>
-								<div
-									class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
-								>
+								<label class="cursor-pointer group">
+									<input
+										type="radio"
+										name="quality"
+										value="groupid"
+										class="sr-only peer"
+									/>
 									<div
-										class="px-4 text-left text-md font-medium truncate"
+										class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 									>
-										GroupID
+										<div
+											class="px-4 text-left text-md font-medium"
+										>
+											GroupID
+										</div>
 									</div>
-								</div>
-							</label>
+								</label>
+							</div>
 						</div>
-					</div>
+						<div
+							class="block w-5/7 px-8 py-2 bg-slate-700 text-left rounded-md font-medium text-white flex flex-row gap-4"
+						>
+							<div>Pointed Value:</div>
+							<div id="sampler-value"></div>
+						</div>
 
 						<select
 							id="loaded-meshes-dropdown"
@@ -273,7 +285,7 @@
 							></canvas>
 							<div
 								id="gauge-line"
-								class="absolute w-8/7 h-0.5 rounded border-y border-white pointer-events-none"
+								class="absolute w-8/7 h-0.5 rounded border-y border-white pointer-events-none transform translate-y-1/2"
 							></div>
 						</div>
 						<div
