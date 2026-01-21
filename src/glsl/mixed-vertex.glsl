@@ -1,10 +1,15 @@
-attribute float value;
+attribute float bipolar;
+attribute float lat;
 
-uniform float uAbsMin;
-uniform float uMin;
-uniform float uMax;
+uniform float uBipAbsMin;
+uniform float uBipMin;
+uniform float uBipMax;
+uniform float uLatAbsMin;
+uniform float uLatMin;
+uniform float uLatMax;
 
-varying float val;
+varying float lt;
+varying float bip;
 varying float vIsNull;
 varying vec3 vNormal;
 
@@ -14,10 +19,11 @@ float normalizeValue(float value, float minVal, float maxVal) {
 
 void main() {
 
-	val = normalizeValue(value, uMin, uMax);
+	lt = normalizeValue(lat, uLatMin, uLatMax);
+	bip = normalizeValue(bipolar, uBipMin, uBipMax);
 
 	float epsilon = 0.0001;
-	vIsNull = step(value, uMin + epsilon);
+	vIsNull = step(lat, uLatMin + epsilon);
 
 	vNormal = normalize(normalMatrix * normal);
 

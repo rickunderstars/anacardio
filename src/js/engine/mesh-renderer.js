@@ -53,12 +53,30 @@ export function updateActiveMesh(dependencies) {
 			side: THREE.DoubleSide,
 		});
 	} else if (state.mode === VisMode.MIXED_MODE) {
+		const activeMesh = state.activeMesh;
+		const [bipAbsMin, bipMin] = get2Min(activeMesh.valueSets["bipolar"]);
+		const bipMax = getMax(activeMesh.valueSets["bipolar"]);
+		const [latAbsMin, latMin] = get2Min(activeMesh.valueSets["lat"]);
+		const latMax = getMax(activeMesh.valueSets["lat"]);
+
+		activeMesh.mesh.geometry.setAttribute(
+			"bipolar",
+			new THREE.BufferAttribute(activeMesh.valueSets["bipolar"], 1),
+		);
+		activeMesh.mesh.geometry.setAttribute(
+			"lat",
+			new THREE.BufferAttribute(activeMesh.valueSets["lat"], 1),
+		);
+
 		hideAllTangentFields(state);
 		activeMesh.mesh.material = new THREE.ShaderMaterial({
 			uniforms: {
-				uAbsMin: { value: absMin },
-				uMin: { value: min },
-				uMax: { value: max },
+				uBipAbsMin: { value: bipAbsMin },
+				uBipMin: { value: bipMin },
+				uBipMax: { value: bipMax },
+				uLatAbsMin: { value: latAbsMin },
+				uLatMin: { value: latMin },
+				uLatMax: { value: latMax },
 				uTime: { value: 0 },
 				uAmbientLightIntensity: { value: state.ambientLightIntensity },
 			},
