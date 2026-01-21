@@ -63,49 +63,49 @@ export function setupEventHandlers(dependencies) {
 		onMouseMove(e, sceneManager, mouse, state);
 	});
 
-			document
-			.querySelector('[data-js="qualities-list"]')
-			.addEventListener("change", function (e) {
-				if (e.target.name === "quality") {
-					state.activeQuality = e.target.value;
-					const { min, max } = updateActiveMesh({ shaders, state });
-					updateMinMaxUI(min, max);
-					sceneManager.render();
-				}
-			});
-	
-		document
-			.getElementById("loaded-meshes-dropdown")
-			.addEventListener("change", function (e) {
-				sceneManager.saveCameraVersor(state);
-	
-				state.activeMeshIndex = parseInt(e.target.value);
+	document
+		.querySelector('[data-js="qualities-list"]')
+		.addEventListener("change", function (e) {
+			if (e.target.name === "quality") {
+				state.activeQuality = e.target.value;
 				const { min, max } = updateActiveMesh({ shaders, state });
 				updateMinMaxUI(min, max);
-	
-				let activeMesh = null;
-	
-				for (let i = 0; i < state.meshes.length; i++) {
-					if (i != state.activeMeshIndex) {
-						state.meshes[i].mesh.visible = false;
-					} else {
-						state.meshes[i].mesh.visible = true;
-						activeMesh = state.meshes[i].mesh;
-					}
+				sceneManager.render();
+			}
+		});
+
+	document
+		.getElementById("loaded-meshes-dropdown")
+		.addEventListener("change", function (e) {
+			sceneManager.saveCameraVersor(state);
+
+			state.activeMeshIndex = parseInt(e.target.value);
+			const { min, max } = updateActiveMesh({ shaders, state });
+			updateMinMaxUI(min, max);
+
+			let activeMesh = null;
+
+			for (let i = 0; i < state.meshes.length; i++) {
+				if (i != state.activeMeshIndex) {
+					state.meshes[i].mesh.visible = false;
+				} else {
+					state.meshes[i].mesh.visible = true;
+					activeMesh = state.meshes[i].mesh;
 				}
-	
-				const box = new THREE.Box3().setFromObject(activeMesh);
-				const center = new THREE.Vector3();
-				box.getCenter(center);
-	
-				const size = new THREE.Vector3();
-				box.getSize(size);
-				const maxDim = Math.max(size.x, size.y, size.z);
-	
-				sceneManager.restoreCameraVersor(center, maxDim, state);
-			});
-	
-		const meshDropdown = document.getElementById("add-mesh-dropdown");
+			}
+
+			const box = new THREE.Box3().setFromObject(activeMesh);
+			const center = new THREE.Vector3();
+			box.getCenter(center);
+
+			const size = new THREE.Vector3();
+			box.getSize(size);
+			const maxDim = Math.max(size.x, size.y, size.z);
+
+			sceneManager.restoreCameraVersor(center, maxDim, state);
+		});
+
+	const meshDropdown = document.getElementById("add-mesh-dropdown");
 	meshDropdown.addEventListener("change", async (e) => {
 		const value = e.target.value;
 
@@ -161,38 +161,27 @@ export function setupEventHandlers(dependencies) {
 	});
 
 	document
-		.getElementById("dynamic-animation")
-		.addEventListener("click", () => {
-			if (state.activeMeshIndex === -1 || !state.activeMesh) return;
-			if (state.mode != VisMode.ANIMATED) {
-				state.mode = VisMode.ANIMATED;
-				const { min, max } = updateActiveMesh({ shaders, state });
-				updateMinMaxUI(min, max);
-				sceneManager.startClock();
-				sceneManager.resetAnimationState();
-				sceneManager.runAnimationLoop(state);
+		.querySelector('[data-js="modes-list"]')
+		.addEventListener("change", function (e) {
+			if (e.target.name === "mode") {
+				if (state.activeMeshIndex === -1 || !state.activeMesh) return;
+
+				const newMode = e.target.value;
+				if (state.mode != newMode) {
+					state.mode = newMode;
+					const { min, max } = updateActiveMesh({ shaders, state });
+					updateMinMaxUI(min, max);
+
+					if (newMode === VisMode.ANIMATED) {
+						sceneManager.startClock();
+						sceneManager.resetAnimationState();
+						sceneManager.runAnimationLoop(state);
+					} else {
+						sceneManager.render();
+					}
+				}
 			}
 		});
-
-	document.getElementById("color-ramp").addEventListener("click", () => {
-		if (state.activeMeshIndex === -1 || !state.activeMesh) return;
-		if (state.mode != VisMode.COLOR_RAMP) {
-			state.mode = VisMode.COLOR_RAMP;
-			const { min, max } = updateActiveMesh({ shaders, state });
-			updateMinMaxUI(min, max);
-			sceneManager.render();
-		}
-	});
-
-	document.getElementById("tangent-field").addEventListener("click", () => {
-		if (state.activeMeshIndex === -1 || !state.activeMesh) return;
-		if (state.mode != VisMode.TANGENT_FIELD) {
-			state.mode = VisMode.TANGENT_FIELD;
-			const { min, max } = updateActiveMesh({ shaders, state });
-			updateMinMaxUI(min, max);
-			sceneManager.render();
-		}
-	});
 }
 
 function cameraReset(sceneManager, state) {
@@ -215,36 +204,11 @@ function onMouseMove(e, sceneManager, mouse, state) {
 	if (result && result.hovered) {
 		const { values, activeValue } = result;
 
-		document.getElementById("unipolar-value").innerHTML = formatNumber(
-			values.unipolar,
-		);
-		document.getElementById("bipolar-value").innerHTML = formatNumber(
-			values.bipolar,
-		);
-		document.getElementById("lat-value").innerHTML = formatNumber(
-			values.lat,
-		);
-		document.getElementById("eml-value").innerHTML = formatNumber(
-			values.eml,
-		);
-		document.getElementById("exteml-value").innerHTML = formatNumber(
-			values.exteml,
-		);
-		document.getElementById("scar-value").innerHTML = formatNumber(
-			values.scar,
-		);
-		document.getElementById("groupid-value").innerHTML = formatNumber(
-			values.groupid,
-		);
+		document.getElementById("sampler-value").innerHTML =
+			formatNumber(activeValue);
 
 		setGaugeLine(activeValue, state);
 	} else {
-		document.getElementById("unipolar-value").innerHTML = "---";
-		document.getElementById("bipolar-value").innerHTML = "---";
-		document.getElementById("lat-value").innerHTML = "---";
-		document.getElementById("eml-value").innerHTML = "---";
-		document.getElementById("exteml-value").innerHTML = "---";
-		document.getElementById("scar-value").innerHTML = "---";
-		document.getElementById("groupid-value").innerHTML = "---";
+		document.getElementById("sampler-value").innerHTML = "---";
 	}
 }
