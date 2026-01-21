@@ -2,6 +2,7 @@ export const VisMode = Object.freeze({
 	COLOR_RAMP: "color-ramp",
 	ANIMATED: "animated",
 	TANGENT_FIELD: "tangent-field",
+	MIXED_MODE: "mixed-mode",
 });
 
 export const AppEvents = Object.freeze({

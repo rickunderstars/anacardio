@@ -7,7 +7,7 @@
 	</head>
 
 	<body class="bg-slate-900 text-slate-100 antialiased font-sans">
-		<div class="flex h-screen w-full overflow-hidden">
+		<div class="flex h-screen w-full overflow-auto">
 			<div id="viewport" class="bg-black relative"></div>
 
 			<div
@@ -259,9 +259,23 @@
 							<div class="text-center w-1/2">Pointed Value:</div>
 							<div
 								id="sampler-value"
-								class="text-center w=1/2"
+								class="text-left w-1/2 pl-8"
 							></div>
 						</div>
+						<label
+							class="flex items-center justify-center cursor-pointer bg-slate-700 p-4 rounded-md hover:bg-slate-600 transition-colors border border-slate-600 w-full"
+						>
+							<input
+								type="checkbox"
+								id="mixed-mode-toggle"
+								class="sr-only peer"
+							/>
+							<div
+								class="text-md font-medium text-slate-200 peer-checked:text-blue-400"
+							>
+								Mixed Mode
+							</div>
+						</label>
 
 						<select
 							id="loaded-meshes-dropdown"

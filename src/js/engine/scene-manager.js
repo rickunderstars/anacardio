@@ -66,7 +66,10 @@ export class SceneManager {
 	}
 
 	runAnimationLoop(state, timeStamp = 0) {
-		if (state.mode != VisMode.ANIMATED) {
+		if (
+			state.mode != VisMode.ANIMATED &&
+			state.mode != VisMode.MIXED_MODE
+		) {
 			this.render();
 			return;
 		}

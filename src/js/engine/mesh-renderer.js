@@ -4,7 +4,8 @@ import { VisMode } from "@js/core/state-manager.js";
 
 export function updateActiveMesh(dependencies) {
 	const { shaders, state } = dependencies;
-	const { vShader, fShader, dynVShader, dynFShader } = shaders;
+	const { vShader, fShader, dynVShader, dynFShader, mixVShader, mixFShader } =
+		shaders;
 
 	const activeMesh = state.activeMesh;
 	const quality = state.activeQuality;
@@ -37,8 +38,7 @@ export function updateActiveMesh(dependencies) {
 		if (state.mode === VisMode.TANGENT_FIELD) {
 			state.activeMesh.tangentFieldMeshes[quality].visible = true;
 		}
-	}
-	if (state.mode === VisMode.ANIMATED) {
+	} else if (state.mode === VisMode.ANIMATED) {
 		hideAllTangentFields(state);
 		activeMesh.mesh.material = new THREE.ShaderMaterial({
 			uniforms: {
@@ -50,6 +50,20 @@ export function updateActiveMesh(dependencies) {
 			},
 			vertexShader: dynVShader,
 			fragmentShader: dynFShader,
+			side: THREE.DoubleSide,
+		});
+	} else if (state.mode === VisMode.MIXED_MODE) {
+		hideAllTangentFields(state);
+		activeMesh.mesh.material = new THREE.ShaderMaterial({
+			uniforms: {
+				uAbsMin: { value: absMin },
+				uMin: { value: min },
+				uMax: { value: max },
+				uTime: { value: 0 },
+				uAmbientLightIntensity: { value: state.ambientLightIntensity },
+			},
+			vertexShader: mixVShader,
+			fragmentShader: mixFShader,
 			side: THREE.DoubleSide,
 		});
 	}
