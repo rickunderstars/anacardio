@@ -73,18 +73,18 @@ export function setupEventHandlers(dependencies) {
 					sceneManager.render();
 				}
 			});
-	
+
 		document
 			.getElementById("loaded-meshes-dropdown")
 			.addEventListener("change", function (e) {
 				sceneManager.saveCameraVersor(state);
-	
+
 				state.activeMeshIndex = parseInt(e.target.value);
 				const { min, max } = updateActiveMesh({ shaders, state });
 				updateMinMaxUI(min, max);
-	
+
 				let activeMesh = null;
-	
+
 				for (let i = 0; i < state.meshes.length; i++) {
 					if (i != state.activeMeshIndex) {
 						state.meshes[i].mesh.visible = false;
@@ -93,18 +93,18 @@ export function setupEventHandlers(dependencies) {
 						activeMesh = state.meshes[i].mesh;
 					}
 				}
-	
+
 				const box = new THREE.Box3().setFromObject(activeMesh);
 				const center = new THREE.Vector3();
 				box.getCenter(center);
-	
+
 				const size = new THREE.Vector3();
 				box.getSize(size);
 				const maxDim = Math.max(size.x, size.y, size.z);
-	
+
 				sceneManager.restoreCameraVersor(center, maxDim, state);
 			});
-	
+
 		const meshDropdown = document.getElementById("add-mesh-dropdown");
 	meshDropdown.addEventListener("change", async (e) => {
 		const value = e.target.value;
@@ -239,12 +239,6 @@ function onMouseMove(e, sceneManager, mouse, state) {
 
 		setGaugeLine(activeValue, state);
 	} else {
-		document.getElementById("unipolar-value").innerHTML = "---";
-		document.getElementById("bipolar-value").innerHTML = "---";
-		document.getElementById("lat-value").innerHTML = "---";
-		document.getElementById("eml-value").innerHTML = "---";
-		document.getElementById("exteml-value").innerHTML = "---";
-		document.getElementById("scar-value").innerHTML = "---";
-		document.getElementById("groupid-value").innerHTML = "---";
+		document.getElementById("")
 	}
 }
