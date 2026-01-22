@@ -16,7 +16,6 @@ export const AppEvents = Object.freeze({
 
 export class StateManager extends EventTarget {
 	meshes = [];
-	lastCameraVersor = null;
 
 	#activeMeshIndex = -1;
 	#activeQuality = "unipolar";

@@ -1,6 +1,16 @@
 import { turboColormap, get2Min, getMax } from "@js/utils/math-utils.js";
 import { VisMode } from "@js/core/state-manager.js";
 
+export const SHADER_COLORS = {
+	NULL_STATIC: [0.5, 0.5, 0.5],
+	NULL: [0.45, 0.45, 0.45],
+	WAVE_START: [0.2, 0.2, 0.2],
+	WAVE_END: [0.3, 1.0, 1.0],
+	WAVE_POLAR_START: [0.3, 0.3, 1.0],
+	WAVE_POLAR_END: [0.0, 1.0, 0.0],
+	EXTEML: [1.0, 0.0, 1.0],
+};
+
 function mixColors(c1, c2, t) {
 	return [
 		c1[0] * (1 - t) + c2[0] * t,
@@ -50,8 +60,8 @@ export function colorizeGradient(state, time = 0) {
 			ctx.fillRect(0, y, width, 1);
 		}
 	} else if (mode === VisMode.ANIMATED) {
-		const startColor = [0.2 * 255, 0.2 * 255, 0.2 * 255];
-		const endColor = [0.3 * 255, 1.0 * 255, 1.0 * 255];
+		const startColor = SHADER_COLORS.WAVE_START.map((c) => c * 255);
+		const endColor = SHADER_COLORS.WAVE_END.map((c) => c * 255);
 
 		for (let y = 0; y < height; y++) {
 			const val = 1 - y / height;
@@ -63,9 +73,9 @@ export function colorizeGradient(state, time = 0) {
 			ctx.fillRect(0, y, width, 1);
 		}
 	} else if (mode === VisMode.MIXED_MODE) {
-		const startColor = [0.2 * 255, 0.2 * 255, 0.2 * 255];
-		const blue = [0.3 * 255, 0.3 * 255, 1.0 * 255];
-		const green = [0.0 * 255, 1.0 * 255, 0.0 * 255];
+		const startColor = SHADER_COLORS.WAVE_START.map((c) => c * 255);
+		const blue = SHADER_COLORS.WAVE_POLAR_START.map((c) => c * 255);
+		const green = SHADER_COLORS.WAVE_POLAR_END.map((c) => c * 255);
 
 		for (let y = 0; y < height; y++) {
 			const val = 1 - y / height;

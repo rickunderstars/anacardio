@@ -95,6 +95,10 @@ export async function addMesh(dependencies) {
 	const center = boundingSphere.center;
 	const radius = boundingSphere.radius;
 
+	if (state.activeMesh) {
+		sceneManager.saveCameraVersor(state.activeMesh);
+	}
+
 	sceneManager.resetCamera(center, radius);
 
 	const meshData = {

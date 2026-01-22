@@ -2,6 +2,9 @@ uniform float uTime;
 uniform float uAmbientLightIntensity;
 uniform float uTimeSpeed;
 uniform int uNumWaves;
+uniform vec3 uNullColor;
+uniform vec3 uWaveStartColor;
+uniform vec3 uWaveEndColor;
 
 varying float val;
 varying float vIsNull;
@@ -32,8 +35,8 @@ void main() {
 				   light3Diffuse * vec3(0.7) + light4Diffuse * vec3(0.7);
 	lambert = lambert / vec3(4.0);
 
-	vec3 nullColor = vec3(0.45, 0.45, 0.45); // grey
-	vec3 color = gradientWave(phase, vec3(0.2, 0.2, 0.2), vec3(0.3, 1.0, 1.0));
+	vec3 nullColor = uNullColor;
+	vec3 color = gradientWave(phase, uWaveStartColor, uWaveEndColor);
 
 	vec3 ambient = color * uAmbientLightIntensity;
 	vec3 diffuse = color * lambert * (1.0 - uAmbientLightIntensity);
