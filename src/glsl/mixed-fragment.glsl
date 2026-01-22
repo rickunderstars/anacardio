@@ -1,8 +1,12 @@
 uniform float uTime;
 uniform float uAmbientLightIntensity;
-
-const float TimeSpeed = 0.05;
-const int NumWaves = 10;
+uniform float uTimeSpeed;
+uniform int uNumWaves;
+uniform vec3 uNullColor;
+uniform vec3 uWaveStartColor;
+uniform vec3 uWavePolarStart;
+uniform vec3 uWavePolarEnd;
+uniform vec3 uExtemlColor;
 
 varying float lt;
 varying float bip;
@@ -17,8 +21,7 @@ vec3 gradientWave(float t, vec3 colorStart, vec3 colorEnd) {
 }
 
 void main() {
-
-	float wave = (uTime * TimeSpeed - lt) * float(NumWaves);
+	float wave = (uTime * uTimeSpeed - lt) * float(uNumWaves);
 	float phase = fract(wave);
 
 	vec3 light1Dir = normalize(vec3(-1.0, 1.0, 1.0));
@@ -35,25 +38,25 @@ void main() {
 				   light3Diffuse * vec3(0.7) + light4Diffuse * vec3(0.7);
 	lambert = lambert / vec3(4.0);
 
-	vec3 burns = vec3(1.0, 0.0, 1.0);
-	vec3 nullColor = vec3(0.45, 0.45, 0.45);
-	vec3 waveColor = mix(vec3(0.0, 0.0, 1.0), vec3(0.0, 1.0, 0.0), bip);
-	vec3 color = gradientWave(phase, vec3(0.2, 0.2, 0.2), waveColor);
+	vec3 exteml = uExtemlColor;
+	vec3 nullColor = uNullColor;
+	vec3 waveColor = mix(uWavePolarStart, uWavePolarEnd, bip);
+	vec3 color = gradientWave(phase, uWaveStartColor, waveColor);
 
 	vec3 ambient = color * uAmbientLightIntensity;
 	vec3 diffuse = color * lambert * (1.0 - uAmbientLightIntensity);
 
 	vec3 nullAmbient = nullColor * uAmbientLightIntensity;
 	vec3 nullDiffuse = nullColor * lambert * (1.0 - uAmbientLightIntensity);
-	vec3 burnsAmbient = burns * uAmbientLightIntensity;
-	vec3 burnsDiffuse = burns * lambert * (1.0 - uAmbientLightIntensity);
+	vec3 extemlAmbient = exteml * uAmbientLightIntensity;
+	vec3 extemlDiffuse = exteml * lambert * (1.0 - uAmbientLightIntensity);
 
 	float binaryIsNull = step(0.1, vIsNull);
 	float binaryXtml = step(0.1, xtml);
 
 	vec3 finalColor =
 		mix(mix(ambient + diffuse, nullAmbient + nullDiffuse, binaryIsNull),
-			burnsAmbient + burnsDiffuse, binaryXtml);
+			extemlAmbient + extemlDiffuse, binaryXtml);
 	gl_FragColor = vec4(finalColor, 1.0);
 
 	/*

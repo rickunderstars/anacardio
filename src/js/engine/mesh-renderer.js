@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { getMax, get2Min } from "@js/utils/math-utils.js";
 import { VisMode } from "@js/core/state-manager.js";
+import { SHADER_COLORS } from "@js/ui/color-gauge.js";
 
 export function updateActiveMesh(dependencies) {
 	const { shaders, state } = dependencies;
@@ -33,6 +34,9 @@ export function updateActiveMesh(dependencies) {
 				uMin: { value: min },
 				uMax: { value: max },
 				uAmbientLightIntensity: { value: state.ambientLightIntensity },
+				uNullColor: {
+					value: new THREE.Vector3(...SHADER_COLORS.NULL_STATIC),
+				},
 			},
 			vertexShader: vShader,
 			fragmentShader: fShader,
@@ -51,6 +55,17 @@ export function updateActiveMesh(dependencies) {
 				uMax: { value: max },
 				uTime: { value: 0 },
 				uAmbientLightIntensity: { value: state.ambientLightIntensity },
+				uTimeSpeed: { value: state.wavesSpeed },
+				uNumWaves: { value: state.wavesNumber },
+				uNullColor: {
+					value: new THREE.Vector3(...SHADER_COLORS.NULL),
+				},
+				uWaveStartColor: {
+					value: new THREE.Vector3(...SHADER_COLORS.WAVE_START),
+				},
+				uWaveEndColor: {
+					value: new THREE.Vector3(...SHADER_COLORS.WAVE_END),
+				},
 			},
 			vertexShader: dynVShader,
 			fragmentShader: dynFShader,
@@ -87,6 +102,23 @@ export function updateActiveMesh(dependencies) {
 				uLatMax: { value: latMax },
 				uTime: { value: 0 },
 				uAmbientLightIntensity: { value: state.ambientLightIntensity },
+				uTimeSpeed: { value: state.wavesSpeed },
+				uNumWaves: { value: state.wavesNumber },
+				uNullColor: {
+					value: new THREE.Vector3(...SHADER_COLORS.NULL),
+				},
+				uWaveStartColor: {
+					value: new THREE.Vector3(...SHADER_COLORS.WAVE_START),
+				},
+				uWavePolarStart: {
+					value: new THREE.Vector3(...SHADER_COLORS.WAVE_POLAR_START),
+				},
+				uWavePolarEnd: {
+					value: new THREE.Vector3(...SHADER_COLORS.WAVE_POLAR_END),
+				},
+				uExtemlColor: {
+					value: new THREE.Vector3(...SHADER_COLORS.EXTEML),
+				},
 			},
 			vertexShader: mixVShader,
 			fragmentShader: mixFShader,

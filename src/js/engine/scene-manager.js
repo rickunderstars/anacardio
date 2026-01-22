@@ -2,6 +2,15 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { VisMode } from "@js/core/state-manager.js";
 
+export const CameraVersors = Object.freeze({
+	FRONT: new THREE.Vector3(0, 0, 1),
+	BACK: new THREE.Vector3(0, 0, -1),
+	TOP: new THREE.Vector3(0, 1, 0),
+	BOTTOM: new THREE.Vector3(0, -1, 0),
+	LEFT: new THREE.Vector3(-1, 0, 0),
+	RIGHT: new THREE.Vector3(1, 0, 0),
+});
+
 export class SceneManager {
 	constructor(viewport) {
 		this.viewport = viewport;
@@ -21,6 +30,7 @@ export class SceneManager {
 		this.fps = 120;
 		this.interval = 1000 / this.fps;
 		this.lastTime = 0;
+		this.onRender = null;
 	}
 
 	#createRenderer() {
@@ -39,6 +49,9 @@ export class SceneManager {
 	}
 
 	render() {
+		if (this.onRender) {
+			this.onRender();
+		}
 		this.renderer.render(this.scene, this.camera);
 	}
 
@@ -97,25 +110,25 @@ export class SceneManager {
 		}
 	}
 
-	saveCameraVersor(state) {
+	saveCameraVersor(meshData) {
+		if (!meshData) return;
 		const versor = new THREE.Vector3();
 		versor
 			.subVectors(this.camera.position, this.controls.target)
 			.normalize();
-		state.lastCameraVersor = versor;
+		meshData.cameraVersor = versor;
 	}
 
-	restoreCameraVersor(center, objectSize, state) {
+	restoreCameraVersor(meshData) {
+		const versor = meshData.cameraVersor ?? CameraVersors.FRONT;
+		this.setCamera(meshData.center, meshData.radius, versor, 2.5);
+	}
+
+	setCamera(center, radius, versor, distanceMultiplier = 2.5) {
 		this.controls.target.copy(center);
-		const distance = objectSize * 1.8;
-		const offset = state.lastCameraVersor.clone().multiplyScalar(distance);
+		const distance = radius * distanceMultiplier;
+		const offset = versor.clone().normalize().multiplyScalar(distance);
 		this.camera.position.copy(center).add(offset);
-		this.controls.update();
-	}
-
-	resetCamera(center, radius) {
-		this.camera.position.set(center.x, center.y, center.z + radius * 2.5);
-		this.controls.target.set(center.x, center.y, center.z);
 		this.controls.update();
 	}
 }
