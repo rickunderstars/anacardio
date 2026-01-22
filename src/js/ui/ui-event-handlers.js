@@ -55,6 +55,34 @@ export function setupEventHandlers(dependencies) {
 		sceneManager.render();
 	};
 
+	document.getElementById("waves-number-slider").oninput = function () {
+		const val = parseFloat(this.value);
+		state.wavesNumber = val;
+		if (
+			state.activeMesh &&
+			state.activeMesh.mesh &&
+			state.activeMesh.mesh.material.uniforms &&
+			state.activeMesh.mesh.material.uniforms.uNumWaves
+		) {
+			state.activeMesh.mesh.material.uniforms.uNumWaves.value = val;
+		}
+		sceneManager.render();
+	};
+
+	document.getElementById("waves-speed-slider").oninput = function () {
+		const val = parseFloat(this.value) / 100;
+		state.wavesSpeed = val;
+		if (
+			state.activeMesh &&
+			state.activeMesh.mesh &&
+			state.activeMesh.mesh.material.uniforms &&
+			state.activeMesh.mesh.material.uniforms.uTimeSpeed
+		) {
+			state.activeMesh.mesh.material.uniforms.uTimeSpeed.value = val;
+		}
+		sceneManager.render();
+	};
+
 	window.addEventListener("resize", () => {
 		sceneManager.onWindowResize();
 	});
@@ -62,6 +90,8 @@ export function setupEventHandlers(dependencies) {
 	window.addEventListener("mousemove", (e) => {
 		onMouseMove(e, sceneManager, mouse, state);
 	});
+
+	updateWaveSlidersVisibility(state);
 
 	document
 		.querySelector('[data-js="qualities-list"]')
@@ -72,6 +102,7 @@ export function setupEventHandlers(dependencies) {
 					'[data-js="modes-list"] input[name="mode"]:checked',
 				).value;
 				state.mode = selectedMode;
+				updateWaveSlidersVisibility(state);
 				const { min, max } = updateActiveMesh({ shaders, state });
 				updateMinMaxUI(min, max);
 				sceneManager.render();
@@ -179,6 +210,7 @@ export function setupEventHandlers(dependencies) {
 				const newMode = e.target.value;
 				if (state.mode != newMode) {
 					state.mode = newMode;
+					updateWaveSlidersVisibility(state);
 					const { min, max } = updateActiveMesh({ shaders, state });
 					updateMinMaxUI(min, max);
 
@@ -203,6 +235,7 @@ export function setupEventHandlers(dependencies) {
 
 			if (e.target.checked) {
 				state.mode = VisMode.MIXED_MODE;
+				updateWaveSlidersVisibility(state);
 				const { min, max } = updateActiveMesh({ shaders, state });
 				updateMinMaxUI(min, max);
 
@@ -214,6 +247,7 @@ export function setupEventHandlers(dependencies) {
 					'[data-js="modes-list"] input[name="mode"]:checked',
 				).value;
 				state.mode = selectedMode;
+				updateWaveSlidersVisibility(state);
 				const { min, max } = updateActiveMesh({ shaders, state });
 				updateMinMaxUI(min, max);
 
@@ -254,5 +288,25 @@ function onMouseMove(e, sceneManager, mouse, state) {
 		setGaugeLine(activeValue, state);
 	} else {
 		document.getElementById("sampler-value").innerHTML = "---";
+	}
+}
+
+function updateWaveSlidersVisibility(state) {
+	const wavesNumberContainer = document.getElementById(
+		"waves-number-container",
+	);
+	const wavesSpeedContainer = document.getElementById(
+		"waves-speed-container",
+	);
+
+	if (
+		state.mode === VisMode.ANIMATED ||
+		state.mode === VisMode.MIXED_MODE
+	) {
+		wavesNumberContainer.classList.remove("hidden");
+		wavesSpeedContainer.classList.remove("hidden");
+	} else {
+		wavesNumberContainer.classList.add("hidden");
+		wavesSpeedContainer.classList.add("hidden");
 	}
 }
