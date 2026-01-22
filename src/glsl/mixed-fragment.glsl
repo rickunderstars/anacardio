@@ -1,8 +1,7 @@
 uniform float uTime;
 uniform float uAmbientLightIntensity;
-
-const float TimeSpeed = 0.05;
-const int NumWaves = 10;
+uniform float uTimeSpeed;
+uniform int uNumWaves;
 
 varying float lt;
 varying float bip;
@@ -17,8 +16,7 @@ vec3 gradientWave(float t, vec3 colorStart, vec3 colorEnd) {
 }
 
 void main() {
-
-	float wave = (uTime * TimeSpeed - lt) * float(NumWaves);
+	float wave = (uTime * uTimeSpeed - lt) * float(uNumWaves);
 	float phase = fract(wave);
 
 	vec3 light1Dir = normalize(vec3(-1.0, 1.0, 1.0));
