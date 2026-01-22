@@ -8,6 +8,7 @@ import { addTestMesh } from "@js/io/test-loader.js";
 import { VisMode } from "@js/core/state-manager.js";
 import { formatNumber } from "@js/utils/math-utils.js";
 import { processFile } from "@js/io/file-loader.js";
+import { CameraVersors } from "@js/engine/scene-manager.js";
 
 export function updateMinMaxUI(min, max) {
 	document.getElementById("min-value").innerHTML =
@@ -19,8 +20,22 @@ export function updateMinMaxUI(min, max) {
 export function setupEventHandlers(dependencies) {
 	const { sceneManager, mouse, shaders, state } = dependencies;
 
-	document.getElementById("camera-reset").addEventListener("click", () => {
-		cameraReset(sceneManager, state);
+	const cameraViews = {
+		"camera-front": CameraVersors.FRONT,
+		"camera-back": CameraVersors.BACK,
+		"camera-top": CameraVersors.TOP,
+		"camera-bottom": CameraVersors.BOTTOM,
+		"camera-left": CameraVersors.LEFT,
+		"camera-right": CameraVersors.RIGHT,
+	};
+
+	Object.entries(cameraViews).forEach(([id, versor]) => {
+		document.getElementById(id).addEventListener("click", () => {
+			if (state.activeMesh) {
+				const mesh = state.activeMesh;
+				sceneManager.setCamera(mesh.center, mesh.radius, versor, 2.5);
+			}
+		});
 	});
 
 	document.addEventListener("keydown", (k) => {
@@ -37,6 +52,27 @@ export function setupEventHandlers(dependencies) {
 				sceneManager.render();
 			});
 			console.log("shaders loaded!!");
+		}
+	});
+
+	document.addEventListener("keydown", (k) => {
+		if (!state.activeMesh) return;
+		const mesh = state.activeMesh;
+		const key = k.key.toLowerCase();
+		const shift = k.shiftKey;
+
+		let versor = null;
+
+		if (key === "x") {
+			versor = shift ? CameraVersors.LEFT : CameraVersors.RIGHT;
+		} else if (key === "y") {
+			versor = shift ? CameraVersors.BOTTOM : CameraVersors.TOP;
+		} else if (key === "z") {
+			versor = shift ? CameraVersors.BACK : CameraVersors.FRONT;
+		}
+
+		if (versor) {
+			sceneManager.setCamera(mesh.center, mesh.radius, versor, 2.5);
 		}
 	});
 
@@ -127,19 +163,10 @@ export function setupEventHandlers(dependencies) {
 					state.meshes[i].mesh.visible = false;
 				} else {
 					state.meshes[i].mesh.visible = true;
-					activeMesh = state.meshes[i].mesh;
 				}
 			}
 
-			const box = new THREE.Box3().setFromObject(activeMesh);
-			const center = new THREE.Vector3();
-			box.getCenter(center);
-
-			const size = new THREE.Vector3();
-			box.getSize(size);
-			const maxDim = Math.max(size.x, size.y, size.z);
-
-			sceneManager.restoreCameraVersor(center, maxDim, state.activeMesh);
+			sceneManager.restoreCameraVersor(state.activeMesh);
 		});
 
 	const meshDropdown = document.getElementById("add-mesh-dropdown");
@@ -268,7 +295,7 @@ function cameraReset(sceneManager, state) {
 	if (!state.activeMesh) return;
 	const center = state.activeMesh.center;
 	const radius = state.activeMesh.radius;
-	sceneManager.resetCamera(center, radius);
+	sceneManager.setCamera(center, radius, new THREE.Vector3(0, 0, 1), 2.5);
 }
 
 function onMouseMove(e, sceneManager, mouse, state) {

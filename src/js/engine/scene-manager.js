@@ -2,6 +2,15 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { VisMode } from "@js/core/state-manager.js";
 
+export const CameraVersors = Object.freeze({
+	FRONT: new THREE.Vector3(0, 0, 1),
+	BACK: new THREE.Vector3(0, 0, -1),
+	TOP: new THREE.Vector3(0, 1, 0),
+	BOTTOM: new THREE.Vector3(0, -1, 0),
+	LEFT: new THREE.Vector3(-1, 0, 0),
+	RIGHT: new THREE.Vector3(1, 0, 0),
+});
+
 export class SceneManager {
 	constructor(viewport) {
 		this.viewport = viewport;
@@ -110,23 +119,16 @@ export class SceneManager {
 		meshData.cameraVersor = versor;
 	}
 
-	restoreCameraVersor(center, objectSize, meshData) {
-		this.controls.target.copy(center);
-		const distance = objectSize * 1.8;
-
-		let versor = new THREE.Vector3(0, 0, 1);
-		if (meshData && meshData.cameraVersor) {
-			versor = meshData.cameraVersor;
-		}
-
-		const offset = versor.clone().multiplyScalar(distance);
-		this.camera.position.copy(center).add(offset);
-		this.controls.update();
+	restoreCameraVersor(meshData) {
+		const versor = meshData.cameraVersor ?? CameraVersors.FRONT;
+		this.setCamera(meshData.center, meshData.radius, versor, 2.5);
 	}
 
-	resetCamera(center, radius) {
-		this.camera.position.set(center.x, center.y, center.z + radius * 2.5);
-		this.controls.target.set(center.x, center.y, center.z);
+	setCamera(center, radius, versor, distanceMultiplier = 2.5) {
+		this.controls.target.copy(center);
+		const distance = radius * distanceMultiplier;
+		const offset = versor.clone().normalize().multiplyScalar(distance);
+		this.camera.position.copy(center).add(offset);
 		this.controls.update();
 	}
 }
