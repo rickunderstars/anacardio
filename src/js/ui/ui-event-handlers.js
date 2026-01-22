@@ -127,19 +127,10 @@ export function setupEventHandlers(dependencies) {
 					state.meshes[i].mesh.visible = false;
 				} else {
 					state.meshes[i].mesh.visible = true;
-					activeMesh = state.meshes[i].mesh;
 				}
 			}
 
-			const box = new THREE.Box3().setFromObject(activeMesh);
-			const center = new THREE.Vector3();
-			box.getCenter(center);
-
-			const size = new THREE.Vector3();
-			box.getSize(size);
-			const maxDim = Math.max(size.x, size.y, size.z);
-
-			sceneManager.restoreCameraVersor(center, maxDim, state.activeMesh);
+			sceneManager.restoreCameraVersor(state.activeMesh);
 		});
 
 	const meshDropdown = document.getElementById("add-mesh-dropdown");
