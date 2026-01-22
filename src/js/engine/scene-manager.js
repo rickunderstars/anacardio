@@ -124,9 +124,11 @@ export class SceneManager {
 		this.controls.update();
 	}
 
-	resetCamera(center, radius) {
-		this.camera.position.set(center.x, center.y, center.z + radius * 2.5);
-		this.controls.target.set(center.x, center.y, center.z);
+	setCamera(center, radius, versor, distanceMultiplier = 2.5) {
+		this.controls.target.copy(center);
+		const distance = radius * distanceMultiplier;
+		const offset = versor.clone().normalize().multiplyScalar(distance);
+		this.camera.position.copy(center).add(offset);
 		this.controls.update();
 	}
 }

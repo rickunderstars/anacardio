@@ -268,7 +268,7 @@ function cameraReset(sceneManager, state) {
 	if (!state.activeMesh) return;
 	const center = state.activeMesh.center;
 	const radius = state.activeMesh.radius;
-	sceneManager.resetCamera(center, radius);
+	sceneManager.setCamera(center, radius, new THREE.Vector3(0, 0, 1), 2.5);
 }
 
 function onMouseMove(e, sceneManager, mouse, state) {

@@ -99,7 +99,7 @@ export async function addMesh(dependencies) {
 		sceneManager.saveCameraVersor(state.activeMesh);
 	}
 
-	sceneManager.resetCamera(center, radius);
+	sceneManager.setCamera(center, radius, new THREE.Vector3(0, 0, 1), 2.5);
 
 	const meshData = {
 		mesh: heart,
