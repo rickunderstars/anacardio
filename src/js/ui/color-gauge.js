@@ -50,14 +50,12 @@ export function colorizeGradient(state, time = 0) {
 			ctx.fillRect(0, y, width, 1);
 		}
 	} else if (mode === VisMode.ANIMATED) {
-		const TimeSpeed = 0.05;
-		const NumWaves = 10.0;
 		const startColor = [0.2 * 255, 0.2 * 255, 0.2 * 255];
 		const endColor = [0.3 * 255, 1.0 * 255, 1.0 * 255];
 
 		for (let y = 0; y < height; y++) {
 			const val = 1 - y / height;
-			const wave = (time * TimeSpeed - val) * NumWaves;
+			const wave = (time * state.wavesSpeed - val) * state.wavesNumber;
 			const phase = wave - Math.floor(wave);
 
 			const [r, g, b] = gradientWave(phase, startColor, endColor, 3);
@@ -65,15 +63,13 @@ export function colorizeGradient(state, time = 0) {
 			ctx.fillRect(0, y, width, 1);
 		}
 	} else if (mode === VisMode.MIXED_MODE) {
-		const TimeSpeed = 0.05;
-		const NumWaves = 10.0;
 		const startColor = [0.2 * 255, 0.2 * 255, 0.2 * 255];
 		const blue = [0.3 * 255, 0.3 * 255, 1.0 * 255];
 		const green = [0.0 * 255, 1.0 * 255, 0.0 * 255];
 
 		for (let y = 0; y < height; y++) {
 			const val = 1 - y / height;
-			const wave = (time * TimeSpeed - val) * NumWaves;
+			const wave = (time * state.wavesSpeed - val) * state.wavesNumber;
 			const phase = wave - Math.floor(wave);
 
 			const colorLeft = gradientWave(phase, startColor, blue, 2);
