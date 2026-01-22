@@ -101,18 +101,25 @@ export class SceneManager {
 		}
 	}
 
-	saveCameraVersor(state) {
+	saveCameraVersor(meshData) {
+		if (!meshData) return;
 		const versor = new THREE.Vector3();
 		versor
 			.subVectors(this.camera.position, this.controls.target)
 			.normalize();
-		state.lastCameraVersor = versor;
+		meshData.cameraVersor = versor;
 	}
 
-	restoreCameraVersor(center, objectSize, state) {
+	restoreCameraVersor(center, objectSize, meshData) {
 		this.controls.target.copy(center);
 		const distance = objectSize * 1.8;
-		const offset = state.lastCameraVersor.clone().multiplyScalar(distance);
+
+		let versor = new THREE.Vector3(0, 0, 1);
+		if (meshData && meshData.cameraVersor) {
+			versor = meshData.cameraVersor;
+		}
+
+		const offset = versor.clone().multiplyScalar(distance);
 		this.camera.position.copy(center).add(offset);
 		this.controls.update();
 	}

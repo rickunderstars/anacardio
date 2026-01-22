@@ -112,7 +112,9 @@ export function setupEventHandlers(dependencies) {
 	document
 		.getElementById("loaded-meshes-dropdown")
 		.addEventListener("change", function (e) {
-			sceneManager.saveCameraVersor(state);
+			if (state.activeMesh) {
+				sceneManager.saveCameraVersor(state.activeMesh);
+			}
 
 			state.activeMeshIndex = parseInt(e.target.value);
 			const { min, max } = updateActiveMesh({ shaders, state });
@@ -137,7 +139,7 @@ export function setupEventHandlers(dependencies) {
 			box.getSize(size);
 			const maxDim = Math.max(size.x, size.y, size.z);
 
-			sceneManager.restoreCameraVersor(center, maxDim, state);
+			sceneManager.restoreCameraVersor(center, maxDim, state.activeMesh);
 		});
 
 	const meshDropdown = document.getElementById("add-mesh-dropdown");
