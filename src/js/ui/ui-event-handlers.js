@@ -8,6 +8,7 @@ import { addTestMesh } from "@js/io/test-loader.js";
 import { VisMode } from "@js/core/state-manager.js";
 import { formatNumber } from "@js/utils/math-utils.js";
 import { processFile } from "@js/io/file-loader.js";
+import { CameraVersors } from "@js/engine/scene-manager.js";
 
 export function updateMinMaxUI(min, max) {
 	document.getElementById("min-value").innerHTML =
@@ -37,6 +38,27 @@ export function setupEventHandlers(dependencies) {
 				sceneManager.render();
 			});
 			console.log("shaders loaded!!");
+		}
+	});
+
+	document.addEventListener("keydown", (k) => {
+		if (!state.activeMesh) return;
+		const mesh = state.activeMesh;
+		const key = k.key.toLowerCase();
+		const shift = k.shiftKey;
+
+		let versor = null;
+
+		if (key === "x") {
+			versor = shift ? CameraVersors.LEFT : CameraVersors.RIGHT;
+		} else if (key === "y") {
+			versor = shift ? CameraVersors.BOTTOM : CameraVersors.TOP;
+		} else if (key === "z") {
+			versor = shift ? CameraVersors.BACK : CameraVersors.FRONT;
+		}
+
+		if (versor) {
+			sceneManager.setCamera(mesh.center, mesh.radius, versor, 2.5);
 		}
 	});
 
