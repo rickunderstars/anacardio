@@ -10,6 +10,8 @@ export const AppEvents = Object.freeze({
 	QUALITY_CHANGED: "quality-changed",
 	MODE_CHANGED: "mode-changed",
 	LIGHT_INTENSITY_CHANGED: "light-intensity-changed",
+	WAVES_NUMBER_CHANGED: "waves-number-changed",
+	WAVES_SPEED_CHANGED: "waves-speed-changed",
 });
 
 export class StateManager extends EventTarget {
@@ -20,6 +22,8 @@ export class StateManager extends EventTarget {
 	#activeQuality = "unipolar";
 	#mode = VisMode.COLOR_RAMP;
 	#ambientLightIntensity = 0.6;
+	#wavesNumber = 10;
+	#wavesSpeed = 0.05;
 
 	get activeMesh() {
 		return this.meshes[this.#activeMeshIndex] ?? null;
@@ -64,6 +68,26 @@ export class StateManager extends EventTarget {
 		if (this.#ambientLightIntensity === clamped) return;
 		this.#ambientLightIntensity = clamped;
 		this.dispatchEvent(new CustomEvent(AppEvents.LIGHT_INTENSITY_CHANGED));
+	}
+
+	get wavesNumber() {
+		return this.#wavesNumber;
+	}
+
+	set wavesNumber(waves) {
+		if (this.#wavesNumber == waves) return;
+		this.#wavesNumber = waves;
+		this.dispatchEvent(new CustomEvent(AppEvents.WAVES_NUMBER_CHANGED));
+	}
+
+	get wavesSpeed() {
+		return this.#wavesSpeed;
+	}
+
+	set wavesSpeed(speed) {
+		if (this.#wavesSpeed == speed) return;
+		this.#wavesSpeed = speed;
+		this.dispatchEvent(new CustomEvent(AppEvents.WAVES_SPEED_CHANGED));
 	}
 
 	addMesh(meshData) {
