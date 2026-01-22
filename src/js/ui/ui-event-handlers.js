@@ -20,8 +20,22 @@ export function updateMinMaxUI(min, max) {
 export function setupEventHandlers(dependencies) {
 	const { sceneManager, mouse, shaders, state } = dependencies;
 
-	document.getElementById("camera-reset").addEventListener("click", () => {
-		cameraReset(sceneManager, state);
+	const cameraViews = {
+		"camera-front": CameraVersors.FRONT,
+		"camera-back": CameraVersors.BACK,
+		"camera-top": CameraVersors.TOP,
+		"camera-bottom": CameraVersors.BOTTOM,
+		"camera-left": CameraVersors.LEFT,
+		"camera-right": CameraVersors.RIGHT,
+	};
+
+	Object.entries(cameraViews).forEach(([id, versor]) => {
+		document.getElementById(id).addEventListener("click", () => {
+			if (state.activeMesh) {
+				const mesh = state.activeMesh;
+				sceneManager.setCamera(mesh.center, mesh.radius, versor, 2.5);
+			}
+		});
 	});
 
 	document.addEventListener("keydown", (k) => {
