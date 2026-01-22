@@ -21,6 +21,7 @@ export class SceneManager {
 		this.fps = 120;
 		this.interval = 1000 / this.fps;
 		this.lastTime = 0;
+		this.onRender = null;
 	}
 
 	#createRenderer() {
@@ -39,6 +40,9 @@ export class SceneManager {
 	}
 
 	render() {
+		if (this.onRender) {
+			this.onRender();
+		}
 		this.renderer.render(this.scene, this.camera);
 	}
 

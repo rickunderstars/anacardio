@@ -37,7 +37,7 @@ void main() {
 
 	vec3 burns = vec3(1.0, 0.0, 1.0);
 	vec3 nullColor = vec3(0.45, 0.45, 0.45);
-	vec3 waveColor = mix(vec3(0.0, 0.0, 1.0), vec3(0.0, 1.0, 0.0), bip);
+	vec3 waveColor = mix(vec3(0.3, 0.3, 1.0), vec3(0.0, 1.0, 0.0), bip);
 	vec3 color = gradientWave(phase, vec3(0.2, 0.2, 0.2), waveColor);
 
 	vec3 ambient = color * uAmbientLightIntensity;

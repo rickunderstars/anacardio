@@ -47,4 +47,8 @@ setupEventHandlers({
 	state,
 });
 
-colorizeGradient();
+sceneManager.onRender = () => {
+	colorizeGradient(state, sceneManager.getElapsedTime());
+};
+
+colorizeGradient(state);
