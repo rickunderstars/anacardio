@@ -77,7 +77,7 @@ export function setupEventHandlers(dependencies) {
 	});
 
 	document.getElementById("light-slider").oninput = function () {
-		const intensity = (100 + 20 - this.value) / 100;
+		const intensity = (100 - this.value) / 100;
 		state.ambientLightIntensity = intensity;
 		if (
 			state.activeMesh &&
