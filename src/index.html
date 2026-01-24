@@ -105,7 +105,7 @@
 										class="flex-grow flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 									>
 										<div
-											class="px-4 text-center text-md font-medium w-full"
+											class="px-4 text-center text-xl font-medium w-full"
 										>
 											Color Ramp
 										</div>
@@ -125,7 +125,7 @@
 										class="flex-grow flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 									>
 										<div
-											class="px-4 text-center text-md font-medium w-full"
+											class="px-4 text-center text-xl font-medium w-full"
 										>
 											Dynamic Animation
 										</div>
@@ -145,7 +145,7 @@
 										class="flex-grow flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 									>
 										<div
-											class="px-4 text-center text-md font-medium w-full"
+											class="px-4 text-center text-xl font-medium w-full"
 										>
 											Tangent Field
 										</div>
@@ -285,16 +285,7 @@
 								</label>
 							</div>
 						</div>
-						<div
-							class="block w-full px-8 py-2 bg-slate-700 text-left rounded-md font-medium text-white flex flex-row gap-4"
-						>
-							<div class="text-center w-1/2">Pointed Value:</div>
-							<div
-								id="sampler-value"
-								class="text-left w-1/2 pl-8"
-							></div>
-						</div>
-						<label
+												<label
 							class="flex items-center justify-center cursor-pointer bg-slate-700 p-4 rounded-md hover:bg-slate-600 transition-colors border border-slate-600 w-full"
 						>
 							<input
@@ -305,10 +296,9 @@
 							<div
 								class="text-md font-medium text-slate-200 peer-checked:text-blue-400"
 							>
-								Mixed Mode
+								Mixed Mode (Dynamic LAT + Bipolar wave gradient + ExtEML)
 							</div>
 						</label>
-
 						<div class="flex flex-col">
 							<div class="flex flex-col gap-2">
 								<div class="text-md text-slate-500 font-bold text-center pt-2 border-t border-slate-700">
@@ -327,7 +317,6 @@
 									class="h-1/6 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
 								/>
 							</div>
-
 							<div id="waves-number-container" class="flex flex-col gap-2">
 								<div class="text-md text-slate-500 font-bold text-center pt-2 border-t border-slate-700">
 									<div class="flex w-full px-1">
@@ -364,6 +353,15 @@
 						/>
 					</div>
 				</div>
+						<div
+							class="block w-2/3 px-8 py-2 bg-slate-700 rounded-md font-medium text-2xl text-white flex flex-row justify-center items-center gap-2 mx-auto"
+						>
+							<div class="text-right w-1/2">Pointed Value:</div>
+							<div
+								id="sampler-value"
+								class="text-left w-1/2 pl-8"
+							></div>
+						</div>
 
 						<select
 							id="loaded-meshes-dropdown"
