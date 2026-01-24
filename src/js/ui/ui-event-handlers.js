@@ -127,7 +127,7 @@ export function setupEventHandlers(dependencies) {
 		onMouseMove(e, sceneManager, mouse, state);
 	});
 
-	updateWaveSlidersVisibility(state);
+	updateUIForMode(state);
 
 	document
 		.querySelector('[data-js="qualities-list"]')
@@ -138,7 +138,7 @@ export function setupEventHandlers(dependencies) {
 					'[data-js="modes-list"] input[name="mode"]:checked',
 				).value;
 				state.mode = selectedMode;
-				updateWaveSlidersVisibility(state);
+				updateUIForMode(state);
 				const { min, max } = updateActiveMesh({ shaders, state });
 				updateMinMaxUI(min, max);
 				sceneManager.render();
@@ -239,7 +239,7 @@ export function setupEventHandlers(dependencies) {
 				const newMode = e.target.value;
 				if (state.mode != newMode) {
 					state.mode = newMode;
-					updateWaveSlidersVisibility(state);
+					updateUIForMode(state);
 					const { min, max } = updateActiveMesh({ shaders, state });
 					updateMinMaxUI(min, max);
 
@@ -264,7 +264,7 @@ export function setupEventHandlers(dependencies) {
 
 			if (e.target.checked) {
 				state.mode = VisMode.MIXED_MODE;
-				updateWaveSlidersVisibility(state);
+				updateUIForMode(state);
 				const { min, max } = updateActiveMesh({ shaders, state });
 				updateMinMaxUI(min, max);
 
@@ -276,7 +276,7 @@ export function setupEventHandlers(dependencies) {
 					'[data-js="modes-list"] input[name="mode"]:checked',
 				).value;
 				state.mode = selectedMode;
-				updateWaveSlidersVisibility(state);
+				updateUIForMode(state);
 				const { min, max } = updateActiveMesh({ shaders, state });
 				updateMinMaxUI(min, max);
 
@@ -320,13 +320,14 @@ function onMouseMove(e, sceneManager, mouse, state) {
 	}
 }
 
-function updateWaveSlidersVisibility(state) {
+function updateUIForMode(state) {
 	const wavesNumberContainer = document.getElementById(
 		"waves-number-container",
 	);
 	const wavesSpeedContainer = document.getElementById(
 		"waves-speed-container",
 	);
+	const hBipolar = document.getElementById("h-bipolar");
 
 	if (
 		state.mode === VisMode.ANIMATED ||
@@ -337,5 +338,11 @@ function updateWaveSlidersVisibility(state) {
 	} else {
 		wavesNumberContainer.classList.add("hidden");
 		wavesSpeedContainer.classList.add("hidden");
+	}
+
+	if (state.mode === VisMode.MIXED_MODE) {
+		hBipolar.classList.remove("hidden");
+	} else {
+		hBipolar.classList.add("hidden");
 	}
 }
