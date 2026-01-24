@@ -6,9 +6,9 @@
 		<title>heart-vis</title>
 	</head>
 
-	<body class="bg-slate-900 text-slate-100 antialiased font-sans">
+	<body class="bg-slate-900 text-white antialiased font-sans font-bold italic">
 		<div class="flex h-screen w-full overflow-auto">
-			<div id="viewport" class="bg-black relative"></div>
+			<div id="viewport" class="relative shrink-0 w-[100vh] h-[100vh] border-r-[0.2em] border-[whitesmoke] bg-[#080808] shadow-[0.3vh_0.3vh_1vh_rgba(0,0,0,0.3)]"></div>
 
 			<div
 				class="flex-grow w-2/5 flex flex-col gap-6 p-4 bg-slate-800 overflow-y-auto"
@@ -105,7 +105,7 @@
 										class="flex-grow flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 									>
 										<div
-											class="px-4 text-center text-md font-medium w-full"
+											class="px-4 text-center text-xl font-medium w-full"
 										>
 											Color Ramp
 										</div>
@@ -125,7 +125,7 @@
 										class="flex-grow flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 									>
 										<div
-											class="px-4 text-center text-md font-medium w-full"
+											class="px-4 text-center text-xl font-medium w-full"
 										>
 											Dynamic Animation
 										</div>
@@ -145,7 +145,7 @@
 										class="flex-grow flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 									>
 										<div
-											class="px-4 text-center text-md font-medium w-full"
+											class="px-4 text-center text-xl font-medium w-full"
 										>
 											Tangent Field
 										</div>
@@ -285,16 +285,7 @@
 								</label>
 							</div>
 						</div>
-						<div
-							class="block w-full px-8 py-2 bg-slate-700 text-left rounded-md font-medium text-white flex flex-row gap-4"
-						>
-							<div class="text-center w-1/2">Pointed Value:</div>
-							<div
-								id="sampler-value"
-								class="text-left w-1/2 pl-8"
-							></div>
-						</div>
-						<label
+												<label
 							class="flex items-center justify-center cursor-pointer bg-slate-700 p-4 rounded-md hover:bg-slate-600 transition-colors border border-slate-600 w-full"
 						>
 							<input
@@ -305,13 +296,76 @@
 							<div
 								class="text-md font-medium text-slate-200 peer-checked:text-blue-400"
 							>
-								Mixed Mode
+								Mixed Mode (Dynamic LAT + Bipolar wave gradient + ExtEML)
 							</div>
 						</label>
+						<div class="flex flex-col">
+							<div class="flex flex-col gap-2">
+								<div class="text-md text-slate-300 font-bold text-center pt-2 border-t border-slate-700">
+									<div class="flex w-full px-1">
+										<span class="w-1/3 text-right">[ - ]</span>
+										<span class="w-1/3 text-center">Shading</span>
+										<span class="w-1/3 text-left">[ + ]</span>
+									</div>
+								</div>
+								<input
+									type="range"
+									min="1"
+									max="100"
+									value="50"
+									id="light-slider"
+									class="h-1/6 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
+								/>
+							</div>
+							<div id="waves-number-container" class="flex flex-col gap-2">
+								<div class="text-md text-slate-300 font-bold text-center pt-2 border-t border-slate-700">
+									<div class="flex w-full px-1">
+										<span class="w-1/3 text-right">[ - ]</span>
+										<span class="w-1/3 text-center">Waves Number</span>
+										<span class="w-1/3 text-left">[ + ]</span>
+									</div>
+								</div>
+								<input
+									type="range"
+									min="1"
+									max="30"
+									value="10"
+									id="waves-number-slider"
+									class="w-full h-1/6 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
+								/>
+							</div>
+
+					<div id="waves-speed-container" class="flex flex-col gap-2 border-slate-700 border-y">
+						<div class="text-md text-slate-300 font-bold text-center pt-2">
+							<div class="flex w-full px-1">
+										<span class="w-1/3 text-right">[ - ]</span>
+										<span class="w-1/3 text-center">Waves Speed</span>
+										<span class="w-1/3 text-left">[ + ]</span>
+									</div>
+						</div>
+						<input
+							type="range"
+							min="1"
+							max="30"
+							value="5"
+							id="waves-speed-slider"
+							class="w-full h-1/6 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
+						/>
+					</div>
+				</div>
+						<div
+							class="block w-2/3 px-8 py-2 bg-slate-700 rounded-md font-medium text-2xl text-white flex flex-row justify-center items-center gap-2 mx-auto my-auto"
+						>
+							<div class="text-right w-1/2">Pointed Value:</div>
+							<div
+								id="sampler-value"
+								class="text-left w-1/2 pl-8"
+							></div>
+						</div>
 
 						<select
 							id="loaded-meshes-dropdown"
-							class="hidden block w-full p-2 bg-slate-700 hover:bg-slate-600 text-center rounded-md cursor-pointer transition-colors font-medium text-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 mt-auto"
+							class="hidden block w-full p-2 bg-slate-700 hover:bg-slate-600 text-center rounded-md cursor-pointer transition-colors font-medium text-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500"
 						></select>
 					</div>
 
@@ -319,6 +373,12 @@
 						id="color-gauge"
 						class="w-1/7 flex flex-col items-center"
 					>
+						<div
+							id="h-bipolar"
+							class="text-sm text-center font-bold bg-black rounded-md w-full mb-1 hidden"
+						>
+							Bipolar<br />min <-> max
+						</div>
 						<div
 							id="max-value"
 							class="text-sm text-center font-bold bg-black rounded-md w-full mb-1"
@@ -343,50 +403,6 @@
 						>
 							min<br />---
 						</div>
-					</div>
-				</div>
-
-				<div class="flex flex-col gap-4 pt-4 border-t border-slate-700">
-					<div class="flex flex-col gap-2">
-						<div class="text-sm text-slate-500 font-bold">
-							Lighting Intensity
-						</div>
-						<input
-							type="range"
-							min="20"
-							max="100"
-							value="60"
-							id="light-slider"
-							class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
-						/>
-					</div>
-
-					<div id="waves-number-container" class="flex flex-col gap-2">
-						<div class="text-sm text-slate-500 font-bold">
-							Waves Number
-						</div>
-						<input
-							type="range"
-							min="1"
-							max="50"
-							value="10"
-							id="waves-number-slider"
-							class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
-						/>
-					</div>
-
-					<div id="waves-speed-container" class="flex flex-col gap-2">
-						<div class="text-sm text-slate-500 font-bold">
-							Waves Speed
-						</div>
-						<input
-							type="range"
-							min="1"
-							max="100"
-							value="5"
-							id="waves-speed-slider"
-							class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
-						/>
 					</div>
 				</div>
 			</div>

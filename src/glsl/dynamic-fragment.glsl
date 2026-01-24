@@ -33,7 +33,7 @@ void main() {
 
 	vec3 lambert = light1Diffuse * vec3(1.3) + light2Diffuse * vec3(1.3) +
 				   light3Diffuse * vec3(0.7) + light4Diffuse * vec3(0.7);
-	lambert = lambert / vec3(4.0);
+	lambert = lambert / vec3(3.0);
 
 	vec3 nullColor = uNullColor;
 	vec3 color = gradientWave(phase, uWaveStartColor, uWaveEndColor);
