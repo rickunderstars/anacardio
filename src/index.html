@@ -309,6 +309,62 @@
 							</div>
 						</label>
 
+						<div class="flex flex-col">
+							<div class="flex flex-col gap-2">
+								<div class="text-md text-slate-500 font-bold text-center pt-2 border-t border-slate-700">
+									<div class="flex w-full px-1">
+										<span class="w-1/3 text-right">[ - ]</span>
+										<span class="w-1/3 text-center">Shading</span>
+										<span class="w-1/3 text-left">[ + ]</span>
+									</div>
+								</div>
+								<input
+									type="range"
+									min="20"
+									max="100"
+									value="60"
+									id="light-slider"
+									class="h-1/6 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
+								/>
+							</div>
+
+							<div id="waves-number-container" class="flex flex-col gap-2">
+								<div class="text-md text-slate-500 font-bold text-center pt-2 border-t border-slate-700">
+									<div class="flex w-full px-1">
+										<span class="w-1/3 text-right">[ - ]</span>
+										<span class="w-1/3 text-center">Waves Number</span>
+										<span class="w-1/3 text-left">[ + ]</span>
+									</div>
+								</div>
+								<input
+									type="range"
+									min="1"
+									max="30"
+									value="10"
+									id="waves-number-slider"
+									class="w-full h-1/6 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
+								/>
+							</div>
+
+					<div id="waves-speed-container" class="flex flex-col gap-2">
+						<div class="text-md text-slate-500 font-bold text-center pt-2 border-t border-slate-700">
+							<div class="flex w-full px-1">
+										<span class="w-1/3 text-right">[ - ]</span>
+										<span class="w-1/3 text-center">Waves Speed</span>
+										<span class="w-1/3 text-left">[ + ]</span>
+									</div>
+						</div>
+						<input
+							type="range"
+							min="1"
+							max="30"
+							value="5"
+							id="waves-speed-slider"
+							class="w-full h-1/6 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
+						/>
+					</div>
+				</div>
+
 						<select
 							id="loaded-meshes-dropdown"
 							class="hidden block w-full p-2 bg-slate-700 hover:bg-slate-600 text-center rounded-md cursor-pointer transition-colors font-medium text-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 mt-auto"
@@ -343,50 +399,6 @@
 						>
 							min<br />---
 						</div>
-					</div>
-				</div>
-
-				<div class="flex flex-col gap-4 pt-4 border-t border-slate-700">
-					<div class="flex flex-col gap-2">
-						<div class="text-sm text-slate-500 font-bold">
-							Lighting Intensity
-						</div>
-						<input
-							type="range"
-							min="20"
-							max="100"
-							value="60"
-							id="light-slider"
-							class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
-						/>
-					</div>
-
-					<div id="waves-number-container" class="flex flex-col gap-2">
-						<div class="text-sm text-slate-500 font-bold">
-							Waves Number
-						</div>
-						<input
-							type="range"
-							min="1"
-							max="50"
-							value="10"
-							id="waves-number-slider"
-							class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
-						/>
-					</div>
-
-					<div id="waves-speed-container" class="flex flex-col gap-2">
-						<div class="text-sm text-slate-500 font-bold">
-							Waves Speed
-						</div>
-						<input
-							type="range"
-							min="1"
-							max="100"
-							value="5"
-							id="waves-speed-slider"
-							class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
-						/>
 					</div>
 				</div>
 			</div>
