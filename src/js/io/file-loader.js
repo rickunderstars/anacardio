@@ -53,7 +53,6 @@ export function processFile(dependencies) {
 export async function addMesh(dependencies) {
 	const { mesh, filename, shaders, sceneManager, state } = dependencies;
 
-	const cpp = await HeartModule();
 	const vertices = mesh.Float32ArrayOfVertices();
 	const triangles = mesh.Uint32ArrayOfTriangles();
 
@@ -66,7 +65,7 @@ export async function addMesh(dependencies) {
 	const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
 
 	FIELD_KEYS.forEach((key) => {
-		const fieldSegments = mesh.Float32ArrayOfTangentFieldSegments(key, 2.7);
+		const fieldSegments = mesh.Float32ArrayOfTangentFieldSegments(key, 2.8);
 
 		if (fieldSegments && fieldSegments.length > 0) {
 			const geometry = new THREE.BufferGeometry();
