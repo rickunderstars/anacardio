@@ -94,6 +94,31 @@ export function colorizeGradient(state, time = 0) {
 	}
 }
 
+export function colorizePolar() {
+	const canvas = document.getElementById("polar-canvas");
+	if (!canvas) return;
+
+	const ctx = canvas.getContext("2d");
+	const rect = canvas.getBoundingClientRect();
+	if (canvas.width !== rect.width || canvas.height !== rect.height) {
+		canvas.width = rect.width;
+		canvas.height = rect.height;
+	}
+
+	const width = canvas.width;
+	const height = canvas.height;
+
+	const startColor = SHADER_COLORS.WAVE_POLAR_START.map((c) => c * 255);
+	const endColor = SHADER_COLORS.WAVE_POLAR_END.map((c) => c * 255);
+
+	const gradient = ctx.createLinearGradient(0, 0, width, 0);
+	gradient.addColorStop(0, `rgb(${startColor[0]}, ${startColor[1]}, ${startColor[2]})`);
+	gradient.addColorStop(1, `rgb(${endColor[0]}, ${endColor[1]}, ${endColor[2]})`);
+
+	ctx.fillStyle = gradient;
+	ctx.fillRect(0, 0, width, height);
+}
+
 export function setGaugeLine(value, state) {
 	if (!state.activeMesh) {
 		return;

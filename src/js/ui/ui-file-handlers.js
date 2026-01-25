@@ -84,7 +84,7 @@ export function renderMeshDropdown(state) {
 		if (!state.meshes.some((m) => m.filename === tm.filename)) {
 			const option = document.createElement("option");
 			option.value = tm.filename;
-			option.text = "Load '" + tm.filename + "'";
+			option.text = "Loading '" + tm.filename + "'";
 			dropdown.appendChild(option);
 		}
 	});
