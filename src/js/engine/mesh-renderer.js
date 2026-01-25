@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { getMax, get2Min } from "@js/utils/math-utils.js";
 import { VisMode } from "@js/core/state-manager.js";
-import { SHADER_COLORS } from "@js/ui/color-gauge.js";
+import { SHADER_COLORS } from "@js/ui/colors.js";
 
 export function updateActiveMesh(dependencies) {
 	const { shaders, state } = dependencies;

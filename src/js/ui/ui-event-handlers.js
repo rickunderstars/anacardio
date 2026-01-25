@@ -2,7 +2,7 @@ import * as THREE from "three";
 
 import { reloadShaderMaterial } from "@js/engine/shader-loader.js";
 import { surfaceSampler } from "@js/engine/raycaster.js";
-import { setGaugeLine, colorizePolar } from "@js/ui/color-gauge.js";
+import { setGaugeLine, colorizePolar } from "@js/ui/colors.js";
 import { updateActiveMesh } from "@js/engine/mesh-renderer.js";
 import { addTestMesh } from "@js/io/test-loader.js";
 import { VisMode } from "@js/core/state-manager.js";

@@ -172,6 +172,7 @@ Mesh::Float32ArrayOfTangentFieldSegments(std::string quality,
 		glm::vec3 e2 = v2.pos - v0.pos;
 		glm::vec3 barycenter = (v0.pos + v1.pos + v2.pos) / 3.0f;
 		glm::vec3 n = glm::normalize(glm::cross(e1, e2));
+		barycenter = barycenter + n / 3.5f;
 
 		float d1 = val1 - val0;
 		float d2 = val2 - val0;
