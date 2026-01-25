@@ -2,11 +2,11 @@ import * as THREE from "three";
 
 import { reloadShaderMaterial } from "@js/engine/shader-loader.js";
 import { surfaceSampler } from "@js/engine/raycaster.js";
-import { setGaugeLine } from "@js/ui/color-gauge.js";
+import { setGaugeLine, colorizePolar } from "@js/ui/color-gauge.js";
 import { updateActiveMesh } from "@js/engine/mesh-renderer.js";
 import { addTestMesh } from "@js/io/test-loader.js";
 import { VisMode } from "@js/core/state-manager.js";
-import { formatNumber } from "@js/utils/math-utils.js";
+import { formatNumber, get2Min, getMax } from "@js/utils/math-utils.js";
 import { processFile } from "@js/io/file-loader.js";
 import { CameraVersors } from "@js/engine/scene-manager.js";
 
@@ -15,6 +15,26 @@ export function updateMinMaxUI(min, max) {
 		"min<br/>" + formatNumber(min);
 	document.getElementById("max-value").innerHTML =
 		"max<br/>" + formatNumber(max);
+}
+
+function updatePolarUI(state) {
+	const bar = document.getElementById("polar-bar");
+	if (state.mode === VisMode.MIXED_MODE) {
+		bar.classList.remove("hidden");
+		colorizePolar();
+
+		if (state.activeMesh && state.activeMesh.valueSets["bipolar"]) {
+			const [, min] = get2Min(state.activeMesh.valueSets["bipolar"]);
+			const max = getMax(state.activeMesh.valueSets["bipolar"]);
+			document.getElementById("polar-min").innerHTML = "min<br/>" + formatNumber(min);
+			document.getElementById("polar-max").innerHTML = "max<br/>" + formatNumber(max);
+		} else {
+			document.getElementById("polar-min").innerText = "min";
+			document.getElementById("polar-max").innerText = "max";
+		}
+	} else {
+		bar.classList.add("hidden");
+	}
 }
 
 export function setupEventHandlers(dependencies) {
@@ -155,6 +175,7 @@ export function setupEventHandlers(dependencies) {
 			state.activeMeshIndex = parseInt(e.target.value);
 			const { min, max } = updateActiveMesh({ shaders, state });
 			updateMinMaxUI(min, max);
+			updatePolarUI(state);
 
 
 			for (let i = 0; i < state.meshes.length; i++) {
@@ -266,6 +287,7 @@ export function setupEventHandlers(dependencies) {
 				updateUIForMode(state);
 				const { min, max } = updateActiveMesh({ shaders, state });
 				updateMinMaxUI(min, max);
+				updatePolarUI(state);
 
 				sceneManager.startClock();
 				sceneManager.resetAnimationState();
@@ -326,7 +348,7 @@ function updateUIForMode(state) {
 	const wavesSpeedContainer = document.getElementById(
 		"waves-speed-container",
 	);
-	const hBipolar = document.getElementById("h-bipolar");
+	const latTitle = document.getElementById("lat-gradient-title");
 
 	if (
 		state.mode === VisMode.ANIMATED ||
@@ -340,8 +362,10 @@ function updateUIForMode(state) {
 	}
 
 	if (state.mode === VisMode.MIXED_MODE) {
-		hBipolar.classList.remove("hidden");
+		latTitle.classList.remove("hidden");
 	} else {
-		hBipolar.classList.add("hidden");
+		latTitle.classList.add("hidden");
 	}
+
+	updatePolarUI(state);
 }

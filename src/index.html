@@ -52,37 +52,37 @@
 						<div class="grid grid-cols-3 gap-2">
 							<button
 								id="camera-front"
-								class="p-2 bg-slate-700 hover:bg-slate-600 text-xs text-center rounded cursor-pointer transition-all border border-slate-600"
+								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer transition-all border border-slate-600"
 							>
 								Front
 							</button>
 							<button
 								id="camera-top"
-								class="p-2 bg-slate-700 hover:bg-slate-600 text-xs text-center rounded cursor-pointer transition-all border border-slate-600"
+								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer transition-all border border-slate-600"
 							>
 								Top
 							</button>
 							<button
 								id="camera-left"
-								class="p-2 bg-slate-700 hover:bg-slate-600 text-xs text-center rounded cursor-pointer transition-all border border-slate-600"
+								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer transition-all border border-slate-600"
 							>
 								Left
 							</button>
 							<button
 								id="camera-back"
-								class="p-2 bg-slate-700 hover:bg-slate-600 text-xs text-center rounded cursor-pointer transition-all border border-slate-600"
+								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer transition-all border border-slate-600"
 							>
 								Back
 							</button>
 							<button
 								id="camera-bottom"
-								class="p-2 bg-slate-700 hover:bg-slate-600 text-xs text-center rounded cursor-pointer transition-all border border-slate-600"
+								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer transition-all border border-slate-600"
 							>
 								Bottom
 							</button>
 							<button
 								id="camera-right"
-								class="p-2 bg-slate-700 hover:bg-slate-600 text-xs text-center rounded cursor-pointer transition-all border border-slate-600"
+								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer transition-all border border-slate-600"
 							>
 								Right
 							</button>
@@ -313,7 +313,14 @@
 									Dynamic LAT + Bipolar wave gradient + ExtEML
 								</div>
 							</label>
-						</fieldset>
+							                            <div id="polar-bar" class="hidden flex flex-col gap-1 mt-2 w-full">
+							                                <div class="text-sm text-center font-bold text-slate-300">Bipolar</div>
+							                                <div class="flex flex-row items-stretch gap-2 h-10">
+							                                    <div id="polar-min" class="flex items-center justify-center text-sm text-center font-bold bg-black rounded-md px-2 min-w-[3rem]">min</div>
+							                                    <canvas id="polar-canvas" class="flex-grow rounded-md shadow-inner"></canvas>
+							                                    <div id="polar-max" class="flex items-center justify-center text-sm text-center font-bold bg-black rounded-md px-2 min-w-[3rem]">max</div>
+							                                </div>
+							                            </div>						</fieldset>
 						<fieldset class="border border-slate-500 rounded-lg p-2">
 							<legend class="px-2 text-sm text-slate-300 font-bold">Parameters</legend>
 							<div class="flex flex-col gap-2">
@@ -392,10 +399,10 @@
 						class="w-1/7 flex flex-col items-center"
 					>
 						<div
-							id="h-bipolar"
-							class="text-sm text-center font-bold bg-black rounded-md w-full mb-1 hidden"
+							id="lat-gradient-title"
+							class="text-sm text-center font-bold text-slate-300 mb-1 hidden"
 						>
-							Bipolar<br />min &lt;-&gt; max
+							LAT
 						</div>
 						<div
 							id="max-value"
