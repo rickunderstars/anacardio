@@ -112,8 +112,14 @@ export function colorizePolar() {
 	const endColor = SHADER_COLORS.WAVE_POLAR_END.map((c) => c * 255);
 
 	const gradient = ctx.createLinearGradient(0, 0, width, 0);
-	gradient.addColorStop(0, `rgb(${startColor[0]}, ${startColor[1]}, ${startColor[2]})`);
-	gradient.addColorStop(1, `rgb(${endColor[0]}, ${endColor[1]}, ${endColor[2]})`);
+	gradient.addColorStop(
+		0,
+		`rgb(${startColor[0]}, ${startColor[1]}, ${startColor[2]})`,
+	);
+	gradient.addColorStop(
+		1,
+		`rgb(${endColor[0]}, ${endColor[1]}, ${endColor[2]})`,
+	);
 
 	ctx.fillStyle = gradient;
 	ctx.fillRect(0, 0, width, height);

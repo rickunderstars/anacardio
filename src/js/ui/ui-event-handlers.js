@@ -26,8 +26,10 @@ function updatePolarUI(state) {
 		if (state.activeMesh && state.activeMesh.valueSets["bipolar"]) {
 			const [, min] = get2Min(state.activeMesh.valueSets["bipolar"]);
 			const max = getMax(state.activeMesh.valueSets["bipolar"]);
-			document.getElementById("polar-min").innerHTML = "min<br/>" + formatNumber(min);
-			document.getElementById("polar-max").innerHTML = "max<br/>" + formatNumber(max);
+			document.getElementById("polar-min").innerHTML =
+				"min<br/>" + formatNumber(min);
+			document.getElementById("polar-max").innerHTML =
+				"max<br/>" + formatNumber(max);
 		} else {
 			document.getElementById("polar-min").innerText = "min";
 			document.getElementById("polar-max").innerText = "max";
@@ -176,7 +178,6 @@ export function setupEventHandlers(dependencies) {
 			const { min, max } = updateActiveMesh({ shaders, state });
 			updateMinMaxUI(min, max);
 			updatePolarUI(state);
-
 
 			for (let i = 0; i < state.meshes.length; i++) {
 				if (i != state.activeMeshIndex) {
@@ -350,10 +351,7 @@ function updateUIForMode(state) {
 	);
 	const latTitle = document.getElementById("lat-gradient-title");
 
-	if (
-		state.mode === VisMode.ANIMATED ||
-		state.mode === VisMode.MIXED_MODE
-	) {
+	if (state.mode === VisMode.ANIMATED || state.mode === VisMode.MIXED_MODE) {
 		wavesNumberContainer.classList.remove("hidden");
 		wavesSpeedContainer.classList.remove("hidden");
 	} else {
