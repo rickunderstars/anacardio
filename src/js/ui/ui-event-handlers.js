@@ -156,7 +156,6 @@ export function setupEventHandlers(dependencies) {
 			const { min, max } = updateActiveMesh({ shaders, state });
 			updateMinMaxUI(min, max);
 
-			let activeMesh = null;
 
 			for (let i = 0; i < state.meshes.length; i++) {
 				if (i != state.activeMeshIndex) {
