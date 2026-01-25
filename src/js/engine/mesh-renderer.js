@@ -124,6 +124,8 @@ export function updateActiveMesh(dependencies) {
 			fragmentShader: mixFShader,
 			side: THREE.DoubleSide,
 		});
+
+		return { min: latMin, max: latMax };
 	}
 
 	return { min, max };
