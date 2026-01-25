@@ -11,11 +11,11 @@
 			<div id="viewport" class="relative shrink-0 w-[100vh] h-[100vh] border-r-[0.2em] border-[whitesmoke] bg-[#080808] shadow-[0.3vh_0.3vh_1vh_rgba(0,0,0,0.3)]"></div>
 
 			<div
-				class="flex-grow w-2/5 flex flex-col gap-6 p-4 bg-slate-800 overflow-y-auto"
+				class="flex-grow w-2/5 flex flex-col gap-3 p-4 bg-slate-800 overflow-y-auto"
 			>
-				<div class="flex gap-3 h-fit overflow-auto">
+				<div class="flex items-center gap-6 h-fit">
 					<div
-						class="flex flex-none w-1/2 items-center gap-2 text-4xl font-bold text-shadow-xl"
+						class="flex flex-none items-center gap-2 text-4xl font-bold text-shadow-xl"
 					>
 						heart-vis
 						<img
@@ -24,17 +24,20 @@
 						/>
 					</div>
 
-					<select
-						id="add-mesh-dropdown"
-						class="block w-1/3 p-2 bg-blue-600 text-center rounded-md cursor-pointer font-medium appearance-none focus:outline-none"
-					></select>
+					<fieldset class="flex-grow flex items-center gap-4 border border-slate-500 rounded-lg p-2">
+						<legend class="px-2 text-sm text-slate-300 font-bold">Mesh Selection</legend>
+						<select
+							id="add-mesh-dropdown"
+							class="flex-1 p-2 bg-blue-600 text-center rounded-md cursor-pointer font-medium appearance-none focus:outline-none"
+						></select>
 
-					<div
-						id="filename"
-						class="block w-1/3 text-sm italic align-middle self-center"
-					>
-						No file selected
-					</div>
+						<div
+							id="filename"
+							class="flex-1 text-sm italic text-center"
+						>
+							No file selected
+						</div>
+					</fieldset>
 				</div>
 
 				<div class="flex flex-col gap-2">
@@ -44,319 +47,334 @@
 						accept="text/*"
 						class="hidden"
 					/>
-					<div class="grid grid-cols-3 gap-2">
-						<button
-							id="camera-front"
-							class="p-2 bg-slate-700 hover:bg-slate-600 text-xs text-center rounded cursor-pointer transition-all border border-slate-600"
-						>
-							Front
-						</button>
-						<button
-							id="camera-top"
-							class="p-2 bg-slate-700 hover:bg-slate-600 text-xs text-center rounded cursor-pointer transition-all border border-slate-600"
-						>
-							Top
-						</button>
-						<button
-							id="camera-left"
-							class="p-2 bg-slate-700 hover:bg-slate-600 text-xs text-center rounded cursor-pointer transition-all border border-slate-600"
-						>
-							Left
-						</button>
-						<button
-							id="camera-back"
-							class="p-2 bg-slate-700 hover:bg-slate-600 text-xs text-center rounded cursor-pointer transition-all border border-slate-600"
-						>
-							Back
-						</button>
-						<button
-							id="camera-bottom"
-							class="p-2 bg-slate-700 hover:bg-slate-600 text-xs text-center rounded cursor-pointer transition-all border border-slate-600"
-						>
-							Bottom
-						</button>
-						<button
-							id="camera-right"
-							class="p-2 bg-slate-700 hover:bg-slate-600 text-xs text-center rounded cursor-pointer transition-all border border-slate-600"
-						>
-							Right
-						</button>
-					</div>
+					<fieldset class="border border-slate-500 rounded-lg p-2">
+						<legend class="px-2 text-sm text-slate-300 font-bold">Camera Control</legend>
+						<div class="grid grid-cols-3 gap-2">
+							<button
+								id="camera-front"
+								class="p-2 bg-slate-700 hover:bg-slate-600 text-xs text-center rounded cursor-pointer transition-all border border-slate-600"
+							>
+								Front
+							</button>
+							<button
+								id="camera-top"
+								class="p-2 bg-slate-700 hover:bg-slate-600 text-xs text-center rounded cursor-pointer transition-all border border-slate-600"
+							>
+								Top
+							</button>
+							<button
+								id="camera-left"
+								class="p-2 bg-slate-700 hover:bg-slate-600 text-xs text-center rounded cursor-pointer transition-all border border-slate-600"
+							>
+								Left
+							</button>
+							<button
+								id="camera-back"
+								class="p-2 bg-slate-700 hover:bg-slate-600 text-xs text-center rounded cursor-pointer transition-all border border-slate-600"
+							>
+								Back
+							</button>
+							<button
+								id="camera-bottom"
+								class="p-2 bg-slate-700 hover:bg-slate-600 text-xs text-center rounded cursor-pointer transition-all border border-slate-600"
+							>
+								Bottom
+							</button>
+							<button
+								id="camera-right"
+								class="p-2 bg-slate-700 hover:bg-slate-600 text-xs text-center rounded cursor-pointer transition-all border border-slate-600"
+							>
+								Right
+							</button>
+						</div>
+					</fieldset>
 				</div>
 
 				<div class="flex flex-grow gap-4">
 					<div class="flex flex-col flex-grow gap-4">
 						<div class="flex flex-row gap-4">
-							<div
-								data-js="modes-list"
-								class="flex flex-col border border-slate-700 rounded-md overflow-hidden divide-y divide-slate-700 w-1/2"
-							>
-								<label
-									class="flex-grow cursor-pointer group flex flex-col"
+							<fieldset class="w-1/2 border border-slate-500 rounded-lg p-2">
+								<legend class="px-2 text-sm text-slate-300 font-bold">Raw Visualization Modes</legend>
+								<div
+									data-js="modes-list"
+									class="flex flex-col border border-slate-700 rounded-md overflow-hidden divide-y divide-slate-700 w-full h-full"
 								>
-									<input
-										type="radio"
-										name="mode"
-										value="color-ramp"
-										class="sr-only peer"
-										checked
-									/>
-									<div
-										class="flex-grow flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+									<label
+										class="flex-grow cursor-pointer group flex flex-col"
 									>
+										<input
+											type="radio"
+											name="mode"
+											value="color-ramp"
+											class="sr-only peer"
+											checked
+										/>
 										<div
-											class="px-4 text-center text-xl font-medium w-full"
+											class="flex-grow flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 										>
-											Color Ramp
+											<div
+												class="px-4 text-center text-xl font-medium w-full"
+											>
+												Color Ramp
+											</div>
 										</div>
-									</div>
-								</label>
+									</label>
 
-								<label
-									class="flex-grow cursor-pointer group flex flex-col"
+									<label
+										class="flex-grow cursor-pointer group flex flex-col"
+									>
+										<input
+											type="radio"
+											name="mode"
+											value="animated"
+											class="sr-only peer"
+										/>
+										<div
+											class="flex-grow flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+										>
+											<div
+												class="px-4 text-center text-xl font-medium w-full"
+											>
+												Dynamic Animation
+											</div>
+										</div>
+									</label>
+
+									<label
+										class="flex-grow cursor-pointer group flex flex-col"
+									>
+										<input
+											type="radio"
+											name="mode"
+											value="tangent-field"
+											class="sr-only peer"
+										/>
+										<div
+											class="flex-grow flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+										>
+											<div
+												class="px-4 text-center text-xl font-medium w-full"
+											>
+												Tangent Field
+											</div>
+										</div>
+									</label>
+								</div>
+							</fieldset>
+
+							<fieldset class="w-1/2 border border-slate-500 rounded-lg p-2">
+								<legend class="px-2 text-sm text-slate-300 font-bold">Qualities</legend>
+								<div
+									data-js="qualities-list"
+									class="flex flex-col border border-slate-700 rounded-md overflow-hidden divide-y divide-slate-700 w-full"
 								>
-									<input
-										type="radio"
-										name="mode"
-										value="animated"
-										class="sr-only peer"
-									/>
-									<div
-										class="flex-grow flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
-									>
+									<label class="cursor-pointer group">
+										<input
+											type="radio"
+											name="quality"
+											value="unipolar"
+											class="sr-only peer"
+											checked
+										/>
 										<div
-											class="px-4 text-center text-xl font-medium w-full"
+											class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 										>
-											Dynamic Animation
+											<div
+												class="px-4 text-left text-md font-medium"
+											>
+												Unipolar
+											</div>
 										</div>
-									</div>
-								</label>
+									</label>
 
-								<label
-									class="flex-grow cursor-pointer group flex flex-col"
-								>
-									<input
-										type="radio"
-										name="mode"
-										value="tangent-field"
-										class="sr-only peer"
-									/>
-									<div
-										class="flex-grow flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
-									>
+									<label class="cursor-pointer group">
+										<input
+											type="radio"
+											name="quality"
+											value="bipolar"
+											class="sr-only peer"
+										/>
 										<div
-											class="px-4 text-center text-xl font-medium w-full"
+											class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 										>
-											Tangent Field
+											<div
+												class="px-4 text-left text-md font-medium"
+											>
+												Bipolar
+											</div>
 										</div>
-									</div>
-								</label>
-							</div>
+									</label>
 
-							<div
-								data-js="qualities-list"
-								class="flex flex-col border border-slate-700 rounded-md overflow-hidden divide-y divide-slate-700 w-1/2"
-							>
-								<label class="cursor-pointer group">
-									<input
-										type="radio"
-										name="quality"
-										value="unipolar"
-										class="sr-only peer"
-										checked
-									/>
-									<div
-										class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
-									>
+									<label class="cursor-pointer group">
+										<input
+											type="radio"
+											name="quality"
+											value="lat"
+											class="sr-only peer"
+										/>
 										<div
-											class="px-4 text-left text-md font-medium"
+											class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 										>
-											Unipolar
+											<div
+												class="px-4 text-left text-md font-medium"
+											>
+												LAT
+											</div>
 										</div>
-									</div>
-								</label>
+									</label>
 
-								<label class="cursor-pointer group">
-									<input
-										type="radio"
-										name="quality"
-										value="bipolar"
-										class="sr-only peer"
-									/>
-									<div
-										class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
-									>
+									<label class="cursor-pointer group">
+										<input
+											type="radio"
+											name="quality"
+											value="eml"
+											class="sr-only peer"
+										/>
 										<div
-											class="px-4 text-left text-md font-medium"
+											class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 										>
-											Bipolar
+											<div
+												class="px-4 text-left text-md font-medium"
+											>
+												EML
+											</div>
 										</div>
-									</div>
-								</label>
+									</label>
 
-								<label class="cursor-pointer group">
-									<input
-										type="radio"
-										name="quality"
-										value="lat"
-										class="sr-only peer"
-									/>
-									<div
-										class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
-									>
+									<label class="cursor-pointer group">
+										<input
+											type="radio"
+											name="quality"
+											value="exteml"
+											class="sr-only peer"
+										/>
 										<div
-											class="px-4 text-left text-md font-medium"
+											class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 										>
-											LAT
+											<div
+												class="px-4 text-left text-md font-medium"
+											>
+												ExtEML
+											</div>
 										</div>
-									</div>
-								</label>
+									</label>
 
-								<label class="cursor-pointer group">
-									<input
-										type="radio"
-										name="quality"
-										value="eml"
-										class="sr-only peer"
-									/>
-									<div
-										class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
-									>
+									<label class="cursor-pointer group">
+										<input
+											type="radio"
+											name="quality"
+											value="scar"
+											class="sr-only peer"
+										/>
 										<div
-											class="px-4 text-left text-md font-medium"
+											class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 										>
-											EML
+											<div
+												class="px-4 text-left text-md font-medium"
+											>
+												SCAR
+											</div>
 										</div>
-									</div>
-								</label>
+									</label>
 
-								<label class="cursor-pointer group">
-									<input
-										type="radio"
-										name="quality"
-										value="exteml"
-										class="sr-only peer"
-									/>
-									<div
-										class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
-									>
+									<label class="cursor-pointer group">
+										<input
+											type="radio"
+											name="quality"
+											value="groupid"
+											class="sr-only peer"
+										/>
 										<div
-											class="px-4 text-left text-md font-medium"
+											class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 										>
-											ExtEML
+											<div
+												class="px-4 text-left text-md font-medium"
+											>
+												GroupID
+											</div>
 										</div>
-									</div>
-								</label>
-
-								<label class="cursor-pointer group">
-									<input
-										type="radio"
-										name="quality"
-										value="scar"
-										class="sr-only peer"
-									/>
-									<div
-										class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
-									>
-										<div
-											class="px-4 text-left text-md font-medium"
-										>
-											SCAR
-										</div>
-									</div>
-								</label>
-
-								<label class="cursor-pointer group">
-									<input
-										type="radio"
-										name="quality"
-										value="groupid"
-										class="sr-only peer"
-									/>
-									<div
-										class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
-									>
-										<div
-											class="px-4 text-left text-md font-medium"
-										>
-											GroupID
-										</div>
-									</div>
-								</label>
-							</div>
+									</label>
+								</div>
+							</fieldset>
 						</div>
-												<label
-							class="flex items-center justify-center cursor-pointer bg-slate-700 p-4 rounded-md hover:bg-slate-600 transition-colors border border-slate-600 w-full"
-						>
-							<input
-								type="checkbox"
-								id="mixed-mode-toggle"
-								class="sr-only peer"
-							/>
-							<div
-								class="text-md font-medium text-slate-200 peer-checked:text-blue-400"
+						<fieldset class="border border-slate-500 rounded-lg p-2">
+							<legend class="px-2 text-sm text-slate-300 font-bold">Mixed Mode</legend>
+							<label
+								class="flex items-center justify-center cursor-pointer bg-slate-700 p-4 rounded-md hover:bg-slate-600 transition-colors border border-slate-600 w-full"
 							>
-								Mixed Mode (Dynamic LAT + Bipolar wave gradient + ExtEML)
-							</div>
-						</label>
-						<div class="flex flex-col">
+								<input
+									type="checkbox"
+									id="mixed-mode-toggle"
+									class="sr-only peer"
+								/>
+								<div
+									class="text-md font-medium text-slate-200 peer-checked:text-blue-400"
+								>
+									Dynamic LAT + Bipolar wave gradient + ExtEML
+								</div>
+							</label>
+						</fieldset>
+						<fieldset class="border border-slate-500 rounded-lg p-2">
+							<legend class="px-2 text-sm text-slate-300 font-bold">Parameters</legend>
 							<div class="flex flex-col gap-2">
-								<div class="text-md text-slate-300 font-bold text-center pt-2 border-t border-slate-700">
-									<div class="flex w-full px-1">
-										<span class="w-1/3 text-right">[ - ]</span>
-										<span class="w-1/3 text-center">Shading</span>
-										<span class="w-1/3 text-left">[ + ]</span>
+								<div class="flex flex-col gap-2">
+									<div class="text-md text-slate-300 font-bold text-center">
+										<div class="flex w-full px-1">
+											<span class="w-1/3 text-right">[ - ]</span>
+											<span class="w-1/3 text-center">Shading</span>
+											<span class="w-1/3 text-left">[ + ]</span>
+										</div>
 									</div>
+									<input
+										type="range"
+										min="1"
+										max="100"
+										value="50"
+										id="light-slider"
+										class="h-1/6 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
+									/>
 								</div>
-								<input
-									type="range"
-									min="1"
-									max="100"
-									value="50"
-									id="light-slider"
-									class="h-1/6 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
-								/>
-							</div>
-							<div id="waves-number-container" class="flex flex-col gap-2">
-								<div class="text-md text-slate-300 font-bold text-center pt-2 border-t border-slate-700">
-									<div class="flex w-full px-1">
-										<span class="w-1/3 text-right">[ - ]</span>
-										<span class="w-1/3 text-center">Waves Number</span>
-										<span class="w-1/3 text-left">[ + ]</span>
+								<div id="waves-number-container" class="flex flex-col gap-2 border-t border-slate-700 pt-2">
+									<div class="text-md text-slate-300 font-bold text-center">
+										<div class="flex w-full px-1">
+											<span class="w-1/3 text-right">[ - ]</span>
+											<span class="w-1/3 text-center">Waves Number</span>
+											<span class="w-1/3 text-left">[ + ]</span>
+										</div>
 									</div>
+									<input
+										type="range"
+										min="1"
+										max="30"
+										value="10"
+										id="waves-number-slider"
+										class="w-full h-1/6 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
+									/>
 								</div>
-								<input
-									type="range"
-									min="1"
-									max="30"
-									value="10"
-									id="waves-number-slider"
-									class="w-full h-1/6 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
-								/>
-							</div>
 
-					<div id="waves-speed-container" class="flex flex-col gap-2 border-slate-700 border-y">
-						<div class="text-md text-slate-300 font-bold text-center pt-2">
-							<div class="flex w-full px-1">
-										<span class="w-1/3 text-right">[ - ]</span>
-										<span class="w-1/3 text-center">Waves Speed</span>
-										<span class="w-1/3 text-left">[ + ]</span>
+								<div id="waves-speed-container" class="flex flex-col gap-2 border-t border-slate-700 pt-2">
+									<div class="text-md text-slate-300 font-bold text-center">
+										<div class="flex w-full px-1">
+											<span class="w-1/3 text-right">[ - ]</span>
+											<span class="w-1/3 text-center">Waves Speed</span>
+											<span class="w-1/3 text-left">[ + ]</span>
+										</div>
 									</div>
-						</div>
-						<input
-							type="range"
-							min="1"
-							max="30"
-							value="5"
-							id="waves-speed-slider"
-							class="w-full h-1/6 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
-						/>
-					</div>
-				</div>
+									<input
+										type="range"
+										min="1"
+										max="30"
+										value="5"
+										id="waves-speed-slider"
+										class="w-full h-1/6 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
+									/>
+								</div>
+							</div>
+						</fieldset>
 						<div
 							class="block w-2/3 px-8 py-2 bg-slate-700 rounded-md font-medium text-xl text-white flex flex-row justify-center items-center gap-2 mx-auto my-auto"
 						>
-							<div class="text-right w-1/2">Pointed Value:</div>
+							<div class="text-right w-2/3">Pointed Value:</div>
 							<div
 								id="sampler-value"
 								class="text-left w-1/2 pl-8"
