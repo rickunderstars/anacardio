@@ -63,6 +63,20 @@ export class SceneManager {
 			this.viewport.clientWidth,
 			this.viewport.clientHeight,
 		);
+
+		const width = this.viewport.clientWidth;
+		const height = this.viewport.clientHeight;
+
+		this.scene.traverse((object) => {
+			if (
+				object.isLineSegments2 &&
+				object.material &&
+				object.material.resolution
+			) {
+				object.material.resolution.set(width, height);
+			}
+		});
+
 		this.render();
 	}
 

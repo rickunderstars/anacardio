@@ -11,6 +11,11 @@ export const SHADER_COLORS = {
 	EXTEML: [1.0, 0.0, 1.0],
 };
 
+export const SEGMENT_COLORS = {
+	START: [0.0, 0.0, 0.0],
+	END: [1.0, 0.0, 1.0],
+};
+
 function mixColors(c1, c2, t) {
 	return [
 		c1[0] * (1 - t) + c2[0] * t,
@@ -112,8 +117,14 @@ export function colorizePolar() {
 	const endColor = SHADER_COLORS.WAVE_POLAR_END.map((c) => c * 255);
 
 	const gradient = ctx.createLinearGradient(0, 0, width, 0);
-	gradient.addColorStop(0, `rgb(${startColor[0]}, ${startColor[1]}, ${startColor[2]})`);
-	gradient.addColorStop(1, `rgb(${endColor[0]}, ${endColor[1]}, ${endColor[2]})`);
+	gradient.addColorStop(
+		0,
+		`rgb(${startColor[0]}, ${startColor[1]}, ${startColor[2]})`,
+	);
+	gradient.addColorStop(
+		1,
+		`rgb(${endColor[0]}, ${endColor[1]}, ${endColor[2]})`,
+	);
 
 	ctx.fillStyle = gradient;
 	ctx.fillRect(0, 0, width, height);

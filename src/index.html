@@ -6,9 +6,14 @@
 		<title>heart-vis</title>
 	</head>
 
-	<body class="bg-slate-900 text-white antialiased font-sans font-bold italic">
+	<body
+		class="bg-slate-900 text-white antialiased font-sans font-bold italic"
+	>
 		<div class="flex h-screen w-full overflow-auto">
-			<div id="viewport" class="relative shrink-0 w-[100vh] h-[100vh] border-r-[0.2em] border-[whitesmoke] bg-[#080808] shadow-[0.3vh_0.3vh_1vh_rgba(0,0,0,0.3)]"></div>
+			<div
+				id="viewport"
+				class="relative shrink-0 w-[100vh] h-[100vh] border-r-[0.2em] border-[whitesmoke] bg-[#080808] shadow-[0.3vh_0.3vh_1vh_rgba(0,0,0,0.3)]"
+			></div>
 
 			<div
 				class="flex-grow w-2/5 flex flex-col gap-3 p-4 bg-slate-800 overflow-y-auto"
@@ -24,8 +29,12 @@
 						/>
 					</div>
 
-					<fieldset class="flex-grow flex items-center gap-4 border border-slate-500 rounded-lg p-2">
-						<legend class="px-2 text-sm text-slate-300 font-bold">Mesh Selection</legend>
+					<fieldset
+						class="flex-grow flex items-center gap-4 border border-slate-500 rounded-lg p-2"
+					>
+						<legend class="px-2 text-sm text-slate-300 font-bold">
+							Mesh Selection
+						</legend>
 						<select
 							id="add-mesh-dropdown"
 							class="flex-1 p-2 bg-blue-600 text-center rounded-md cursor-pointer font-medium appearance-none focus:outline-none"
@@ -48,7 +57,9 @@
 						class="hidden"
 					/>
 					<fieldset class="border border-slate-500 rounded-lg p-2">
-						<legend class="px-2 text-sm text-slate-300 font-bold">Camera Control</legend>
+						<legend class="px-2 text-sm text-slate-300 font-bold">
+							Camera Control
+						</legend>
 						<div class="grid grid-cols-3 gap-2">
 							<button
 								id="camera-front"
@@ -93,8 +104,14 @@
 				<div class="flex flex-grow gap-4">
 					<div class="flex flex-col flex-grow gap-4">
 						<div class="flex flex-row gap-4">
-							<fieldset class="w-1/2 border border-slate-500 rounded-lg p-2">
-								<legend class="px-2 text-sm text-slate-300 font-bold">Raw Visualization Modes</legend>
+							<fieldset
+								class="w-1/2 border border-slate-500 rounded-lg p-2"
+							>
+								<legend
+									class="px-2 text-sm text-slate-300 font-bold"
+								>
+									Raw Visualization Modes
+								</legend>
 								<div
 									data-js="modes-list"
 									class="flex flex-col border border-slate-700 rounded-md overflow-hidden divide-y divide-slate-700 w-full h-full"
@@ -162,8 +179,14 @@
 								</div>
 							</fieldset>
 
-							<fieldset class="w-1/2 border border-slate-500 rounded-lg p-2">
-								<legend class="px-2 text-sm text-slate-300 font-bold">Qualities</legend>
+							<fieldset
+								class="w-1/2 border border-slate-500 rounded-lg p-2"
+							>
+								<legend
+									class="px-2 text-sm text-slate-300 font-bold"
+								>
+									Qualities
+								</legend>
 								<div
 									data-js="qualities-list"
 									class="flex flex-col border border-slate-700 rounded-md overflow-hidden divide-y divide-slate-700 w-full"
@@ -297,8 +320,14 @@
 								</div>
 							</fieldset>
 						</div>
-						<fieldset class="border border-slate-500 rounded-lg p-2">
-							<legend class="px-2 text-sm text-slate-300 font-bold">Mixed Mode</legend>
+						<fieldset
+							class="border border-slate-500 rounded-lg p-2"
+						>
+							<legend
+								class="px-2 text-sm text-slate-300 font-bold"
+							>
+								Mixed Mode
+							</legend>
 							<label
 								class="flex items-center justify-center cursor-pointer bg-slate-700 px-4 py-1 rounded-md hover:bg-slate-600 transition-colors border border-slate-600 w-full"
 							>
@@ -313,23 +342,60 @@
 									Dynamic LAT + Bipolar wave gradient + ExtEML
 								</div>
 							</label>
-							                            <div id="polar-bar" class="hidden flex flex-col gap-1 mt-2 w-full">
-							                                <div class="text-sm text-center font-bold text-slate-300">Bipolar</div>
-							                                <div class="flex flex-row items-stretch gap-2 h-10">
-							                                    <div id="polar-min" class="flex items-center justify-center text-sm text-center font-bold bg-black rounded-md px-2 min-w-[3rem]">min</div>
-							                                    <canvas id="polar-canvas" class="flex-grow rounded-md shadow-inner"></canvas>
-							                                    <div id="polar-max" class="flex items-center justify-center text-sm text-center font-bold bg-black rounded-md px-2 min-w-[3rem]">max</div>
-							                                </div>
-							                            </div>						</fieldset>
-						<fieldset class="border border-slate-500 rounded-lg p-2">
-							<legend class="px-2 text-sm text-slate-300 font-bold">Parameters</legend>
+							<div
+								id="polar-bar"
+								class="hidden flex flex-col gap-1 mt-2 w-full"
+							>
+								<div
+									class="text-sm text-center font-bold text-slate-300"
+								>
+									Bipolar
+								</div>
+								<div
+									class="flex flex-row items-stretch gap-2 h-10"
+								>
+									<div
+										id="polar-min"
+										class="flex items-center justify-center text-sm text-center font-bold bg-black rounded-md px-2 w-14"
+									>
+										min
+									</div>
+									<canvas
+										id="polar-canvas"
+										class="flex-grow rounded-md shadow-inner"
+									></canvas>
+									<div
+										id="polar-max"
+										class="flex items-center justify-center text-sm text-center font-bold bg-black rounded-md px-2 w-14"
+									>
+										max
+									</div>
+								</div>
+							</div>
+						</fieldset>
+						<fieldset
+							class="border border-slate-500 rounded-lg p-2"
+						>
+							<legend
+								class="px-2 text-sm text-slate-300 font-bold"
+							>
+								Parameters
+							</legend>
 							<div class="flex flex-col gap-2">
 								<div class="flex flex-col gap-2">
-									<div class="text-md text-slate-300 font-bold text-center">
+									<div
+										class="text-md text-slate-300 font-bold text-center"
+									>
 										<div class="flex w-full px-1">
-											<span class="w-1/3 text-right">[ - ]</span>
-											<span class="w-1/3 text-center">Shading</span>
-											<span class="w-1/3 text-left">[ + ]</span>
+											<span class="w-1/3 text-right"
+												>[ - ]</span
+											>
+											<span class="w-1/3 text-center"
+												>Shading</span
+											>
+											<span class="w-1/3 text-left"
+												>[ + ]</span
+											>
 										</div>
 									</div>
 									<input
@@ -341,12 +407,23 @@
 										class="bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
 									/>
 								</div>
-								<div id="waves-number-container" class="flex flex-col gap-2 border-t border-slate-700 pt-2">
-									<div class="text-md text-slate-300 font-bold text-center">
+								<div
+									id="waves-number-container"
+									class="flex flex-col gap-2 border-t border-slate-700 pt-2"
+								>
+									<div
+										class="text-md text-slate-300 font-bold text-center"
+									>
 										<div class="flex w-full px-1">
-											<span class="w-1/3 text-right">[ - ]</span>
-											<span class="w-1/3 text-center">Waves Number</span>
-											<span class="w-1/3 text-left">[ + ]</span>
+											<span class="w-1/3 text-right"
+												>[ - ]</span
+											>
+											<span class="w-1/3 text-center"
+												>Waves Number</span
+											>
+											<span class="w-1/3 text-left"
+												>[ + ]</span
+											>
 										</div>
 									</div>
 									<input
@@ -359,12 +436,23 @@
 									/>
 								</div>
 
-								<div id="waves-speed-container" class="flex flex-col gap-2 border-t border-slate-700 pt-2">
-									<div class="text-md text-slate-300 font-bold text-center">
+								<div
+									id="waves-speed-container"
+									class="flex flex-col gap-2 border-t border-slate-700 pt-2"
+								>
+									<div
+										class="text-md text-slate-300 font-bold text-center"
+									>
 										<div class="flex w-full px-1">
-											<span class="w-1/3 text-right">[ - ]</span>
-											<span class="w-1/3 text-center">Waves Speed</span>
-											<span class="w-1/3 text-left">[ + ]</span>
+											<span class="w-1/3 text-right"
+												>[ - ]</span
+											>
+											<span class="w-1/3 text-center"
+												>Waves Speed</span
+											>
+											<span class="w-1/3 text-left"
+												>[ + ]</span
+											>
 										</div>
 									</div>
 									<input
