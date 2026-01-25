@@ -1,8 +1,12 @@
 import * as THREE from "three";
+import { LineSegments2 } from "three/addons/lines/LineSegments2.js";
+import { LineMaterial } from "three/addons/lines/LineMaterial.js";
+import { LineSegmentsGeometry } from "three/addons/lines/LineSegmentsGeometry.js";
 import { updateActiveMesh } from "@js/engine/mesh-renderer.js";
 import { VisMode } from "@js/core/state-manager.js";
 import { updateMeshesList, updateFilenameUI } from "@js/ui/ui-file-handlers.js";
 import { updateMinMaxUI } from "@js/ui/ui-event-handlers.js";
+import { SEGMENT_COLORS } from "@js/ui/colors.js";
 
 export const FIELD_KEYS = [
 	"unipolar",
@@ -62,21 +66,36 @@ export async function addMesh(dependencies) {
 	});
 
 	const tangentFieldMeshes = {};
-	const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
+	const resolution = new THREE.Vector2(
+		sceneManager.viewport.clientWidth,
+		sceneManager.viewport.clientHeight,
+	);
+	const lineMaterial = new LineMaterial({
+		color: 0xffffff,
+		linewidth: 1.5,
+		resolution: resolution,
+		vertexColors: true,
+	});
 
 	FIELD_KEYS.forEach((key) => {
 		const fieldSegments = mesh.Float32ArrayOfTangentFieldSegments(key, 2.8);
 
 		if (fieldSegments && fieldSegments.length > 0) {
-			const geometry = new THREE.BufferGeometry();
-			geometry.setAttribute(
-				"position",
-				new THREE.BufferAttribute(fieldSegments, 3),
-			);
-			tangentFieldMeshes[key] = new THREE.LineSegments(
-				geometry,
-				lineMaterial,
-			);
+			const geometry = new LineSegmentsGeometry();
+			geometry.setPositions(fieldSegments);
+
+			const colors = new Float32Array(fieldSegments.length);
+			for (let i = 0; i < fieldSegments.length; i += 6) {
+				colors[i] = SEGMENT_COLORS.START[0];
+				colors[i + 1] = SEGMENT_COLORS.START[1];
+				colors[i + 2] = SEGMENT_COLORS.START[2];
+				colors[i + 3] = SEGMENT_COLORS.END[0];
+				colors[i + 4] = SEGMENT_COLORS.END[1];
+				colors[i + 5] = SEGMENT_COLORS.END[2];
+			}
+			geometry.setColors(colors);
+
+			tangentFieldMeshes[key] = new LineSegments2(geometry, lineMaterial);
 		}
 	});
 

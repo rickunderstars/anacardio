@@ -7,7 +7,7 @@ import { StateManager, VisMode } from "@js/core/state-manager.js";
 import { setupFileHandlers } from "@js/ui/ui-file-handlers.js";
 import { loadShaders } from "@js/engine/shader-loader.js";
 import { setupEventHandlers } from "@js/ui/ui-event-handlers.js";
-import { colorizeGradient } from "@js/ui/color-gauge.js";
+import { colorizeGradient } from "@js/ui/colors.js";
 
 const viewport = document.getElementById("viewport");
 export const sceneManager = new SceneManager(viewport);
