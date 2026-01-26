@@ -13,7 +13,7 @@ export const SHADER_COLORS = {
 
 export const SEGMENT_COLORS = {
 	START: [0.0, 0.0, 0.0],
-	END: [1.0, 0.0, 1.0],
+	END: [1.0, 1.0, 1.0],
 };
 
 function mixColors(c1, c2, t) {

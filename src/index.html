@@ -9,16 +9,16 @@
 	<body
 		class="bg-slate-900 text-white antialiased font-sans font-bold italic"
 	>
-		<div class="flex h-screen w-full overflow-auto">
+		<div class="flex flex-col lg:flex-row h-screen w-full overflow-hidden">
 			<div
 				id="viewport"
-				class="relative shrink-0 w-[100vh] h-[100vh] border-r-[0.2em] border-[whitesmoke] bg-[#080808] shadow-[0.3vh_0.3vh_1vh_rgba(0,0,0,0.3)]"
+				class="relative shrink-0 w-full h-[50vh] lg:w-4/7 lg:h-full border-b-[0.2em] lg:border-b-0 lg:border-r-[0.2em] border-[whitesmoke] bg-[#080808] shadow-[0.3vh_0.3vh_1vh_rgba(0,0,0,0.3)]"
 			></div>
 
 			<div
-				class="flex-grow w-2/5 flex flex-col gap-3 p-4 bg-slate-800 overflow-y-auto"
+				class="w-full h-[50vh] lg:w-3/7 lg:h-full flex flex-col gap-3 p-4 bg-slate-800 overflow-y-auto"
 			>
-				<div class="flex items-center gap-6 h-fit">
+				<div class="flex flex-wrap items-center gap-4 h-fit">
 					<div
 						class="flex flex-none items-center gap-2 text-4xl font-bold text-shadow-xl"
 					>
@@ -30,19 +30,19 @@
 					</div>
 
 					<fieldset
-						class="flex-grow flex items-center gap-4 border border-slate-500 rounded-lg p-2"
+						class="flex-grow flex items-center gap-4 border border-slate-500 rounded-lg p-2 min-w-[300px]"
 					>
 						<legend class="px-2 text-sm text-slate-300 font-bold">
 							Mesh Selection
 						</legend>
 						<select
 							id="add-mesh-dropdown"
-							class="flex-1 p-2 bg-blue-600 text-center rounded-md cursor-pointer font-medium appearance-none focus:outline-none"
+							class="flex-1 p-2 bg-blue-600 text-center rounded-md cursor-pointer font-medium appearance-none focus:outline-none min-w-0"
 						></select>
 
 						<div
 							id="filename"
-							class="flex-1 text-sm italic text-center"
+							class="flex-1 text-sm italic text-center truncate min-w-0"
 						>
 							No file selected
 						</div>
