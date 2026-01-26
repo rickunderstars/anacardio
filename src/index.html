@@ -16,6 +16,46 @@
 			></div>
 
 			<div
+				id="color-gauge"
+				class="w-1/16 flex flex-col items-center bg-slate-800 p-2 pr-0"
+			>
+				<div
+					id="lat-gradient-title"
+					class="text-sm text-center font-bold text-slate-300 mb-1 hidden"
+				>
+					LAT
+				</div>
+				<div
+					id="max-value"
+					class="text-sm text-center font-bold bg-black rounded-md w-full mb-1"
+				>
+					max<br />---
+				</div>
+				<div class="relative w-full h-full flex justify-center rounded">
+					<canvas
+						id="gradient-bar"
+						class="w-full h-full rounded-md box-shadow-xl"
+					></canvas>
+					<div
+						id="gauge-line"
+						class="absolute w-9/8 h-0.5 rounded border-y border-white pointer-events-none transform translate-y-1/2"
+					></div>
+				</div>
+				<div
+					id="min-value"
+					class="text-sm text-center font-bold bg-black rounded-md w-full mt-1"
+				>
+					min<br />---
+				</div>
+				<div
+					class="text-sm text-center font-bold bg-black rounded-md w-full mt-1 bg-slate-700"
+				>
+					<div>Value<br /></div>
+					<div id="sampler-value"></div>
+				</div>
+			</div>
+
+			<div
 				class="w-full h-[50vh] lg:w-3/7 lg:h-full flex flex-col gap-3 p-4 bg-slate-800 overflow-y-auto"
 			>
 				<div class="flex flex-wrap items-center gap-4 h-fit">
@@ -466,56 +506,10 @@
 								</div>
 							</div>
 						</fieldset>
-						<div
-							class="block w-2/3 px-8 py-2 bg-slate-700 rounded-md font-medium text-xl text-white flex flex-row justify-center items-center gap-2 mx-auto my-auto"
-						>
-							<div class="text-right w-2/3">Pointed Value:</div>
-							<div
-								id="sampler-value"
-								class="text-left w-1/2 pl-8"
-							></div>
-						</div>
-
 						<select
 							id="loaded-meshes-dropdown"
 							class="hidden block w-full p-2 bg-slate-700 hover:bg-slate-600 text-center rounded-md cursor-pointer transition-colors font-medium text-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500"
 						></select>
-					</div>
-
-					<div
-						id="color-gauge"
-						class="w-1/7 flex flex-col items-center"
-					>
-						<div
-							id="lat-gradient-title"
-							class="text-sm text-center font-bold text-slate-300 mb-1 hidden"
-						>
-							LAT
-						</div>
-						<div
-							id="max-value"
-							class="text-sm text-center font-bold bg-black rounded-md w-full mb-1"
-						>
-							max<br />---
-						</div>
-						<div
-							class="relative w-full h-full flex justify-center rounded"
-						>
-							<canvas
-								id="gradient-bar"
-								class="w-full h-full rounded-md box-shadow-xl"
-							></canvas>
-							<div
-								id="gauge-line"
-								class="absolute w-8/7 h-0.5 rounded border-y border-white pointer-events-none transform translate-y-1/2"
-							></div>
-						</div>
-						<div
-							id="min-value"
-							class="text-sm text-center font-bold bg-black rounded-md w-full mt-1"
-						>
-							min<br />---
-						</div>
 					</div>
 				</div>
 			</div>
