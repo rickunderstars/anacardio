@@ -11,10 +11,8 @@ import { processFile } from "@js/io/file-loader.js";
 import { CameraVersors } from "@js/engine/scene-manager.js";
 
 export function updateMinMaxUI(min, max) {
-	document.getElementById("min-value").innerHTML =
-		"min<br/>" + formatNumber(min);
-	document.getElementById("max-value").innerHTML =
-		"max<br/>" + formatNumber(max);
+	document.getElementById("min-value").innerHTML = formatNumber(min);
+	document.getElementById("max-value").innerHTML = formatNumber(max);
 }
 
 function updatePolarUI(state) {
