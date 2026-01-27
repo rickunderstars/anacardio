@@ -220,7 +220,7 @@ export function setupEventHandlers(dependencies) {
 		} finally {
 			meshDropdown.disabled = false;
 			meshDropdown.value = "";
-			if (placeholder) placeholder.text = "Add Mesh";
+			if (placeholder) placeholder.text = "Select";
 			document.body.style.cursor = "default";
 		}
 	});
