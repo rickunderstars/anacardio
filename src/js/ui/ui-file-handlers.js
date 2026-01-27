@@ -55,36 +55,27 @@ export function setupFileHandlers(dependencies) {
 	});
 }
 
-export function updateFilenameUI(filename, isError = false) {
-	const fileElement = document.getElementById("filename");
-	if (isError) {
-		fileElement.innerHTML = "Could not load: " + filename;
-	} else {
-		fileElement.innerHTML = "Last upload: " + filename;
-	}
-}
-
 export function renderMeshDropdown(state) {
 	const dropdown = document.getElementById("add-mesh-dropdown");
 	dropdown.innerHTML = "";
 
 	const placeholder = document.createElement("option");
 	placeholder.value = "";
-	placeholder.text = "Add Mesh";
+	placeholder.text = "Select";
 	placeholder.hidden = true;
 	placeholder.selected = true;
 	dropdown.appendChild(placeholder);
 
 	const fileOption = document.createElement("option");
 	fileOption.value = "file";
-	fileOption.text = "Select local file...";
+	fileOption.text = "Local file...";
 	dropdown.appendChild(fileOption);
 
 	testMeshes.forEach((tm) => {
 		if (!state.meshes.some((m) => m.filename === tm.filename)) {
 			const option = document.createElement("option");
 			option.value = tm.filename;
-			option.text = "Loading '" + tm.filename + "'";
+			option.text = "Load '" + tm.filename + "'";
 			dropdown.appendChild(option);
 		}
 	});

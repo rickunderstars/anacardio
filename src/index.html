@@ -29,7 +29,7 @@
 					id="max-value"
 					class="text-sm text-center font-bold bg-black rounded-md w-full mb-1"
 				>
-					max<br />---
+					---
 				</div>
 				<div class="relative w-full h-full flex justify-center rounded">
 					<canvas
@@ -45,12 +45,11 @@
 					id="min-value"
 					class="text-sm text-center font-bold bg-black rounded-md w-full mt-1"
 				>
-					min<br />---
+					---
 				</div>
 				<div
 					class="text-sm text-center font-bold bg-black rounded-md w-full mt-1 bg-slate-700"
 				>
-					<div>Value<br /></div>
 					<div id="sampler-value"></div>
 				</div>
 			</div>
@@ -73,19 +72,12 @@
 						class="flex-grow flex items-center gap-4 border border-slate-500 rounded-lg p-2 min-w-[300px]"
 					>
 						<legend class="px-2 text-sm text-slate-300 font-bold">
-							Mesh Selection
+							Model
 						</legend>
 						<select
 							id="add-mesh-dropdown"
-							class="flex-1 p-2 bg-blue-600 text-center rounded-md cursor-pointer font-medium appearance-none focus:outline-none min-w-0"
+							class="flex-1 p-2 bg-blue-600 text-center rounded-md cursor-pointer font-medium appearance-none focus:outline-none"
 						></select>
-
-						<div
-							id="filename"
-							class="flex-1 text-sm italic text-center truncate min-w-0"
-						>
-							No file selected
-						</div>
 					</fieldset>
 				</div>
 
@@ -98,7 +90,7 @@
 					/>
 					<fieldset class="border border-slate-500 rounded-lg p-2">
 						<legend class="px-2 text-sm text-slate-300 font-bold">
-							Camera Control
+							View
 						</legend>
 						<div class="grid grid-cols-3 gap-2">
 							<button
@@ -150,7 +142,7 @@
 								<legend
 									class="px-2 text-sm text-slate-300 font-bold"
 								>
-									Raw Visualization Modes
+									Mode
 								</legend>
 								<div
 									data-js="modes-list"
@@ -172,7 +164,7 @@
 											<div
 												class="px-4 text-center text-xl font-medium w-full"
 											>
-												Color Ramp
+												Color Map
 											</div>
 										</div>
 									</label>
@@ -192,7 +184,7 @@
 											<div
 												class="px-4 text-center text-xl font-medium w-full"
 											>
-												Dynamic Animation
+												Waves
 											</div>
 										</div>
 									</label>
@@ -212,7 +204,7 @@
 											<div
 												class="px-4 text-center text-xl font-medium w-full"
 											>
-												Tangent Field
+												Gradients
 											</div>
 										</div>
 									</label>
@@ -225,7 +217,7 @@
 								<legend
 									class="px-2 text-sm text-slate-300 font-bold"
 								>
-									Qualities
+									Field
 								</legend>
 								<div
 									data-js="qualities-list"
@@ -366,7 +358,7 @@
 							<legend
 								class="px-2 text-sm text-slate-300 font-bold"
 							>
-								Mixed Mode
+								Combined
 							</legend>
 							<label
 								class="flex items-center justify-center cursor-pointer bg-slate-700 px-4 py-1 rounded-md hover:bg-slate-600 transition-colors border border-slate-600 w-full"
@@ -416,27 +408,19 @@
 						<fieldset
 							class="border border-slate-500 rounded-lg p-2"
 						>
+							<!--
 							<legend
-								class="px-2 text-sm text-slate-300 font-bold"
+							class="px-2 text-sm text-slate-300 font-bold"
 							>
-								Parameters
-							</legend>
+							Parameters
+						</legend>
+						-->
 							<div class="flex flex-col gap-2">
-								<div class="flex flex-col gap-2">
+								<div class="flex flex-row items-center">
 									<div
-										class="text-md text-slate-300 font-bold text-center"
+										class="text-md text-slate-300 font-bold text-left w-1/3"
 									>
-										<div class="flex w-full px-1">
-											<span class="w-1/3 text-right"
-												>[ - ]</span
-											>
-											<span class="w-1/3 text-center"
-												>Shading</span
-											>
-											<span class="w-1/3 text-left"
-												>[ + ]</span
-											>
-										</div>
+										Shading
 									</div>
 									<input
 										type="range"
@@ -444,27 +428,17 @@
 										max="100"
 										value="50"
 										id="light-slider"
-										class="bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
+										class="w-full max-h-4 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
 									/>
 								</div>
 								<div
 									id="waves-number-container"
-									class="flex flex-col gap-2 border-t border-slate-700 pt-2"
+									class="flex flex-row items-center border-t border-slate-700 pt-2"
 								>
 									<div
-										class="text-md text-slate-300 font-bold text-center"
+										class="text-md text-slate-300 font-bold text-left w-1/3"
 									>
-										<div class="flex w-full px-1">
-											<span class="w-1/3 text-right"
-												>[ - ]</span
-											>
-											<span class="w-1/3 text-center"
-												>Waves Number</span
-											>
-											<span class="w-1/3 text-left"
-												>[ + ]</span
-											>
-										</div>
+										Waves Number
 									</div>
 									<input
 										type="range"
@@ -472,28 +446,18 @@
 										max="30"
 										value="10"
 										id="waves-number-slider"
-										class="w-full bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
+										class="w-full max-h-4 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
 									/>
 								</div>
 
 								<div
 									id="waves-speed-container"
-									class="flex flex-col gap-2 border-t border-slate-700 pt-2"
+									class="flex flex-row items-center border-t border-slate-700 pt-2"
 								>
 									<div
-										class="text-md text-slate-300 font-bold text-center"
+										class="text-md text-slate-300 font-bold text-left w-1/3"
 									>
-										<div class="flex w-full px-1">
-											<span class="w-1/3 text-right"
-												>[ - ]</span
-											>
-											<span class="w-1/3 text-center"
-												>Waves Speed</span
-											>
-											<span class="w-1/3 text-left"
-												>[ + ]</span
-											>
-										</div>
+										Waves Speed
 									</div>
 									<input
 										type="range"
@@ -501,7 +465,7 @@
 										max="30"
 										value="5"
 										id="waves-speed-slider"
-										class="w-full bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
+										class="w-full max-h-4 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
 									/>
 								</div>
 							</div>

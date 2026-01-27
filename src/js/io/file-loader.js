@@ -4,7 +4,7 @@ import { LineMaterial } from "three/addons/lines/LineMaterial.js";
 import { LineSegmentsGeometry } from "three/addons/lines/LineSegmentsGeometry.js";
 import { updateActiveMesh } from "@js/engine/mesh-renderer.js";
 import { VisMode } from "@js/core/state-manager.js";
-import { updateMeshesList, updateFilenameUI } from "@js/ui/ui-file-handlers.js";
+import { updateMeshesList } from "@js/ui/ui-file-handlers.js";
 import { updateMinMaxUI } from "@js/ui/ui-event-handlers.js";
 import { SEGMENT_COLORS } from "@js/ui/colors.js";
 
@@ -36,10 +36,8 @@ export function processFile(dependencies) {
 				mesh = cpp.importMesh(fileContent);
 			} catch (e) {
 				console.error("Error: ", e.message);
-				updateFilenameUI(file.name, true);
 				return;
 			}
-			updateFilenameUI(file.name);
 
 			const filename = file.name;
 			addMesh({

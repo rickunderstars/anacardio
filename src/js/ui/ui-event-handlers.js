@@ -11,10 +11,8 @@ import { processFile } from "@js/io/file-loader.js";
 import { CameraVersors } from "@js/engine/scene-manager.js";
 
 export function updateMinMaxUI(min, max) {
-	document.getElementById("min-value").innerHTML =
-		"min<br/>" + formatNumber(min);
-	document.getElementById("max-value").innerHTML =
-		"max<br/>" + formatNumber(max);
+	document.getElementById("min-value").innerHTML = formatNumber(min);
+	document.getElementById("max-value").innerHTML = formatNumber(max);
 }
 
 function updatePolarUI(state) {
@@ -220,7 +218,7 @@ export function setupEventHandlers(dependencies) {
 		} finally {
 			meshDropdown.disabled = false;
 			meshDropdown.value = "";
-			if (placeholder) placeholder.text = "Add Mesh";
+			if (placeholder) placeholder.text = "Select";
 			document.body.style.cursor = "default";
 		}
 	});
