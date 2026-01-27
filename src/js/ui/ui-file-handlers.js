@@ -55,15 +55,6 @@ export function setupFileHandlers(dependencies) {
 	});
 }
 
-export function updateFilenameUI(filename, isError = false) {
-	const fileElement = document.getElementById("filename");
-	if (isError) {
-		fileElement.innerHTML = "Could not load: " + filename;
-	} else {
-		fileElement.innerHTML = "Last upload: " + filename;
-	}
-}
-
 export function renderMeshDropdown(state) {
 	const dropdown = document.getElementById("add-mesh-dropdown");
 	dropdown.innerHTML = "";

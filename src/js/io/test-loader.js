@@ -1,5 +1,4 @@
 import { addMesh } from "@js/io/file-loader.js";
-import { updateFilenameUI } from "@js/ui/ui-file-handlers.js";
 
 export const testMeshes = [
 	{
@@ -18,7 +17,6 @@ export async function addTestMesh(dependencies, meshFilename) {
 	const selectedMesh = testMeshes.find((m) => m.filename === meshFilename);
 
 	if (!selectedMesh) {
-		updateFilenameUI("Mesh not found.", true);
 		return;
 	}
 
@@ -51,5 +49,4 @@ export async function addTestMesh(dependencies, meshFilename) {
 		sceneManager,
 		state,
 	});
-	updateFilenameUI(filename);
 }
