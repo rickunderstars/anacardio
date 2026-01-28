@@ -80,7 +80,7 @@ export function surfaceSampler(dependencies) {
 				activeValue = groupid;
 				break;
 			case "combined":
-				activeValue = 0;
+				activeValue = lat;
 				break;
 		}
 

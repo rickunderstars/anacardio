@@ -334,8 +334,13 @@ function updateUIForMode(state) {
 
 	if (state.activeQuality === "combined") {
 		horizontalTitle.classList.remove("hidden");
+		verticalTitle.innerHTML = "&LongLeftArrow; LAT &LongRightArrow;";
 	} else {
 		horizontalTitle.classList.add("hidden");
+		verticalTitle.innerHTML =
+			"&LongLeftArrow; " +
+			state.activeQuality.toUpperCase() +
+			" &LongRightArrow;";
 	}
 
 	updatePolarUI(state);

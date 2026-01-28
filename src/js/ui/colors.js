@@ -131,13 +131,21 @@ export function colorizePolar() {
 }
 
 export function setGaugeLine(value, state) {
-	if (!state.activeMesh || !state.activeMesh.valueSets[state.activeQuality]) {
+	if (!state.activeMesh) {
 		return;
 	}
+
+	const quality =
+		state.activeQuality === "combined" ? "lat" : state.activeQuality;
+
+	if (!state.activeMesh.valueSets[quality]) {
+		return;
+	}
+
 	const line = document.getElementById("gauge-line");
 
-	const [, min] = get2Min(state.activeMesh.valueSets[state.activeQuality]);
-	const max = getMax(state.activeMesh.valueSets[state.activeQuality]);
+	const [, min] = get2Min(state.activeMesh.valueSets[quality]);
+	const max = getMax(state.activeMesh.valueSets[quality]);
 
 	if (value > max) {
 		line.style.bottom = `100%`;
