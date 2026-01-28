@@ -174,6 +174,11 @@ Mesh::Float32ArrayOfTangentFieldSegments(std::string quality,
 		glm::vec3 n = glm::normalize(glm::cross(e1, e2));
 		barycenter = barycenter + n / 3.5f;
 
+		if (v0.groupID != v1.groupID || v1.groupID != v2.groupID) {
+			tempSegments.push_back({barycenter, glm::vec3(0.0f)});
+			return;
+		}
+
 		float d1 = val1 - val0;
 		float d2 = val2 - val0;
 
@@ -251,27 +256,15 @@ Mesh::Float32ArrayOfTangentFieldSegments(std::string quality,
 		(maxValidLength > 1e-6f) ? (TARGET_MAX_LENGTH / maxValidLength) : 0.0f;
 
 	for (const auto &item : tempSegments) {
-		float currentLen = glm::length(item.vector);
+		glm::vec3 finalVector = item.vector * scaleFactor;
+		glm::vec3 secondPoint = item.center + finalVector;
 
-		if (currentLen > upperFence) {
-
-			segments.push_back(item.center.x);
-			segments.push_back(item.center.y);
-			segments.push_back(item.center.z);
-			segments.push_back(item.center.x);
-			segments.push_back(item.center.y);
-			segments.push_back(item.center.z);
-		} else {
-			glm::vec3 finalVector = item.vector * scaleFactor;
-			glm::vec3 secondPoint = item.center + finalVector;
-
-			segments.push_back(item.center.x);
-			segments.push_back(item.center.y);
-			segments.push_back(item.center.z);
-			segments.push_back(secondPoint.x);
-			segments.push_back(secondPoint.y);
-			segments.push_back(secondPoint.z);
-		}
+		segments.push_back(item.center.x);
+		segments.push_back(item.center.y);
+		segments.push_back(item.center.z);
+		segments.push_back(secondPoint.x);
+		segments.push_back(secondPoint.y);
+		segments.push_back(secondPoint.z);
 	}
 
 	emscripten::val float32Array =

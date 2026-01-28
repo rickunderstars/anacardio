@@ -76,24 +76,50 @@ export async function addMesh(dependencies) {
 	});
 
 	FIELD_KEYS.forEach((key) => {
-		const fieldSegments = mesh.Float32ArrayOfTangentFieldSegments(key, 2.8);
+		const rawSegments = mesh.Float32ArrayOfTangentFieldSegments(key, 2.8);
 
-		if (fieldSegments && fieldSegments.length > 0) {
-			const geometry = new LineSegmentsGeometry();
-			geometry.setPositions(fieldSegments);
+		if (rawSegments && rawSegments.length > 0) {
+			const filteredPositions = [];
+			const filteredColors = [];
+			const EPSILON = 0.00001;
 
-			const colors = new Float32Array(fieldSegments.length);
-			for (let i = 0; i < fieldSegments.length; i += 6) {
-				colors[i] = SEGMENT_COLORS.START[0];
-				colors[i + 1] = SEGMENT_COLORS.START[1];
-				colors[i + 2] = SEGMENT_COLORS.START[2];
-				colors[i + 3] = SEGMENT_COLORS.END[0];
-				colors[i + 4] = SEGMENT_COLORS.END[1];
-				colors[i + 5] = SEGMENT_COLORS.END[2];
+			for (let i = 0; i < rawSegments.length; i += 6) {
+				const ax = rawSegments[i];
+				const ay = rawSegments[i + 1];
+				const az = rawSegments[i + 2];
+				const bx = rawSegments[i + 3];
+				const by = rawSegments[i + 4];
+				const bz = rawSegments[i + 5];
+
+				const dx = ax - bx;
+				const dy = ay - by;
+				const dz = az - bz;
+				const distSq = dx * dx + dy * dy + dz * dz;
+
+				if (distSq > EPSILON * EPSILON) {
+					filteredPositions.push(ax, ay, az, bx, by, bz);
+
+					filteredColors.push(
+						SEGMENT_COLORS.START[0],
+						SEGMENT_COLORS.START[1],
+						SEGMENT_COLORS.START[2],
+						SEGMENT_COLORS.END[0],
+						SEGMENT_COLORS.END[1],
+						SEGMENT_COLORS.END[2],
+					);
+				}
 			}
-			geometry.setColors(colors);
 
-			tangentFieldMeshes[key] = new LineSegments2(geometry, lineMaterial);
+			if (filteredPositions.length > 0) {
+				const geometry = new LineSegmentsGeometry();
+				geometry.setPositions(new Float32Array(filteredPositions));
+				geometry.setColors(new Float32Array(filteredColors));
+
+				tangentFieldMeshes[key] = new LineSegments2(
+					geometry,
+					lineMaterial,
+				);
+			}
 		}
 	});
 
