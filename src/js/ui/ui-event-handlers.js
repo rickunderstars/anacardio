@@ -9,6 +9,7 @@ import { VisMode } from "@js/core/state-manager.js";
 import { formatNumber, get2Min, getMax } from "@js/utils/math-utils.js";
 import { processFile } from "@js/io/file-loader.js";
 import { CameraVersors } from "@js/engine/scene-manager.js";
+import { renderMeshDropdown } from "@js/ui/ui-file-handlers.js";
 
 export function updateMinMaxUI(min, max) {
 	document.getElementById("min-value").innerHTML = formatNumber(min);
@@ -176,14 +177,22 @@ export function setupEventHandlers(dependencies) {
 			}
 		});
 
-	document
-		.getElementById("loaded-meshes-dropdown")
-		.addEventListener("change", function (e) {
+	const meshDropdown = document.getElementById("add-mesh-dropdown");
+	meshDropdown.addEventListener("change", async (e) => {
+		const value = e.target.value;
+
+				// 1. Load from file
+				if (value === "file") {
+					document.getElementById("raw-mesh").click();
+					renderMeshDropdown(state);
+					return;
+				}
+		if (!isNaN(Number(value)) && value !== "") {
 			if (state.activeMesh) {
 				sceneManager.saveCameraVersor(state.activeMesh);
 			}
 
-			state.activeMeshIndex = parseInt(e.target.value);
+			state.activeMeshIndex = parseInt(value);
 			const { min, max } = updateActiveMesh({ shaders, state });
 			updateMinMaxUI(min, max);
 			updatePolarUI(state);
@@ -197,23 +206,12 @@ export function setupEventHandlers(dependencies) {
 			}
 
 			sceneManager.restoreCameraVersor(state.activeMesh);
-		});
-
-	const meshDropdown = document.getElementById("add-mesh-dropdown");
-	meshDropdown.addEventListener("change", async (e) => {
-		const value = e.target.value;
-
-		if (value === "file") {
-			document.getElementById("raw-mesh").click();
-			meshDropdown.value = "";
+			renderMeshDropdown(state);
 			return;
 		}
 
 		document.body.style.cursor = "wait";
 		meshDropdown.disabled = true;
-
-		const placeholder = meshDropdown.querySelector('option[value=""]');
-		if (placeholder) placeholder.text = "Loading...";
 
 		try {
 			await addTestMesh(
@@ -226,10 +224,9 @@ export function setupEventHandlers(dependencies) {
 			);
 		} catch (error) {
 			console.error("Failed to load test mesh: ", error);
+			renderMeshDropdown(state);
 		} finally {
 			meshDropdown.disabled = false;
-			meshDropdown.value = "";
-			if (placeholder) placeholder.text = "Select";
 			document.body.style.cursor = "default";
 		}
 	});

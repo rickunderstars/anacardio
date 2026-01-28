@@ -4,7 +4,7 @@ import { LineMaterial } from "three/addons/lines/LineMaterial.js";
 import { LineSegmentsGeometry } from "three/addons/lines/LineSegmentsGeometry.js";
 import { updateActiveMesh } from "@js/engine/mesh-renderer.js";
 import { VisMode } from "@js/core/state-manager.js";
-import { updateMeshesList } from "@js/ui/ui-file-handlers.js";
+import { renderMeshDropdown } from "@js/ui/ui-file-handlers.js";
 import { updateMinMaxUI } from "@js/ui/ui-event-handlers.js";
 import { SEGMENT_COLORS } from "@js/ui/colors.js";
 
@@ -173,7 +173,7 @@ export async function addMesh(dependencies) {
 	}
 
 	sceneManager.render();
-	updateMeshesList(state);
+	renderMeshDropdown(state);
 
 	console.log(
 		"Mesh loaded successfully. Meshes loaded:",
