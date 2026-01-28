@@ -17,7 +17,7 @@ export function updateMinMaxUI(min, max) {
 
 function updatePolarUI(state) {
 	const bar = document.getElementById("polar-bar");
-	if (state.mode === VisMode.MIXED_MODE) {
+	if (state.activeQuality === "combined") {
 		bar.classList.remove("hidden");
 		colorizePolar();
 
@@ -161,7 +161,18 @@ export function setupEventHandlers(dependencies) {
 				updateUIForMode(state);
 				const { min, max } = updateActiveMesh({ shaders, state });
 				updateMinMaxUI(min, max);
-				sceneManager.render();
+
+				if (state.activeQuality === "combined") {
+					sceneManager.startClock();
+					sceneManager.resetAnimationState();
+					sceneManager.runAnimationLoop(state);
+				} else if (state.mode === VisMode.ANIMATED) {
+					sceneManager.startClock();
+					sceneManager.resetAnimationState();
+					sceneManager.runAnimationLoop(state);
+				} else {
+					sceneManager.render();
+				}
 			}
 		});
 
@@ -238,7 +249,10 @@ export function setupEventHandlers(dependencies) {
 		});
 
 	sceneManager.controls.addEventListener("change", () => {
-		if (state.mode != VisMode.ANIMATED) {
+		if (
+			state.mode != VisMode.ANIMATED &&
+			state.activeQuality != "combined"
+		) {
 			sceneManager.render();
 		}
 	});
@@ -247,12 +261,6 @@ export function setupEventHandlers(dependencies) {
 		.querySelector('[data-js="modes-list"]')
 		.addEventListener("change", function (e) {
 			if (e.target.name === "mode") {
-				const mixedToggle =
-					document.getElementById("mixed-mode-toggle");
-				if (mixedToggle.checked) {
-					mixedToggle.checked = false;
-				}
-
 				if (state.activeMeshIndex === -1 || !state.activeMesh) return;
 
 				const newMode = e.target.value;
@@ -269,43 +277,6 @@ export function setupEventHandlers(dependencies) {
 					} else {
 						sceneManager.render();
 					}
-				}
-			}
-		});
-
-	document
-		.getElementById("mixed-mode-toggle")
-		.addEventListener("change", function (e) {
-			if (state.activeMeshIndex === -1 || !state.activeMesh) {
-				e.target.checked = !e.target.checked;
-				return;
-			}
-
-			if (e.target.checked) {
-				state.mode = VisMode.MIXED_MODE;
-				updateUIForMode(state);
-				const { min, max } = updateActiveMesh({ shaders, state });
-				updateMinMaxUI(min, max);
-				updatePolarUI(state);
-
-				sceneManager.startClock();
-				sceneManager.resetAnimationState();
-				sceneManager.runAnimationLoop(state);
-			} else {
-				const selectedMode = document.querySelector(
-					'[data-js="modes-list"] input[name="mode"]:checked',
-				).value;
-				state.mode = selectedMode;
-				updateUIForMode(state);
-				const { min, max } = updateActiveMesh({ shaders, state });
-				updateMinMaxUI(min, max);
-
-				if (selectedMode === VisMode.ANIMATED) {
-					sceneManager.startClock();
-					sceneManager.resetAnimationState();
-					sceneManager.runAnimationLoop(state);
-				} else {
-					sceneManager.render();
 				}
 			}
 		});
@@ -347,9 +318,13 @@ function updateUIForMode(state) {
 	const wavesSpeedContainer = document.getElementById(
 		"waves-speed-container",
 	);
-	const latTitle = document.getElementById("lat-gradient-title");
+	const verticalTitle = document.getElementById("vertical-gradient-title");
 
-	if (state.mode === VisMode.ANIMATED || state.mode === VisMode.MIXED_MODE) {
+	const horizontalTitle = document.getElementById(
+		"horizontal-gradient-title",
+	);
+
+	if (state.mode === VisMode.ANIMATED || state.activeQuality === "combined") {
 		wavesNumberContainer.classList.remove("hidden");
 		wavesSpeedContainer.classList.remove("hidden");
 	} else {
@@ -357,10 +332,10 @@ function updateUIForMode(state) {
 		wavesSpeedContainer.classList.add("hidden");
 	}
 
-	if (state.mode === VisMode.MIXED_MODE) {
-		latTitle.classList.remove("hidden");
+	if (state.activeQuality === "combined") {
+		horizontalTitle.classList.remove("hidden");
 	} else {
-		latTitle.classList.add("hidden");
+		horizontalTitle.classList.add("hidden");
 	}
 
 	updatePolarUI(state);

@@ -52,7 +52,7 @@ void main() {
 	vec3 extemlDiffuse = exteml * lambert * (1.0 - uAmbientLightIntensity);
 
 	float binaryIsNull = step(0.1, vIsNull);
-	float binaryXtml = step(0.1, xtml);
+	float binaryXtml = step(0.3, xtml);
 
 	vec3 finalColor =
 		mix(mix(ambient + diffuse, nullAmbient + nullDiffuse, binaryIsNull),
