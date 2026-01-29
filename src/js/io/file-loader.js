@@ -155,7 +155,7 @@ export async function addMesh(dependencies) {
 	state.addMesh(meshData);
 
 	const { min, max } = updateActiveMesh({ shaders, state });
-	updateMinMaxUI(min, max);
+	updateMinMaxUI(min, max, state);
 
 	state.meshes.forEach((m) => {
 		m.mesh.visible = false;

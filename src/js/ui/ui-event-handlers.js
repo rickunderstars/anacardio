@@ -2,7 +2,7 @@ import * as THREE from "three";
 
 import { reloadShaderMaterial } from "@js/engine/shader-loader.js";
 import { surfaceSampler } from "@js/engine/raycaster.js";
-import { setGaugeLine, colorizePolar } from "@js/ui/colors.js";
+import { setGaugeLine } from "@js/ui/colors.js";
 import { updateActiveMesh } from "@js/engine/mesh-renderer.js";
 import { addTestMesh } from "@js/io/test-loader.js";
 import { VisMode, AppEvents } from "@js/core/state-manager.js";
@@ -11,31 +11,23 @@ import { processFile } from "@js/io/file-loader.js";
 import { CameraVersors } from "@js/engine/scene-manager.js";
 import { renderMeshDropdown } from "@js/ui/ui-file-handlers.js";
 
-export function updateMinMaxUI(min, max) {
+export function updateMinMaxUI(min, max, state) {
 	document.getElementById("min-value").innerHTML = formatNumber(min);
 	document.getElementById("max-value").innerHTML = formatNumber(max);
-}
 
-function updatePolarUI(state) {
-	const bar = document.getElementById("polar-bar");
-	if (state.activeQuality === "combined") {
-		bar.classList.remove("hidden");
-		colorizePolar();
+	let bMin = min;
+	let bMax = max;
 
-		if (state.activeMesh && state.activeMesh.valueSets["bipolar"]) {
-			const [, min] = get2Min(state.activeMesh.valueSets["bipolar"]);
-			const max = getMax(state.activeMesh.valueSets["bipolar"]);
-			document.getElementById("polar-min").innerHTML =
-				"min<br/>" + formatNumber(min);
-			document.getElementById("polar-max").innerHTML =
-				"max<br/>" + formatNumber(max);
-		} else {
-			document.getElementById("polar-min").innerText = "min";
-			document.getElementById("polar-max").innerText = "max";
-		}
-	} else {
-		bar.classList.add("hidden");
+	if (state && state.activeQuality === "combined" && state.activeMesh) {
+		const [, foundMin] = get2Min(state.activeMesh.valueSets["bipolar"]);
+		bMin = foundMin;
+		bMax = getMax(state.activeMesh.valueSets["bipolar"]);
 	}
+
+	document.querySelector("#bipolar-min span").innerHTML =
+		formatNumber(bMin);
+	document.querySelector("#bipolar-max span").innerHTML =
+		formatNumber(bMax);
 }
 
 export function setupEventHandlers(dependencies) {
@@ -75,7 +67,7 @@ export function setupEventHandlers(dependencies) {
 		if (k.key.toLowerCase() === "s") {
 			console.log("loading shaders...");
 			reloadShaderMaterial({ shaders, state }).then((res) => {
-				if (res) updateMinMaxUI(res.min, res.max);
+				if (res) updateMinMaxUI(res.min, res.max, state);
 				sceneManager.render();
 			});
 			console.log("shaders loaded!!");
@@ -212,7 +204,7 @@ export function setupEventHandlers(dependencies) {
 
 				updateUIForMode(state);
 				const { min, max } = updateActiveMesh({ shaders, state });
-				updateMinMaxUI(min, max);
+				updateMinMaxUI(min, max, state);
 
 				if (state.activeQuality === "combined") {
 					sceneManager.startClock();
@@ -245,8 +237,8 @@ export function setupEventHandlers(dependencies) {
 
 			state.activeMeshIndex = parseInt(value);
 			const { min, max } = updateActiveMesh({ shaders, state });
-			updateMinMaxUI(min, max);
-			updatePolarUI(state);
+			updateMinMaxUI(min, max, state);
+
 
 			for (let i = 0; i < state.meshes.length; i++) {
 				if (i != state.activeMeshIndex) {
@@ -336,7 +328,7 @@ export function setupEventHandlers(dependencies) {
 				}
 				updateUIForMode(state);
 				const { min, max } = updateActiveMesh({ shaders, state });
-				updateMinMaxUI(min, max);
+				updateMinMaxUI(min, max, state);
 
 				if (newMode === VisMode.ANIMATED) {
 					sceneManager.startClock();
@@ -399,18 +391,28 @@ function updateUIForMode(state) {
 		wavesSpeedContainer.classList.add("hidden");
 	}
 
+	const colorGauge = document.getElementById("color-gauge");
+
 	if (state.activeQuality === "combined") {
 		horizontalTitle.classList.remove("hidden");
 		verticalTitle.innerHTML = "&LongLeftArrow; LAT &LongRightArrow;";
+		document.getElementById("bipolar-min").classList.remove("hidden");
+		document.getElementById("bipolar-max").classList.remove("hidden");
+
+		colorGauge.classList.remove("w-1/16");
+		colorGauge.classList.add("w-1/12");
 	} else {
 		horizontalTitle.classList.add("hidden");
 		verticalTitle.innerHTML =
 			"&LongLeftArrow; " +
 			state.activeQuality.toUpperCase() +
 			" &LongRightArrow;";
-	}
+		document.getElementById("bipolar-min").classList.add("hidden");
+		document.getElementById("bipolar-max").classList.add("hidden");
 
-	updatePolarUI(state);
+		colorGauge.classList.remove("w-1/12");
+		colorGauge.classList.add("w-1/16");
+	}
 }
 
 function updateControlsState(state) {

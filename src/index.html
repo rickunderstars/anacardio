@@ -37,28 +37,56 @@
 				>
 					BIPOLAR<br />&longleftrightarrow;
 				</div>
-				<div
-					id="max-value"
-					class="text-sm text-center font-bold bg-black rounded-md w-full mb-1 p-1"
-				>
-					---
-				</div>
-				<div class="relative w-full h-full flex justify-center rounded">
-					<canvas
-						id="gradient-bar"
-						class="w-full h-full rounded-md box-shadow-xl"
-					></canvas>
+
+				<div class="flex flex-row w-full flex-grow gap-1 items-center">
 					<div
-						id="gauge-line"
-						class="absolute w-9/8 h-0.5 rounded border-y border-white pointer-events-none transform translate-y-1/2"
-					></div>
+						id="bipolar-min"
+						class="w-1/5 min-w-[16px] flex-shrink-0 h-1/4 p-1 mr-1 bg-black rounded-md flex items-center justify-center hidden"
+					>
+						<span
+							class="-rotate-90 whitespace-nowrap text-sm font-bold"
+							>---</span
+						>
+					</div>
+
+					<div class="flex flex-col flex-grow h-full min-w-0 gap-1">
+						<div
+							id="max-value"
+							class="text-sm text-center font-bold bg-black rounded-md w-full p-1 truncate"
+						>
+							---
+						</div>
+						<div
+							class="relative flex-grow w-full flex justify-center rounded"
+						>
+							<canvas
+								id="gradient-bar"
+								class="w-full h-full rounded-md box-shadow-xl"
+							></canvas>
+							<div
+								id="gauge-line"
+								class="absolute w-12/11 h-0.5 rounded border-y border-white pointer-events-none transform translate-y-1/2"
+							></div>
+						</div>
+						<div
+							id="min-value"
+							class="text-sm text-center font-bold bg-black rounded-md w-full p-1 truncate"
+						>
+							---
+						</div>
+					</div>
+
+					<div
+						id="bipolar-max"
+						class="w-1/5 min-w-[16px] flex-shrink-0 h-1/4 p-1 ml-1 bg-black rounded-md flex items-center justify-center hidden"
+					>
+						<span
+							class="-rotate-90 whitespace-nowrap text-sm font-bold"
+							>---</span
+						>
+					</div>
 				</div>
-				<div
-					id="min-value"
-					class="text-sm text-center font-bold bg-black rounded-md w-full mt-1 p-1"
-				>
-					---
-				</div>
+
 				<div
 					class="text-sm text-center font-bold bg-black rounded-md w-full mt-1 bg-slate-700 p-1"
 				>
@@ -408,36 +436,6 @@
 											</div>
 										</div>
 									</label>
-								</div>
-								<div
-									id="polar-bar"
-									class="hidden flex flex-col gap-1 mt-2 w-full"
-								>
-									<div
-										class="text-sm text-center font-bold text-slate-300"
-									>
-										Bipolar
-									</div>
-									<div
-										class="flex flex-row items-stretch gap-2 h-10"
-									>
-										<div
-											id="polar-min"
-											class="flex items-center justify-center text-sm text-center font-bold bg-black rounded-md px-2 w-14"
-										>
-											min
-										</div>
-										<canvas
-											id="polar-canvas"
-											class="flex-grow rounded-md shadow-inner"
-										></canvas>
-										<div
-											id="polar-max"
-											class="flex items-center justify-center text-sm text-center font-bold bg-black rounded-md px-2 w-14"
-										>
-											max
-										</div>
-									</div>
 								</div>
 							</fieldset>
 						</div>
