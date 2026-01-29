@@ -18,8 +18,8 @@ export class StateManager extends EventTarget {
 	meshes = [];
 
 	#activeMeshIndex = -1;
-	#activeQuality = "unipolar";
-	#mode = VisMode.COLOR_RAMP;
+	#activeQuality = "combined";
+	#mode = VisMode.ANIMATED;
 	#ambientLightIntensity = 0.6;
 	#wavesNumber = 10;
 	#wavesSpeed = 0.05;

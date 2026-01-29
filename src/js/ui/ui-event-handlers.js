@@ -453,7 +453,8 @@ function updateControlsState(state) {
 	qualityRadios.forEach((radio) => {
 		radio.disabled = isDisabled;
 		const label = radio.closest("label");
-		if (!label) return;
+		const div = label?.querySelector("div");
+		if (!label || !div) return;
 
 		if (isDisabled) {
 			return;
@@ -472,14 +473,23 @@ function updateControlsState(state) {
 		} else {
 			label.classList.remove("opacity-50");
 		}
+
+		if (state.activeQuality === "combined") {
+			if (["bipolar", "lat", "exteml"].includes(radio.value)) {
+				div.classList.add("border-purple-400");
+				div.classList.remove("border-transparent");
+			} else {
+				div.classList.remove("border-purple-400");
+				div.classList.add("border-transparent");
+			}
+		} else {
+			div.classList.remove("border-purple-400");
+			div.classList.add("border-transparent");
+		}
 	});
 
 	const ticks = document.querySelectorAll("span[data-tick]");
 	ticks.forEach((tick) => {
-		if (state.activeQuality === "combined") {
-			tick.classList.remove("hidden");
-		} else {
-			tick.classList.add("hidden");
-		}
+		tick.classList.add("hidden");
 	});
 }

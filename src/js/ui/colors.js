@@ -32,7 +32,7 @@ function gradientWave(t, colorStart, colorEnd, power) {
 	return mixColors(colorStart, colorEnd, t);
 }
 
-export function colorizeBinaryGradient(state) {
+export function colorizeBinaryGradient() {
 	const gradient = document.getElementById("gradient-bar");
 	if (!gradient) return;
 
@@ -99,7 +99,7 @@ export function colorizeGradient(state, time = 0) {
 		}
 	} else if (mode === VisMode.COLOR_RAMP || mode === VisMode.TANGENT_FIELD) {
 		if (state.isBinary) {
-			colorizeBinaryGradient(state);
+			colorizeBinaryGradient();
 			return;
 		}
 
