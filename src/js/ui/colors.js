@@ -32,6 +32,25 @@ function gradientWave(t, colorStart, colorEnd, power) {
 	return mixColors(colorStart, colorEnd, t);
 }
 
+export function colorizeBinaryGradient(state) {
+	const gradient = document.getElementById("gradient-bar");
+	if (!gradient) return;
+
+	const ctx = gradient.getContext("2d");
+
+	const width = gradient.width;
+	const height = gradient.height;
+
+	const binColor1 = SHADER_COLORS.BIN_COLOR_1.map((c) => Math.round(c * 255));
+	const binColor2 = SHADER_COLORS.BIN_COLOR_2.map((c) => Math.round(c * 255));
+
+	ctx.fillStyle = `rgb(${binColor1[0]}, ${binColor1[1]}, ${binColor1[2]})`;
+	ctx.fillRect(0, height / 2, width, height / 2);
+
+	ctx.fillStyle = `rgb(${binColor2[0]}, ${binColor2[1]}, ${binColor2[2]})`;
+	ctx.fillRect(0, 0, width, height / 2);
+}
+
 export function colorizeGradient(state, time = 0) {
 	const gradient = document.getElementById("gradient-bar");
 	if (!gradient) return;
@@ -79,6 +98,11 @@ export function colorizeGradient(state, time = 0) {
 			ctx.fillRect(1, y, 1, 1);
 		}
 	} else if (mode === VisMode.COLOR_RAMP || mode === VisMode.TANGENT_FIELD) {
+		if (state.isBinary) {
+			colorizeBinaryGradient(state);
+			return;
+		}
+
 		for (let y = 0; y < height; y++) {
 			const t = 1 - y / height;
 			const [r, g, b] = turboColormap(t);

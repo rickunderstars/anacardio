@@ -40,6 +40,7 @@ export function updateActiveMesh(dependencies) {
 			new THREE.BufferAttribute(activeMesh.valueSets["exteml"], 1),
 		);
 
+		state.isBinary = false;
 		hideAllTangentFields(state);
 		activeMesh.mesh.material = new THREE.ShaderMaterial({
 			uniforms: {
@@ -90,6 +91,7 @@ export function updateActiveMesh(dependencies) {
 
 	const isBinary =
 		areValuesClose(absMin, min) || areValuesClose(min, max);
+	state.isBinary = isBinary;
 	const renderMin = isBinary ? absMin : min;
 	const renderMax =
 		isBinary && areValuesClose(absMin, max) ? max + 1.0 : max;
