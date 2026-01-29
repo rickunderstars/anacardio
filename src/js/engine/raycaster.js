@@ -79,6 +79,9 @@ export function surfaceSampler(dependencies) {
 			case "groupid":
 				activeValue = groupid;
 				break;
+			case "combined":
+				activeValue = lat;
+				break;
 		}
 
 		return {

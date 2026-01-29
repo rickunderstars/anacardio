@@ -2,41 +2,32 @@ import * as THREE from "three";
 
 import { reloadShaderMaterial } from "@js/engine/shader-loader.js";
 import { surfaceSampler } from "@js/engine/raycaster.js";
-import { setGaugeLine, colorizePolar } from "@js/ui/colors.js";
+import { setGaugeLine } from "@js/ui/colors.js";
 import { updateActiveMesh } from "@js/engine/mesh-renderer.js";
 import { addTestMesh } from "@js/io/test-loader.js";
-import { VisMode } from "@js/core/state-manager.js";
+import { VisMode, AppEvents } from "@js/core/state-manager.js";
 import { formatNumber, get2Min, getMax } from "@js/utils/math-utils.js";
 import { processFile } from "@js/io/file-loader.js";
 import { CameraVersors } from "@js/engine/scene-manager.js";
+import { renderMeshDropdown } from "@js/ui/ui-file-handlers.js";
 
-export function updateMinMaxUI(min, max) {
-	document.getElementById("min-value").innerHTML =
-		"min<br/>" + formatNumber(min);
-	document.getElementById("max-value").innerHTML =
-		"max<br/>" + formatNumber(max);
-}
+export function updateMinMaxUI(min, max, state) {
+	document.getElementById("min-value").innerHTML = formatNumber(min);
+	document.getElementById("max-value").innerHTML = formatNumber(max);
 
-function updatePolarUI(state) {
-	const bar = document.getElementById("polar-bar");
-	if (state.mode === VisMode.MIXED_MODE) {
-		bar.classList.remove("hidden");
-		colorizePolar();
+	let bMin = min;
+	let bMax = max;
 
-		if (state.activeMesh && state.activeMesh.valueSets["bipolar"]) {
-			const [, min] = get2Min(state.activeMesh.valueSets["bipolar"]);
-			const max = getMax(state.activeMesh.valueSets["bipolar"]);
-			document.getElementById("polar-min").innerHTML =
-				"min<br/>" + formatNumber(min);
-			document.getElementById("polar-max").innerHTML =
-				"max<br/>" + formatNumber(max);
-		} else {
-			document.getElementById("polar-min").innerText = "min";
-			document.getElementById("polar-max").innerText = "max";
-		}
-	} else {
-		bar.classList.add("hidden");
+	if (state && state.activeQuality === "combined" && state.activeMesh) {
+		const [, foundMin] = get2Min(state.activeMesh.valueSets["bipolar"]);
+		bMin = foundMin;
+		bMax = getMax(state.activeMesh.valueSets["bipolar"]);
 	}
+
+	document.querySelector("#bipolar-min span").innerHTML =
+		formatNumber(bMin);
+	document.querySelector("#bipolar-max span").innerHTML =
+		formatNumber(bMax);
 }
 
 export function setupEventHandlers(dependencies) {
@@ -67,10 +58,16 @@ export function setupEventHandlers(dependencies) {
 	});
 
 	document.addEventListener("keydown", (k) => {
+		if (k.key.toLowerCase() === "p" || k.key === " ") {
+			sceneManager.togglePause();
+		}
+	});
+
+	document.addEventListener("keydown", (k) => {
 		if (k.key.toLowerCase() === "s") {
 			console.log("loading shaders...");
 			reloadShaderMaterial({ shaders, state }).then((res) => {
-				if (res) updateMinMaxUI(res.min, res.max);
+				if (res) updateMinMaxUI(res.min, res.max, state);
 				sceneManager.render();
 			});
 			console.log("shaders loaded!!");
@@ -150,34 +147,98 @@ export function setupEventHandlers(dependencies) {
 	});
 
 	updateUIForMode(state);
+	updateControlsState(state);
+
+	state.addEventListener(AppEvents.MESH_CHANGED, () => {
+		updateControlsState(state);
+	});
+
+	state.addEventListener(AppEvents.MODE_CHANGED, () => {
+		updateControlsState(state);
+	});
+
+	state.addEventListener(AppEvents.QUALITY_CHANGED, () => {
+		updateControlsState(state);
+	});
 
 	document
 		.querySelector('[data-js="qualities-list"]')
 		.addEventListener("change", function (e) {
 			if (e.target.name === "quality") {
-				state.activeQuality = e.target.value;
+				const newQuality = e.target.value;
+				const restrictedQualities = [
+					"eml",
+					"exteml",
+					"scar",
+					"groupid",
+				];
+				const combinedRestrictedModes = [
+					VisMode.COLOR_RAMP,
+					VisMode.TANGENT_FIELD,
+				];
+
+				if (
+					restrictedQualities.includes(newQuality) &&
+					(state.mode === VisMode.ANIMATED ||
+						state.mode === VisMode.TANGENT_FIELD)
+				) {
+					state.mode = VisMode.COLOR_RAMP;
+				} else if (
+					newQuality === "combined" &&
+					combinedRestrictedModes.includes(state.mode)
+				) {
+					state.mode = VisMode.ANIMATED;
+				}
+
+				state.activeQuality = newQuality;
 				const selectedMode = document.querySelector(
 					'[data-js="modes-list"] input[name="mode"]:checked',
 				).value;
-				state.mode = selectedMode;
+
+				if (state.mode !== selectedMode) {
+					const modeInput = document.querySelector(
+						`input[name="mode"][value="${state.mode}"]`,
+					);
+					if (modeInput) modeInput.checked = true;
+				}
+
 				updateUIForMode(state);
 				const { min, max } = updateActiveMesh({ shaders, state });
-				updateMinMaxUI(min, max);
-				sceneManager.render();
+				updateMinMaxUI(min, max, state);
+
+				if (state.activeQuality === "combined") {
+					sceneManager.startClock();
+					sceneManager.resetAnimationState();
+					sceneManager.runAnimationLoop(state);
+				} else if (state.mode === VisMode.ANIMATED) {
+					sceneManager.startClock();
+					sceneManager.resetAnimationState();
+					sceneManager.runAnimationLoop(state);
+				} else {
+					sceneManager.render();
+				}
 			}
 		});
 
-	document
-		.getElementById("loaded-meshes-dropdown")
-		.addEventListener("change", function (e) {
+	const meshDropdown = document.getElementById("add-mesh-dropdown");
+	meshDropdown.addEventListener("change", async (e) => {
+		const value = e.target.value;
+
+		if (value === "file") {
+			document.getElementById("raw-mesh").click();
+			renderMeshDropdown(state);
+			return;
+		}
+
+		if (!isNaN(Number(value)) && value !== "") {
 			if (state.activeMesh) {
 				sceneManager.saveCameraVersor(state.activeMesh);
 			}
 
-			state.activeMeshIndex = parseInt(e.target.value);
+			state.activeMeshIndex = parseInt(value);
 			const { min, max } = updateActiveMesh({ shaders, state });
-			updateMinMaxUI(min, max);
-			updatePolarUI(state);
+			updateMinMaxUI(min, max, state);
+
 
 			for (let i = 0; i < state.meshes.length; i++) {
 				if (i != state.activeMeshIndex) {
@@ -188,23 +249,12 @@ export function setupEventHandlers(dependencies) {
 			}
 
 			sceneManager.restoreCameraVersor(state.activeMesh);
-		});
-
-	const meshDropdown = document.getElementById("add-mesh-dropdown");
-	meshDropdown.addEventListener("change", async (e) => {
-		const value = e.target.value;
-
-		if (value === "file") {
-			document.getElementById("raw-mesh").click();
-			meshDropdown.value = "";
+			renderMeshDropdown(state);
 			return;
 		}
 
 		document.body.style.cursor = "wait";
 		meshDropdown.disabled = true;
-
-		const placeholder = meshDropdown.querySelector('option[value=""]');
-		if (placeholder) placeholder.text = "Loading...";
 
 		try {
 			await addTestMesh(
@@ -217,30 +267,18 @@ export function setupEventHandlers(dependencies) {
 			);
 		} catch (error) {
 			console.error("Failed to load test mesh: ", error);
+			renderMeshDropdown(state);
 		} finally {
 			meshDropdown.disabled = false;
-			meshDropdown.value = "";
-			if (placeholder) placeholder.text = "Add Mesh";
 			document.body.style.cursor = "default";
 		}
 	});
-	document
-		.getElementById("raw-mesh")
-		.addEventListener("change", function (e) {
-			if (e.target.files.length > 0) {
-				const file = e.target.files[0];
-				processFile({
-					file,
-					shaders,
-					sceneManager,
-					state,
-				});
-				e.target.value = "";
-			}
-		});
 
 	sceneManager.controls.addEventListener("change", () => {
-		if (state.mode != VisMode.ANIMATED) {
+		if (
+			state.mode != VisMode.ANIMATED &&
+			state.activeQuality != "combined"
+		) {
 			sceneManager.render();
 		}
 	});
@@ -249,60 +287,50 @@ export function setupEventHandlers(dependencies) {
 		.querySelector('[data-js="modes-list"]')
 		.addEventListener("change", function (e) {
 			if (e.target.name === "mode") {
-				const mixedToggle =
-					document.getElementById("mixed-mode-toggle");
-				if (mixedToggle.checked) {
-					mixedToggle.checked = false;
-				}
-
 				if (state.activeMeshIndex === -1 || !state.activeMesh) return;
 
 				const newMode = e.target.value;
-				if (state.mode != newMode) {
-					state.mode = newMode;
-					updateUIForMode(state);
-					const { min, max } = updateActiveMesh({ shaders, state });
-					updateMinMaxUI(min, max);
+				const restrictedQualities = [
+					"eml",
+					"exteml",
+					"scar",
+					"groupid",
+				];
+				const combinedQuality = "combined";
 
-					if (newMode === VisMode.ANIMATED) {
-						sceneManager.startClock();
-						sceneManager.resetAnimationState();
-						sceneManager.runAnimationLoop(state);
-					} else {
-						sceneManager.render();
-					}
+				if (
+					(newMode === VisMode.ANIMATED ||
+						newMode === VisMode.TANGENT_FIELD) &&
+					restrictedQualities.includes(state.activeQuality)
+				) {
+					state.activeQuality = "unipolar";
+				} else if (
+					(newMode === VisMode.COLOR_RAMP ||
+						newMode === VisMode.TANGENT_FIELD) &&
+					state.activeQuality === combinedQuality
+				) {
+					state.activeQuality = "unipolar";
 				}
-			}
-		});
 
-	document
-		.getElementById("mixed-mode-toggle")
-		.addEventListener("change", function (e) {
-			if (state.activeMeshIndex === -1 || !state.activeMesh) {
-				e.target.checked = !e.target.checked;
-				return;
-			}
+				state.mode = newMode;
 
-			if (e.target.checked) {
-				state.mode = VisMode.MIXED_MODE;
-				updateUIForMode(state);
-				const { min, max } = updateActiveMesh({ shaders, state });
-				updateMinMaxUI(min, max);
-				updatePolarUI(state);
-
-				sceneManager.startClock();
-				sceneManager.resetAnimationState();
-				sceneManager.runAnimationLoop(state);
-			} else {
-				const selectedMode = document.querySelector(
-					'[data-js="modes-list"] input[name="mode"]:checked',
+				const selectedQuality = document.querySelector(
+					'[data-js="qualities-list"] input[name="quality"]:checked',
 				).value;
-				state.mode = selectedMode;
+				if (state.activeQuality !== selectedQuality) {
+					const qualityInput = document.querySelector(
+						`input[name="quality"][value="${state.activeQuality}"]`,
+					);
+					if (qualityInput) qualityInput.checked = true;
+				}
+
+				if (state.mode != newMode) {
+				}
 				updateUIForMode(state);
 				const { min, max } = updateActiveMesh({ shaders, state });
-				updateMinMaxUI(min, max);
+				updateMinMaxUI(min, max, state);
 
-				if (selectedMode === VisMode.ANIMATED) {
+				if (newMode === VisMode.ANIMATED) {
 					sceneManager.startClock();
 					sceneManager.resetAnimationState();
 					sceneManager.runAnimationLoop(state);
@@ -349,9 +377,13 @@ function updateUIForMode(state) {
 	const wavesSpeedContainer = document.getElementById(
 		"waves-speed-container",
 	);
-	const latTitle = document.getElementById("lat-gradient-title");
+	const verticalTitle = document.getElementById("vertical-gradient-title");
 
-	if (state.mode === VisMode.ANIMATED || state.mode === VisMode.MIXED_MODE) {
+	const horizontalTitle = document.getElementById(
+		"horizontal-gradient-title",
+	);
+
+	if (state.mode === VisMode.ANIMATED || state.activeQuality === "combined") {
 		wavesNumberContainer.classList.remove("hidden");
 		wavesSpeedContainer.classList.remove("hidden");
 	} else {
@@ -359,11 +391,95 @@ function updateUIForMode(state) {
 		wavesSpeedContainer.classList.add("hidden");
 	}
 
-	if (state.mode === VisMode.MIXED_MODE) {
-		latTitle.classList.remove("hidden");
-	} else {
-		latTitle.classList.add("hidden");
-	}
+	const colorGauge = document.getElementById("color-gauge");
 
-	updatePolarUI(state);
+	if (state.activeQuality === "combined") {
+		horizontalTitle.classList.remove("hidden");
+		verticalTitle.innerHTML = "&LongLeftArrow; LAT &LongRightArrow;";
+		document.getElementById("bipolar-min").classList.remove("hidden");
+		document.getElementById("bipolar-max").classList.remove("hidden");
+
+		colorGauge.classList.remove("w-1/16");
+		colorGauge.classList.add("w-1/12");
+	} else {
+		horizontalTitle.classList.add("hidden");
+		verticalTitle.innerHTML =
+			"&LongLeftArrow; " +
+			state.activeQuality.toUpperCase() +
+			" &LongRightArrow;";
+		document.getElementById("bipolar-min").classList.add("hidden");
+		document.getElementById("bipolar-max").classList.add("hidden");
+
+		colorGauge.classList.remove("w-1/12");
+		colorGauge.classList.add("w-1/16");
+	}
+}
+
+function updateControlsState(state) {
+	const isDisabled = state.activeMeshIndex === -1;
+	const modeRadios = document.querySelectorAll('input[name="mode"]');
+	const qualityRadios = document.querySelectorAll('input[name="quality"]');
+
+	const restrictedQualities = ["eml", "exteml", "scar", "groupid"];
+	const restrictedModes = [VisMode.ANIMATED, VisMode.TANGENT_FIELD];
+
+	const combinedQuality = "combined";
+	const combinedRestrictedModes = [VisMode.COLOR_RAMP, VisMode.TANGENT_FIELD];
+
+	modeRadios.forEach((radio) => {
+		radio.disabled = isDisabled;
+		const label = radio.closest("label");
+		if (!label) return;
+
+		if (isDisabled) {
+			return;
+		}
+
+		const isRestrictedByQualities =
+			restrictedModes.includes(radio.value) &&
+			restrictedQualities.includes(state.activeQuality);
+
+		const isRestrictedByCombined =
+			combinedRestrictedModes.includes(radio.value) &&
+			state.activeQuality === combinedQuality;
+
+		if (isRestrictedByQualities || isRestrictedByCombined) {
+			label.classList.add("opacity-50");
+		} else {
+			label.classList.remove("opacity-50");
+		}
+	});
+
+	qualityRadios.forEach((radio) => {
+		radio.disabled = isDisabled;
+		const label = radio.closest("label");
+		if (!label) return;
+
+		if (isDisabled) {
+			return;
+		}
+
+		const isRestrictedByModes =
+			restrictedQualities.includes(radio.value) &&
+			restrictedModes.includes(state.mode);
+
+		const isRestrictedByCombined =
+			radio.value === combinedQuality &&
+			combinedRestrictedModes.includes(state.mode);
+
+		if (isRestrictedByModes || isRestrictedByCombined) {
+			label.classList.add("opacity-50");
+		} else {
+			label.classList.remove("opacity-50");
+		}
+	});
+
+	const ticks = document.querySelectorAll("span[data-tick]");
+	ticks.forEach((tick) => {
+		if (state.activeQuality === "combined") {
+			tick.classList.remove("hidden");
+		} else {
+			tick.classList.add("hidden");
+		}
+	});
 }
