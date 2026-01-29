@@ -1,4 +1,7 @@
 uniform float uAmbientLightIntensity;
+uniform float uOnlyTwo;
+uniform vec3 uBinColor1;
+uniform vec3 uBinColor2;
 
 varying float val;
 varying vec3 vNormal;
@@ -37,7 +40,13 @@ void main() {
 				   light3Diffuse * vec3(0.7) + light4Diffuse * vec3(0.7);
 	lambert = lambert / vec3(3.0);
 
-	vec3 color = TurboColormap(val);
+	vec3 color;
+	if (uOnlyTwo > 0.5) {
+		float snappedVal = step(0.5, val);
+		color = mix(uBinColor1, uBinColor2, snappedVal);
+	} else {
+		color = TurboColormap(val);
+	}
 
 	vec3 ambient = color * uAmbientLightIntensity;
 	vec3 diffuse = color * lambert * (1.0 - uAmbientLightIntensity);

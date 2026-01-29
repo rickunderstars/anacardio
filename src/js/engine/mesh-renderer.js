@@ -88,13 +88,25 @@ export function updateActiveMesh(dependencies) {
 	);
 	activeMesh.mesh.material.dispose();
 
+	const isBinary =
+		areValuesClose(absMin, min) || areValuesClose(min, max);
+	const renderMin = isBinary ? absMin : min;
+	const renderMax =
+		isBinary && areValuesClose(absMin, max) ? max + 1.0 : max;
+
 	if (state.mode === VisMode.COLOR_RAMP) {
 		activeMesh.mesh.material = new THREE.ShaderMaterial({
 			uniforms: {
-				uOnlyTwo: { value: areValuesClose(absMin, min) ? 1.0 : 0.0 },
-				uMin: { value: min },
-				uMax: { value: max },
+				uOnlyTwo: { value: isBinary ? 1.0 : 0.0 },
+				uMin: { value: renderMin },
+				uMax: { value: renderMax },
 				uAmbientLightIntensity: { value: state.ambientLightIntensity },
+				uBinColor1: {
+					value: new THREE.Vector3(...SHADER_COLORS.BIN_COLOR_1),
+				},
+				uBinColor2: {
+					value: new THREE.Vector3(...SHADER_COLORS.BIN_COLOR_2),
+				},
 			},
 			vertexShader: vShader,
 			fragmentShader: fShader,
@@ -104,8 +116,8 @@ export function updateActiveMesh(dependencies) {
 	} else if (state.mode === VisMode.TANGENT_FIELD) {
 		activeMesh.mesh.material = new THREE.ShaderMaterial({
 			uniforms: {
-				uMin: { value: min },
-				uMax: { value: max },
+				uMin: { value: renderMin },
+				uMax: { value: renderMax },
 				uAmbientLightIntensity: { value: state.ambientLightIntensity },
 				uColor: {
 					value: new THREE.Vector3(
