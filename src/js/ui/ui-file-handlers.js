@@ -18,6 +18,7 @@ export function setupFileHandlers(dependencies) {
 					sceneManager,
 					state,
 				});
+				e.target.value = "";
 			}
 		});
 

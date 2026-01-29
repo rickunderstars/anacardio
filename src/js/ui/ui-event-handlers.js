@@ -181,12 +181,12 @@ export function setupEventHandlers(dependencies) {
 	meshDropdown.addEventListener("change", async (e) => {
 		const value = e.target.value;
 
-				// 1. Load from file
-				if (value === "file") {
-					document.getElementById("raw-mesh").click();
-					renderMeshDropdown(state);
-					return;
-				}
+		if (value === "file") {
+			document.getElementById("raw-mesh").click();
+			renderMeshDropdown(state);
+			return;
+		}
+
 		if (!isNaN(Number(value)) && value !== "") {
 			if (state.activeMesh) {
 				sceneManager.saveCameraVersor(state.activeMesh);
@@ -230,20 +230,6 @@ export function setupEventHandlers(dependencies) {
 			document.body.style.cursor = "default";
 		}
 	});
-	document
-		.getElementById("raw-mesh")
-		.addEventListener("change", function (e) {
-			if (e.target.files.length > 0) {
-				const file = e.target.files[0];
-				processFile({
-					file,
-					shaders,
-					sceneManager,
-					state,
-				});
-				e.target.value = "";
-			}
-		});
 
 	sceneManager.controls.addEventListener("change", () => {
 		if (
