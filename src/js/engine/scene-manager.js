@@ -31,6 +31,9 @@ export class SceneManager {
 		this.interval = 1000 / this.fps;
 		this.lastTime = 0;
 		this.onRender = null;
+
+		this.isPaused = false;
+		this.accumulatedTime = 0;
 	}
 
 	#createRenderer() {
@@ -81,11 +84,16 @@ export class SceneManager {
 	}
 
 	getElapsedTime() {
-		return this.clock.getElapsedTime();
+		return this.accumulatedTime;
+	}
+
+	togglePause() {
+		this.isPaused = !this.isPaused;
 	}
 
 	startClock() {
 		this.clock.start();
+		this.accumulatedTime = 0;
 	}
 
 	resetAnimationState() {
@@ -103,6 +111,11 @@ export class SceneManager {
 
 		requestAnimationFrame((t) => this.runAnimationLoop(state, t));
 
+		const clockDelta = this.clock.getDelta();
+		if (!this.isPaused) {
+			this.accumulatedTime += clockDelta;
+		}
+
 		if (!this.lastTime) this.lastTime = timeStamp;
 
 		const delta = timeStamp - this.lastTime;
@@ -116,7 +129,7 @@ export class SceneManager {
 					state.activeMesh.mesh.material.uniforms.uTime
 				) {
 					state.activeMesh.mesh.material.uniforms.uTime.value =
-						this.getElapsedTime();
+						this.accumulatedTime;
 				}
 			}
 

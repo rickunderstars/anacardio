@@ -66,6 +66,12 @@ export function setupEventHandlers(dependencies) {
 	});
 
 	document.addEventListener("keydown", (k) => {
+		if (k.key.toLowerCase() === "p" || k.key === " ") {
+			sceneManager.togglePause();
+		}
+	});
+
+	document.addEventListener("keydown", (k) => {
 		if (k.key.toLowerCase() === "s") {
 			console.log("loading shaders...");
 			reloadShaderMaterial({ shaders, state }).then((res) => {
