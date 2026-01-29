@@ -60,7 +60,7 @@
 					---
 				</div>
 				<div
-					class="text-sm text-center font-bold bg-black rounded-md w-full mb-1 bg-slate-700 p-1"
+					class="text-sm text-center font-bold bg-black rounded-md w-full mt-1 bg-slate-700 p-1"
 				>
 					<div id="sampler-value"></div>
 				</div>
@@ -161,7 +161,7 @@
 									class="flex flex-col border border-slate-700 rounded-md overflow-hidden divide-y divide-slate-700 w-full h-full"
 								>
 									<label
-										class="flex-grow cursor-pointer group flex flex-col"
+										class="flex-grow cursor-pointer group flex flex-col has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
 									>
 										<input
 											type="radio"
@@ -182,7 +182,7 @@
 									</label>
 
 									<label
-										class="flex-grow cursor-pointer group flex flex-col"
+										class="flex-grow cursor-pointer group flex flex-col has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
 									>
 										<input
 											type="radio"
@@ -202,7 +202,7 @@
 									</label>
 
 									<label
-										class="flex-grow cursor-pointer group flex flex-col"
+										class="flex-grow cursor-pointer group flex flex-col has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
 									>
 										<input
 											type="radio"
@@ -235,7 +235,9 @@
 									data-js="qualities-list"
 									class="flex flex-col border border-slate-700 rounded-md overflow-hidden divide-y divide-slate-700 w-full"
 								>
-									<label class="cursor-pointer group">
+									<label
+										class="cursor-pointer group has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
+									>
 										<input
 											type="radio"
 											name="quality"
@@ -254,7 +256,9 @@
 										</div>
 									</label>
 
-									<label class="cursor-pointer group">
+									<label
+										class="cursor-pointer group has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
+									>
 										<input
 											type="radio"
 											name="quality"
@@ -267,12 +271,19 @@
 											<div
 												class="px-4 text-left text-md font-medium"
 											>
+												<span
+													data-tick
+													class="hidden text-blue-400 font-bold"
+													>✓
+												</span>
 												Bipolar
 											</div>
 										</div>
 									</label>
 
-									<label class="cursor-pointer group">
+									<label
+										class="cursor-pointer group has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
+									>
 										<input
 											type="radio"
 											name="quality"
@@ -285,12 +296,19 @@
 											<div
 												class="px-4 text-left text-md font-medium"
 											>
+												<span
+													data-tick
+													class="hidden text-blue-400 font-bold"
+													>✓
+												</span>
 												LAT
 											</div>
 										</div>
 									</label>
 
-									<label class="cursor-pointer group">
+									<label
+										class="cursor-pointer group has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
+									>
 										<input
 											type="radio"
 											name="quality"
@@ -308,7 +326,9 @@
 										</div>
 									</label>
 
-									<label class="cursor-pointer group">
+									<label
+										class="cursor-pointer group has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
+									>
 										<input
 											type="radio"
 											name="quality"
@@ -321,12 +341,19 @@
 											<div
 												class="px-4 text-left text-md font-medium"
 											>
+												<span
+													data-tick
+													class="hidden text-blue-400 font-bold"
+													>✓
+												</span>
 												ExtEML
 											</div>
 										</div>
 									</label>
 
-									<label class="cursor-pointer group">
+									<label
+										class="cursor-pointer group has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
+									>
 										<input
 											type="radio"
 											name="quality"
@@ -343,8 +370,28 @@
 											</div>
 										</div>
 									</label>
-
-									<label class="cursor-pointer group">
+									<label
+										class="cursor-pointer group has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
+									>
+										<input
+											type="radio"
+											name="quality"
+											value="groupid"
+											class="sr-only peer"
+										/>
+										<div
+											class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+										>
+											<div
+												class="px-4 text-left text-md font-medium"
+											>
+												GroupID
+											</div>
+										</div>
+									</label>
+									<label
+										class="cursor-pointer group has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
+									>
 										<input
 											type="radio"
 											name="quality"

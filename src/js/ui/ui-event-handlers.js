@@ -5,7 +5,7 @@ import { surfaceSampler } from "@js/engine/raycaster.js";
 import { setGaugeLine, colorizePolar } from "@js/ui/colors.js";
 import { updateActiveMesh } from "@js/engine/mesh-renderer.js";
 import { addTestMesh } from "@js/io/test-loader.js";
-import { VisMode } from "@js/core/state-manager.js";
+import { VisMode, AppEvents } from "@js/core/state-manager.js";
 import { formatNumber, get2Min, getMax } from "@js/utils/math-utils.js";
 import { processFile } from "@js/io/file-loader.js";
 import { CameraVersors } from "@js/engine/scene-manager.js";
@@ -149,6 +149,19 @@ export function setupEventHandlers(dependencies) {
 	});
 
 	updateUIForMode(state);
+	updateControlsState(state);
+
+	state.addEventListener(AppEvents.MESH_CHANGED, () => {
+		updateControlsState(state);
+	});
+
+	state.addEventListener(AppEvents.MODE_CHANGED, () => {
+		updateControlsState(state);
+	});
+
+	state.addEventListener(AppEvents.QUALITY_CHANGED, () => {
+		updateControlsState(state);
+	});
 
 	document
 		.querySelector('[data-js="qualities-list"]')
@@ -327,4 +340,65 @@ function updateUIForMode(state) {
 	}
 
 	updatePolarUI(state);
+}
+
+function updateControlsState(state) {
+	const isDisabled = state.activeMeshIndex === -1;
+	const modeRadios = document.querySelectorAll('input[name="mode"]');
+	const qualityRadios = document.querySelectorAll('input[name="quality"]');
+
+	const restrictedQualities = ["eml", "exteml", "scar", "groupid"];
+	const restrictedModes = [VisMode.ANIMATED, VisMode.TANGENT_FIELD];
+
+	const combinedQuality = "combined";
+	const combinedRestrictedModes = [VisMode.COLOR_RAMP, VisMode.TANGENT_FIELD];
+
+	modeRadios.forEach((radio) => {
+		if (isDisabled) {
+			radio.disabled = true;
+		} else {
+			const isRestrictedByQualities =
+				restrictedModes.includes(radio.value) &&
+				restrictedQualities.includes(state.activeQuality);
+
+			const isRestrictedByCombined =
+				combinedRestrictedModes.includes(radio.value) &&
+				state.activeQuality === combinedQuality;
+
+			if (isRestrictedByQualities || isRestrictedByCombined) {
+				radio.disabled = true;
+			} else {
+				radio.disabled = false;
+			}
+		}
+	});
+
+	qualityRadios.forEach((radio) => {
+		if (isDisabled) {
+			radio.disabled = true;
+		} else {
+			const isRestrictedByModes =
+				restrictedQualities.includes(radio.value) &&
+				restrictedModes.includes(state.mode);
+
+			const isRestrictedByCombined =
+				radio.value === combinedQuality &&
+				combinedRestrictedModes.includes(state.mode);
+
+			if (isRestrictedByModes || isRestrictedByCombined) {
+				radio.disabled = true;
+			} else {
+				radio.disabled = false;
+			}
+		}
+	});
+
+	const ticks = document.querySelectorAll("span[data-tick]");
+	ticks.forEach((tick) => {
+		if (state.activeQuality === "combined") {
+			tick.classList.remove("hidden");
+		} else {
+			tick.classList.add("hidden");
+		}
+	});
 }
