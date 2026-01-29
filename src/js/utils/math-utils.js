@@ -66,6 +66,9 @@ export function areValuesClose(v1, v2) {
 }
 
 export function formatNumber(num, significantDigits = 5) {
+	if (num === undefined || num === null) {
+		return "---";
+	}
 	if (Number.isInteger(num)) {
 		return num.toString();
 	}

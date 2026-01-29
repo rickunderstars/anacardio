@@ -87,13 +87,9 @@ export function updateActiveMesh(dependencies) {
 		activeMesh.mesh.material = new THREE.ShaderMaterial({
 			uniforms: {
 				uOnlyTwo: { value: areValuesClose(absMin, min) ? 1.0 : 0.0 },
-				uAbsMin: { value: absMin },
 				uMin: { value: min },
 				uMax: { value: max },
 				uAmbientLightIntensity: { value: state.ambientLightIntensity },
-				uNullColor: {
-					value: new THREE.Vector3(...SHADER_COLORS.NULL_STATIC),
-				},
 			},
 			vertexShader: vShader,
 			fragmentShader: fShader,
@@ -107,16 +103,12 @@ export function updateActiveMesh(dependencies) {
 		hideAllTangentFields(state);
 		activeMesh.mesh.material = new THREE.ShaderMaterial({
 			uniforms: {
-				uAbsMin: { value: absMin },
 				uMin: { value: min },
 				uMax: { value: max },
 				uTime: { value: 0 },
 				uAmbientLightIntensity: { value: state.ambientLightIntensity },
 				uTimeSpeed: { value: state.wavesSpeed },
 				uNumWaves: { value: state.wavesNumber },
-				uNullColor: {
-					value: new THREE.Vector3(...SHADER_COLORS.NULL),
-				},
 				uWaveStartColor: {
 					value: new THREE.Vector3(...SHADER_COLORS.WAVE_START),
 				},

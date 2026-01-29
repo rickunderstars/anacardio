@@ -8,7 +8,7 @@ export const SHADER_COLORS = {
 	WAVE_END: [0.3, 1.0, 1.0],
 	WAVE_POLAR_START: [0.3, 0.3, 1.0],
 	WAVE_POLAR_END: [0.0, 1.0, 0.0],
-	EXTEML: [0.63, 0.4, 0.4],
+	EXTEML: [0.55, 0.41, 0.41],
 };
 
 export const SEGMENT_COLORS = {
