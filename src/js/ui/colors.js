@@ -43,7 +43,7 @@ export function colorizeBinaryGradient() {
 	ctx.fillRect(0, 0, width, height / 2);
 }
 
-export function colorizeGradientWithTurbo(ctx, width, height) {
+export function colorizeGradientTurbo(ctx, width, height) {
 	for (let y = 0; y < height; y++) {
 		const t = 1 - y / height;
 		const [r, g, b] = turboColormap(t);
@@ -73,6 +73,30 @@ export function colorizeGradientDynamic(
 			const peakColor = mixColors(colorLeft, colorRight, tHorizontal);
 			const [r, g, b] = gradientWave(phase, colorBase, peakColor, power);
 			ctx.fillStyle = `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)})`;
+			ctx.fillRect(x, y, 1, 1);
+		}
+	}
+}
+
+export function colorizeGradient2D(
+	ctx,
+	width,
+	height,
+	cTL,
+	cTR,
+	cBL,
+	cBR,
+) {
+	for (let y = 0; y < height; y++) {
+		const v = height > 1 ? y / (height - 1) : 0;
+		for (let x = 0; x < width; x++) {
+			const u = width > 1 ? x / (width - 1) : 0;
+
+			const cTop = mixColors(cTL, cTR, u);
+			const cBottom = mixColors(cBL, cBR, u);
+			const cFinal = mixColors(cTop, cBottom, v);
+
+			ctx.fillStyle = `rgb(${Math.round(cFinal[0])}, ${Math.round(cFinal[1])}, ${Math.round(cFinal[2])})`;
 			ctx.fillRect(x, y, 1, 1);
 		}
 	}
@@ -127,7 +151,7 @@ export function colorizeGradient(state, time = 0) {
 			2,
 		);
 	} else if (mode === VisMode.COLOR_RAMP || mode === VisMode.TANGENT_FIELD) {
-		colorizeGradientWithTurbo(ctx, width, height);
+		colorizeGradientTurbo(ctx, width, height);
 	} else if (mode === VisMode.ANIMATED) {
 		const startColor = SHADER_COLORS.WAVE_START.map((c) => c * 255);
 		const endColor = SHADER_COLORS.WAVE_END.map((c) => c * 255);
