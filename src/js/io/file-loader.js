@@ -73,6 +73,8 @@ export async function addMesh(dependencies) {
 		linewidth: 1.5,
 		resolution: resolution,
 		vertexColors: true,
+		transparent: true,
+		blending: THREE.AdditiveBlending,
 	});
 
 	FIELD_KEYS.forEach((key) => {

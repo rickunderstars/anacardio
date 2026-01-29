@@ -257,11 +257,12 @@ Mesh::Float32ArrayOfTangentFieldSegments(std::string quality,
 
 	for (const auto &item : tempSegments) {
 		glm::vec3 finalVector = item.vector * scaleFactor;
+		glm::vec3 firstPoint = item.center - finalVector;
 		glm::vec3 secondPoint = item.center + finalVector;
 
-		segments.push_back(item.center.x);
-		segments.push_back(item.center.y);
-		segments.push_back(item.center.z);
+		segments.push_back(firstPoint.x);
+		segments.push_back(firstPoint.y);
+		segments.push_back(firstPoint.z);
 		segments.push_back(secondPoint.x);
 		segments.push_back(secondPoint.y);
 		segments.push_back(secondPoint.z);

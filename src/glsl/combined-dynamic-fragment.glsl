@@ -12,6 +12,7 @@ varying float lt;
 varying float bip;
 varying float xtml;
 varying float vIsNull;
+varying float vGroupId;
 varying vec3 vNormal;
 
 vec3 gradientWave(float t, vec3 colorStart, vec3 colorEnd) {
@@ -51,7 +52,7 @@ void main() {
 	vec3 extemlAmbient = exteml * uAmbientLightIntensity;
 	vec3 extemlDiffuse = exteml * lambert * (1.0 - uAmbientLightIntensity);
 
-	float binaryIsNull = step(0.1, vIsNull);
+	float binaryIsNull = step(0.1, abs(vGroupId));
 	float binaryXtml = step(0.3, xtml);
 
 	vec3 finalColor =

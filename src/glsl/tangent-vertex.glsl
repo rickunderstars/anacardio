@@ -2,7 +2,6 @@ attribute float value;
 
 uniform float uMin;
 uniform float uMax;
-uniform float uOnlyTwo;
 
 varying float val;
 varying vec3 vNormal;

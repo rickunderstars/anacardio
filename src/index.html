@@ -7,7 +7,7 @@
 	</head>
 
 	<body
-		class="bg-slate-900 text-white antialiased font-sans font-bold italic"
+		class="bg-slate-900 text-white antialiased [&_*]:transition-all font-sans font-bold italic"
 	>
 		<div
 			class="flex flex-col md:flex-row h-screen w-full overflow-hidden bg-slate-800"
@@ -116,7 +116,7 @@
 						</legend>
 						<select
 							id="add-mesh-dropdown"
-							class="flex-1 p-2 bg-blue-600 text-center rounded-md cursor-pointer font-medium appearance-none hover:bg-blue-500 transition-all focus:outline-none"
+							class="flex-1 p-2 bg-blue-600 text-center rounded-md cursor-pointer font-medium appearance-none hover:bg-blue-500 focus:outline-none"
 						></select>
 					</fieldset>
 				</div>
@@ -135,37 +135,37 @@
 						<div class="grid grid-cols-3 gap-2">
 							<button
 								id="camera-front"
-								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer transition-all border border-slate-600"
+								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer border border-slate-600"
 							>
 								Front
 							</button>
 							<button
 								id="camera-top"
-								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer transition-all border border-slate-600"
+								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer border border-slate-600"
 							>
 								Top
 							</button>
 							<button
 								id="camera-left"
-								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer transition-all border border-slate-600"
+								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer border border-slate-600"
 							>
 								Left
 							</button>
 							<button
 								id="camera-back"
-								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer transition-all border border-slate-600"
+								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer border border-slate-600"
 							>
 								Back
 							</button>
 							<button
 								id="camera-bottom"
-								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer transition-all border border-slate-600"
+								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer border border-slate-600"
 							>
 								Bottom
 							</button>
 							<button
 								id="camera-right"
-								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer transition-all border border-slate-600"
+								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer border border-slate-600"
 							>
 								Right
 							</button>
@@ -196,10 +196,9 @@
 											name="mode"
 											value="color-ramp"
 											class="sr-only peer"
-											checked
 										/>
 										<div
-											class="flex-grow flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+											class="flex-grow flex items-center gap-3 px-2 py-1 bg-slate-800 border-l-3 border-transparent peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 										>
 											<div
 												class="px-4 text-center text-xl font-medium w-full"
@@ -217,9 +216,10 @@
 											name="mode"
 											value="animated"
 											class="sr-only peer"
+											checked
 										/>
 										<div
-											class="flex-grow flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+											class="flex-grow flex items-center gap-3 px-2 py-1 bg-slate-800 border-l-3 border-transparent peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 										>
 											<div
 												class="px-4 text-center text-xl font-medium w-full"
@@ -239,7 +239,7 @@
 											class="sr-only peer"
 										/>
 										<div
-											class="flex-grow flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+											class="flex-grow flex items-center gap-3 px-2 py-1 bg-slate-800 border-l-3 border-transparent peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 										>
 											<div
 												class="px-4 text-center text-xl font-medium w-full"
@@ -269,12 +269,31 @@
 										<input
 											type="radio"
 											name="quality"
-											value="unipolar"
+											value="combined"
 											class="sr-only peer"
 											checked
 										/>
 										<div
-											class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+											class="flex items-center gap-3 px-2 py-1 bg-slate-800 border-l-3 border-transparent peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+										>
+											<div
+												class="px-4 text-left text-md font-black"
+											>
+												Combined
+											</div>
+										</div>
+									</label>
+									<label
+										class="cursor-pointer group has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
+									>
+										<input
+											type="radio"
+											name="quality"
+											value="unipolar"
+											class="sr-only peer"
+										/>
+										<div
+											class="flex items-center gap-3 px-2 py-1 bg-slate-800 border-l-3 border-transparent peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 										>
 											<div
 												class="px-4 text-left text-md font-medium"
@@ -294,16 +313,11 @@
 											class="sr-only peer"
 										/>
 										<div
-											class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+											class="flex items-center gap-3 px-2 py-1 bg-slate-800 border-l-3 border-transparent peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 										>
 											<div
 												class="px-4 text-left text-md font-medium"
 											>
-												<span
-													data-tick
-													class="hidden text-blue-400 font-bold"
-													>✓
-												</span>
 												Bipolar
 											</div>
 										</div>
@@ -319,16 +333,11 @@
 											class="sr-only peer"
 										/>
 										<div
-											class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+											class="flex items-center gap-3 px-2 py-1 bg-slate-800 border-l-3 border-transparent peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 										>
 											<div
 												class="px-4 text-left text-md font-medium"
 											>
-												<span
-													data-tick
-													class="hidden text-blue-400 font-bold"
-													>✓
-												</span>
 												LAT
 											</div>
 										</div>
@@ -344,7 +353,7 @@
 											class="sr-only peer"
 										/>
 										<div
-											class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+											class="flex items-center gap-3 px-2 py-1 bg-slate-800 border-l-3 border-transparent peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 										>
 											<div
 												class="px-4 text-left text-md font-medium"
@@ -364,16 +373,11 @@
 											class="sr-only peer"
 										/>
 										<div
-											class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+											class="flex items-center gap-3 px-2 py-1 bg-slate-800 border-l-3 border-transparent peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 										>
 											<div
 												class="px-4 text-left text-md font-medium"
 											>
-												<span
-													data-tick
-													class="hidden text-blue-400 font-bold"
-													>✓
-												</span>
 												ExtEML
 											</div>
 										</div>
@@ -389,7 +393,7 @@
 											class="sr-only peer"
 										/>
 										<div
-											class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+											class="flex items-center gap-3 px-2 py-1 bg-slate-800 border-l-3 border-transparent peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 										>
 											<div
 												class="px-4 text-left text-md font-medium"
@@ -408,31 +412,12 @@
 											class="sr-only peer"
 										/>
 										<div
-											class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+											class="flex items-center gap-3 px-2 py-1 bg-slate-800 border-l-3 border-transparent peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 										>
 											<div
 												class="px-4 text-left text-md font-medium"
 											>
 												GroupID
-											</div>
-										</div>
-									</label>
-									<label
-										class="cursor-pointer group has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
-									>
-										<input
-											type="radio"
-											name="quality"
-											value="combined"
-											class="sr-only peer"
-										/>
-										<div
-											class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
-										>
-											<div
-												class="px-4 text-left text-md font-medium"
-											>
-												Combined
 											</div>
 										</div>
 									</label>

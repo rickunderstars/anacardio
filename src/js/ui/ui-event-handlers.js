@@ -24,10 +24,8 @@ export function updateMinMaxUI(min, max, state) {
 		bMax = getMax(state.activeMesh.valueSets["bipolar"]);
 	}
 
-	document.querySelector("#bipolar-min span").innerHTML =
-		formatNumber(bMin);
-	document.querySelector("#bipolar-max span").innerHTML =
-		formatNumber(bMax);
+	document.querySelector("#bipolar-min span").innerHTML = formatNumber(bMin);
+	document.querySelector("#bipolar-max span").innerHTML = formatNumber(bMax);
 }
 
 export function setupEventHandlers(dependencies) {
@@ -174,7 +172,6 @@ export function setupEventHandlers(dependencies) {
 				];
 				const combinedRestrictedModes = [
 					VisMode.COLOR_RAMP,
-					VisMode.TANGENT_FIELD,
 				];
 
 				if (
@@ -238,7 +235,6 @@ export function setupEventHandlers(dependencies) {
 			state.activeMeshIndex = parseInt(value);
 			const { min, max } = updateActiveMesh({ shaders, state });
 			updateMinMaxUI(min, max, state);
-
 
 			for (let i = 0; i < state.meshes.length; i++) {
 				if (i != state.activeMeshIndex) {
@@ -305,8 +301,7 @@ export function setupEventHandlers(dependencies) {
 				) {
 					state.activeQuality = "unipolar";
 				} else if (
-					(newMode === VisMode.COLOR_RAMP ||
-						newMode === VisMode.TANGENT_FIELD) &&
+					newMode === VisMode.COLOR_RAMP &&
 					state.activeQuality === combinedQuality
 				) {
 					state.activeQuality = "unipolar";
@@ -394,10 +389,17 @@ function updateUIForMode(state) {
 	const colorGauge = document.getElementById("color-gauge");
 
 	if (state.activeQuality === "combined") {
-		horizontalTitle.classList.remove("hidden");
 		verticalTitle.innerHTML = "&LongLeftArrow; LAT &LongRightArrow;";
-		document.getElementById("bipolar-min").classList.remove("hidden");
-		document.getElementById("bipolar-max").classList.remove("hidden");
+
+		if (state.mode === VisMode.TANGENT_FIELD) {
+			horizontalTitle.classList.add("hidden");
+			document.getElementById("bipolar-min").classList.add("hidden");
+			document.getElementById("bipolar-max").classList.add("hidden");
+		} else {
+			horizontalTitle.classList.remove("hidden");
+			document.getElementById("bipolar-min").classList.remove("hidden");
+			document.getElementById("bipolar-max").classList.remove("hidden");
+		}
 
 		colorGauge.classList.remove("w-1/16");
 		colorGauge.classList.add("w-1/12");
@@ -424,7 +426,7 @@ function updateControlsState(state) {
 	const restrictedModes = [VisMode.ANIMATED, VisMode.TANGENT_FIELD];
 
 	const combinedQuality = "combined";
-	const combinedRestrictedModes = [VisMode.COLOR_RAMP, VisMode.TANGENT_FIELD];
+	const combinedRestrictedModes = [VisMode.COLOR_RAMP];
 
 	modeRadios.forEach((radio) => {
 		radio.disabled = isDisabled;
@@ -453,7 +455,8 @@ function updateControlsState(state) {
 	qualityRadios.forEach((radio) => {
 		radio.disabled = isDisabled;
 		const label = radio.closest("label");
-		if (!label) return;
+		const div = label?.querySelector("div");
+		if (!label || !div) return;
 
 		if (isDisabled) {
 			return;
@@ -472,14 +475,23 @@ function updateControlsState(state) {
 		} else {
 			label.classList.remove("opacity-50");
 		}
+
+		if (state.activeQuality === "combined") {
+			if (["bipolar", "lat", "exteml", "groupid"].includes(radio.value)) {
+				div.classList.add("border-purple-400");
+				div.classList.remove("border-transparent");
+			} else {
+				div.classList.remove("border-purple-400");
+				div.classList.add("border-transparent");
+			}
+		} else {
+			div.classList.remove("border-purple-400");
+			div.classList.add("border-transparent");
+		}
 	});
 
 	const ticks = document.querySelectorAll("span[data-tick]");
 	ticks.forEach((tick) => {
-		if (state.activeQuality === "combined") {
-			tick.classList.remove("hidden");
-		} else {
-			tick.classList.add("hidden");
-		}
+		tick.classList.add("hidden");
 	});
 }

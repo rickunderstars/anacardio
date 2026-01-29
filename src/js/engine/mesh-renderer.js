@@ -1,12 +1,20 @@
 import * as THREE from "three";
-import { getMax, get2Min } from "@js/utils/math-utils.js";
+import { getMax, get2Min, areValuesClose } from "@js/utils/math-utils.js";
 import { VisMode } from "@js/core/state-manager.js";
 import { SHADER_COLORS } from "@js/ui/colors.js";
 
 export function updateActiveMesh(dependencies) {
 	const { shaders, state } = dependencies;
-	const { vShader, fShader, dynVShader, dynFShader, mixVShader, mixFShader } =
-		shaders;
+	const {
+		vShader,
+		fShader,
+		dynVShader,
+		dynFShader,
+		mixVShader,
+		mixFShader,
+		tanVShader,
+		tanFShader,
+	} = shaders;
 
 	if (state.activeMeshIndex < 0) {
 		return;
@@ -31,40 +39,73 @@ export function updateActiveMesh(dependencies) {
 			"exteml",
 			new THREE.BufferAttribute(activeMesh.valueSets["exteml"], 1),
 		);
+		activeMesh.mesh.geometry.setAttribute(
+			"groupid",
+			new THREE.BufferAttribute(activeMesh.valueSets["groupid"], 1),
+		);
 
+		state.isBinary = false;
 		hideAllTangentFields(state);
-		activeMesh.mesh.material = new THREE.ShaderMaterial({
-			uniforms: {
-				uBipAbsMin: { value: bipAbsMin },
-				uBipMin: { value: bipMin },
-				uBipMax: { value: bipMax },
-				uLatAbsMin: { value: latAbsMin },
-				uLatMin: { value: latMin },
-				uLatMax: { value: latMax },
-				uTime: { value: 0 },
-				uAmbientLightIntensity: { value: state.ambientLightIntensity },
-				uTimeSpeed: { value: state.wavesSpeed },
-				uNumWaves: { value: state.wavesNumber },
-				uNullColor: {
-					value: new THREE.Vector3(...SHADER_COLORS.NULL),
+
+		if (state.mode === VisMode.TANGENT_FIELD) {
+			activeMesh.mesh.material = new THREE.ShaderMaterial({
+				uniforms: {
+					uMin: { value: latAbsMin },
+					uMax: { value: latMax },
+					uAmbientLightIntensity: {
+						value: state.ambientLightIntensity,
+					},
+					uColor: {
+						value: new THREE.Vector3(
+							...SHADER_COLORS.GRADIENT_BACKGROUND,
+						),
+					},
 				},
-				uWaveStartColor: {
-					value: new THREE.Vector3(...SHADER_COLORS.WAVE_START),
+				vertexShader: tanVShader,
+				fragmentShader: tanFShader,
+				side: THREE.DoubleSide,
+			});
+			activeMesh.tangentFieldMeshes["lat"].visible = true;
+		} else {
+			activeMesh.mesh.material = new THREE.ShaderMaterial({
+				uniforms: {
+					uBipAbsMin: { value: bipAbsMin },
+					uBipMin: { value: bipMin },
+					uBipMax: { value: bipMax },
+					uLatAbsMin: { value: latAbsMin },
+					uLatMin: { value: latAbsMin },
+					uLatMax: { value: latMax },
+					uTime: { value: 0 },
+					uAmbientLightIntensity: {
+						value: state.ambientLightIntensity,
+					},
+					uTimeSpeed: { value: state.wavesSpeed },
+					uNumWaves: { value: state.wavesNumber },
+					uNullColor: {
+						value: new THREE.Vector3(...SHADER_COLORS.NULL),
+					},
+					uWaveStartColor: {
+						value: new THREE.Vector3(...SHADER_COLORS.WAVE_START),
+					},
+					uWavePolarStart: {
+						value: new THREE.Vector3(
+							...SHADER_COLORS.WAVE_POLAR_START,
+						),
+					},
+					uWavePolarEnd: {
+						value: new THREE.Vector3(
+							...SHADER_COLORS.WAVE_POLAR_END,
+						),
+					},
+					uExtemlColor: {
+						value: new THREE.Vector3(...SHADER_COLORS.EXTEML),
+					},
 				},
-				uWavePolarStart: {
-					value: new THREE.Vector3(...SHADER_COLORS.WAVE_POLAR_START),
-				},
-				uWavePolarEnd: {
-					value: new THREE.Vector3(...SHADER_COLORS.WAVE_POLAR_END),
-				},
-				uExtemlColor: {
-					value: new THREE.Vector3(...SHADER_COLORS.EXTEML),
-				},
-			},
-			vertexShader: mixVShader,
-			fragmentShader: mixFShader,
-			side: THREE.DoubleSide,
-		});
+				vertexShader: mixVShader,
+				fragmentShader: mixFShader,
+				side: THREE.DoubleSide,
+			});
+		}
 
 		return { min: latMin, max: latMax };
 	}
@@ -80,19 +121,25 @@ export function updateActiveMesh(dependencies) {
 	);
 	activeMesh.mesh.material.dispose();
 
-	if (
-		state.mode === VisMode.COLOR_RAMP ||
-		state.mode === VisMode.TANGENT_FIELD
-	) {
+	const isBinary =
+		areValuesClose(absMin, min) || areValuesClose(min, max);
+	state.isBinary = isBinary;
+	const renderMin = isBinary ? absMin : min;
+	const renderMax =
+		isBinary && areValuesClose(absMin, max) ? max + 1.0 : max;
+
+	if (state.mode === VisMode.COLOR_RAMP) {
 		activeMesh.mesh.material = new THREE.ShaderMaterial({
 			uniforms: {
-				uOnlyTwo: { value: absMin - min == 0 ? 1.0 : 0.0 },
-				uAbsMin: { value: absMin },
-				uMin: { value: min },
-				uMax: { value: max },
+				uOnlyTwo: { value: isBinary ? 1.0 : 0.0 },
+				uMin: { value: renderMin },
+				uMax: { value: renderMax },
 				uAmbientLightIntensity: { value: state.ambientLightIntensity },
-				uNullColor: {
-					value: new THREE.Vector3(...SHADER_COLORS.NULL_STATIC),
+				uBinColor1: {
+					value: new THREE.Vector3(...SHADER_COLORS.BIN_COLOR_1),
+				},
+				uBinColor2: {
+					value: new THREE.Vector3(...SHADER_COLORS.BIN_COLOR_2),
 				},
 			},
 			vertexShader: vShader,
@@ -100,23 +147,34 @@ export function updateActiveMesh(dependencies) {
 			side: THREE.DoubleSide,
 		});
 		hideAllTangentFields(state);
-		if (state.mode === VisMode.TANGENT_FIELD) {
-			state.activeMesh.tangentFieldMeshes[quality].visible = true;
-		}
+	} else if (state.mode === VisMode.TANGENT_FIELD) {
+		activeMesh.mesh.material = new THREE.ShaderMaterial({
+			uniforms: {
+				uMin: { value: renderMin },
+				uMax: { value: renderMax },
+				uAmbientLightIntensity: { value: state.ambientLightIntensity },
+				uColor: {
+					value: new THREE.Vector3(
+						...SHADER_COLORS.GRADIENT_BACKGROUND,
+					),
+				},
+			},
+			vertexShader: tanVShader,
+			fragmentShader: tanFShader,
+			side: THREE.DoubleSide,
+		});
+		hideAllTangentFields(state);
+		state.activeMesh.tangentFieldMeshes[quality].visible = true;
 	} else if (state.mode === VisMode.ANIMATED) {
 		hideAllTangentFields(state);
 		activeMesh.mesh.material = new THREE.ShaderMaterial({
 			uniforms: {
-				uAbsMin: { value: absMin },
 				uMin: { value: min },
 				uMax: { value: max },
 				uTime: { value: 0 },
 				uAmbientLightIntensity: { value: state.ambientLightIntensity },
 				uTimeSpeed: { value: state.wavesSpeed },
 				uNumWaves: { value: state.wavesNumber },
-				uNullColor: {
-					value: new THREE.Vector3(...SHADER_COLORS.NULL),
-				},
 				uWaveStartColor: {
 					value: new THREE.Vector3(...SHADER_COLORS.WAVE_START),
 				},
