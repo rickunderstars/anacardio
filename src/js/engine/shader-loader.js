@@ -4,8 +4,8 @@ import staticVertexShader from "@glsl/static-vertex.glsl";
 import staticFragmentShader from "@glsl/static-fragment.glsl";
 import dynamicVertexShader from "@glsl/dynamic-vertex.glsl";
 import dynamicFragmentShader from "@glsl/dynamic-fragment.glsl";
-import combinedVertexShader from "@glsl/combined-vertex.glsl";
-import combinedFragmentShader from "@glsl/combined-fragment.glsl";
+import combinedVertexShader from "@glsl/combined-dynamic-vertex.glsl";
+import combinedFragmentShader from "@glsl/combined-dynamic-fragment.glsl";
 import tangentVertexShader from "@glsl/tangent-vertex.glsl";
 import tangentFragmentShader from "@glsl/tangent-fragment.glsl";
 
@@ -44,8 +44,8 @@ export async function loadShaders() {
 		loadShader("glsl/static-fragment.glsl"),
 		loadShader("glsl/dynamic-vertex.glsl"),
 		loadShader("glsl/dynamic-fragment.glsl"),
-		loadShader("glsl/combined-vertex.glsl"),
-		loadShader("glsl/combined-fragment.glsl"),
+		loadShader("glsl/combined-dynamic-vertex.glsl"),
+		loadShader("glsl/combined-dynamic-fragment.glsl"),
 		loadShader("glsl/tangent-vertex.glsl"),
 		loadShader("glsl/tangent-fragment.glsl"),
 	]);
