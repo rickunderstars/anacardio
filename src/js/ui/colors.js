@@ -8,7 +8,7 @@ export const SHADER_COLORS = {
 	WAVE_END: [0.3, 1.0, 1.0],
 	WAVE_POLAR_START: [0.3, 0.3, 1.0],
 	WAVE_POLAR_END: [0.0, 1.0, 0.0],
-	EXTEML: [1.0, 0.0, 1.0],
+	EXTEML: [0.63, 0.4, 0.4],
 };
 
 export const SEGMENT_COLORS = {
@@ -57,7 +57,26 @@ export function colorizeGradient(state, time = 0) {
 
 	const mode = state ? state.mode : VisMode.COLOR_RAMP;
 
-	if (mode === VisMode.COLOR_RAMP || mode === VisMode.TANGENT_FIELD) {
+	if (state.activeQuality === "combined") {
+		const startColor = SHADER_COLORS.WAVE_START.map((c) => c * 255);
+		const blue = SHADER_COLORS.WAVE_POLAR_START.map((c) => c * 255);
+		const green = SHADER_COLORS.WAVE_POLAR_END.map((c) => c * 255);
+
+		for (let y = 0; y < height; y++) {
+			const val = 1 - y / height;
+			const wave = (time * state.wavesSpeed - val) * state.wavesNumber;
+			const phase = wave - Math.floor(wave);
+
+			const colorLeft = gradientWave(phase, startColor, blue, 2);
+			const colorRight = gradientWave(phase, startColor, green, 2);
+
+			ctx.fillStyle = `rgb(${Math.round(colorLeft[0])}, ${Math.round(colorLeft[1])}, ${Math.round(colorLeft[2])})`;
+			ctx.fillRect(0, y, 1, 1);
+
+			ctx.fillStyle = `rgb(${Math.round(colorRight[0])}, ${Math.round(colorRight[1])}, ${Math.round(colorRight[2])})`;
+			ctx.fillRect(1, y, 1, 1);
+		}
+	} else if (mode === VisMode.COLOR_RAMP || mode === VisMode.TANGENT_FIELD) {
 		for (let y = 0; y < height; y++) {
 			const t = 1 - y / height;
 			const [r, g, b] = turboColormap(t);
@@ -77,67 +96,25 @@ export function colorizeGradient(state, time = 0) {
 			ctx.fillStyle = `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)})`;
 			ctx.fillRect(0, y, width, 1);
 		}
-	} else if (mode === VisMode.MIXED_MODE) {
-		const startColor = SHADER_COLORS.WAVE_START.map((c) => c * 255);
-		const blue = SHADER_COLORS.WAVE_POLAR_START.map((c) => c * 255);
-		const green = SHADER_COLORS.WAVE_POLAR_END.map((c) => c * 255);
-
-		for (let y = 0; y < height; y++) {
-			const val = 1 - y / height;
-			const wave = (time * state.wavesSpeed - val) * state.wavesNumber;
-			const phase = wave - Math.floor(wave);
-
-			const colorLeft = gradientWave(phase, startColor, blue, 2);
-			const colorRight = gradientWave(phase, startColor, green, 2);
-
-			ctx.fillStyle = `rgb(${Math.round(colorLeft[0])}, ${Math.round(colorLeft[1])}, ${Math.round(colorLeft[2])})`;
-			ctx.fillRect(0, y, 1, 1);
-
-			ctx.fillStyle = `rgb(${Math.round(colorRight[0])}, ${Math.round(colorRight[1])}, ${Math.round(colorRight[2])})`;
-			ctx.fillRect(1, y, 1, 1);
-		}
 	}
-}
-
-export function colorizePolar() {
-	const canvas = document.getElementById("polar-canvas");
-	if (!canvas) return;
-
-	const ctx = canvas.getContext("2d");
-	const rect = canvas.getBoundingClientRect();
-	if (canvas.width !== rect.width || canvas.height !== rect.height) {
-		canvas.width = rect.width;
-		canvas.height = rect.height;
-	}
-
-	const width = canvas.width;
-	const height = canvas.height;
-
-	const startColor = SHADER_COLORS.WAVE_POLAR_START.map((c) => c * 255);
-	const endColor = SHADER_COLORS.WAVE_POLAR_END.map((c) => c * 255);
-
-	const gradient = ctx.createLinearGradient(0, 0, width, 0);
-	gradient.addColorStop(
-		0,
-		`rgb(${startColor[0]}, ${startColor[1]}, ${startColor[2]})`,
-	);
-	gradient.addColorStop(
-		1,
-		`rgb(${endColor[0]}, ${endColor[1]}, ${endColor[2]})`,
-	);
-
-	ctx.fillStyle = gradient;
-	ctx.fillRect(0, 0, width, height);
 }
 
 export function setGaugeLine(value, state) {
 	if (!state.activeMesh) {
 		return;
 	}
+
+	const quality =
+		state.activeQuality === "combined" ? "lat" : state.activeQuality;
+
+	if (!state.activeMesh.valueSets[quality]) {
+		return;
+	}
+
 	const line = document.getElementById("gauge-line");
 
-	const [, min] = get2Min(state.activeMesh.valueSets[state.activeQuality]);
-	const max = getMax(state.activeMesh.valueSets[state.activeQuality]);
+	const [, min] = get2Min(state.activeMesh.valueSets[quality]);
+	const max = getMax(state.activeMesh.valueSets[quality]);
 
 	if (value > max) {
 		line.style.bottom = `100%`;

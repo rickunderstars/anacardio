@@ -9,53 +9,93 @@
 	<body
 		class="bg-slate-900 text-white antialiased font-sans font-bold italic"
 	>
-		<div class="flex flex-col lg:flex-row h-screen w-full overflow-hidden">
+		<div
+			class="flex flex-col md:flex-row h-screen w-full overflow-hidden bg-slate-800"
+		>
 			<div
 				id="viewport"
-				class="relative shrink-0 w-full h-[50vh] lg:w-4/7 lg:h-full border-b-[0.2em] lg:border-b-0 lg:border-r-[0.2em] border-[whitesmoke] bg-[#080808] shadow-[0.3vh_0.3vh_1vh_rgba(0,0,0,0.3)]"
+				class="relative shrink-0 w-full h-[50vh] md:w-4/7 md:h-full border-b-[0.2em] md:border-b-0 md:border-r-[0.2em] border-[whitesmoke] bg-[#080808] shadow-[0.3vh_0.3vh_1vh_rgba(0,0,0,0.3)]"
 			></div>
 
 			<div
+				class="flex items-center justify-center text-sm font-bold bg-slate-800 text-slate-300 bg-slate-800"
+			>
+				<span
+					id="vertical-gradient-title"
+					class="inline-block -rotate-90 whitespace-nowrap w-8"
+				>
+					&LongLeftArrow; field &LongRightArrow;
+				</span>
+			</div>
+			<div
 				id="color-gauge"
-				class="w-1/16 flex flex-col items-center bg-slate-800 p-2 pr-0"
+				class="w-1/16 flex flex-col items-center bg-slate-800 py-2 px-0"
 			>
 				<div
-					id="lat-gradient-title"
-					class="text-sm text-center font-bold text-slate-300 mb-1 hidden"
+					id="horizontal-gradient-title"
+					class="text-sm text-center font-bold text-slate-300 mb-1 whitespace-nowrap hidden"
 				>
-					LAT
+					BIPOLAR<br />&longleftrightarrow;
 				</div>
-				<div
-					id="max-value"
-					class="text-sm text-center font-bold bg-black rounded-md w-full mb-1"
-				>
-					---
-				</div>
-				<div class="relative w-full h-full flex justify-center rounded">
-					<canvas
-						id="gradient-bar"
-						class="w-full h-full rounded-md box-shadow-xl"
-					></canvas>
+
+				<div class="flex flex-row w-full flex-grow gap-1 items-center">
 					<div
-						id="gauge-line"
-						class="absolute w-9/8 h-0.5 rounded border-y border-white pointer-events-none transform translate-y-1/2"
-					></div>
+						id="bipolar-min"
+						class="w-1/5 min-w-[16px] flex-shrink-0 h-1/4 p-1 mr-1 bg-black rounded-md flex items-center justify-center hidden"
+					>
+						<span
+							class="-rotate-90 whitespace-nowrap text-sm font-bold"
+							>---</span
+						>
+					</div>
+
+					<div class="flex flex-col flex-grow h-full min-w-0 gap-1">
+						<div
+							id="max-value"
+							class="text-sm text-center font-bold bg-black rounded-md w-full p-1 truncate"
+						>
+							---
+						</div>
+						<div
+							class="relative flex-grow w-full flex justify-center rounded"
+						>
+							<canvas
+								id="gradient-bar"
+								class="w-full h-full rounded-md box-shadow-xl"
+							></canvas>
+							<div
+								id="gauge-line"
+								class="absolute w-12/11 h-0.5 rounded border-y border-white pointer-events-none transform translate-y-1/2"
+							></div>
+						</div>
+						<div
+							id="min-value"
+							class="text-sm text-center font-bold bg-black rounded-md w-full p-1 truncate"
+						>
+							---
+						</div>
+					</div>
+
+					<div
+						id="bipolar-max"
+						class="w-1/5 min-w-[16px] flex-shrink-0 h-1/4 p-1 ml-1 bg-black rounded-md flex items-center justify-center hidden"
+					>
+						<span
+							class="-rotate-90 whitespace-nowrap text-sm font-bold"
+							>---</span
+						>
+					</div>
 				</div>
+
 				<div
-					id="min-value"
-					class="text-sm text-center font-bold bg-black rounded-md w-full mt-1"
-				>
-					---
-				</div>
-				<div
-					class="text-sm text-center font-bold bg-black rounded-md w-full mt-1 bg-slate-700"
+					class="text-sm text-center font-bold bg-black rounded-md w-full mt-1 bg-slate-700 p-1"
 				>
 					<div id="sampler-value"></div>
 				</div>
 			</div>
 
 			<div
-				class="w-full h-[50vh] lg:w-3/7 lg:h-full flex flex-col gap-3 p-4 bg-slate-800 overflow-y-auto"
+				class="w-full h-[50vh] md:w-3/7 md:h-full flex flex-col gap-3 p-4 bg-slate-800 overflow-y-auto"
 			>
 				<div class="flex flex-wrap items-center gap-4 h-fit">
 					<div
@@ -76,7 +116,7 @@
 						</legend>
 						<select
 							id="add-mesh-dropdown"
-							class="flex-1 p-2 bg-blue-600 text-center rounded-md cursor-pointer font-medium appearance-none focus:outline-none"
+							class="flex-1 p-2 bg-blue-600 text-center rounded-md cursor-pointer font-medium appearance-none hover:bg-blue-500 transition-all focus:outline-none"
 						></select>
 					</fieldset>
 				</div>
@@ -149,7 +189,7 @@
 									class="flex flex-col border border-slate-700 rounded-md overflow-hidden divide-y divide-slate-700 w-full h-full"
 								>
 									<label
-										class="flex-grow cursor-pointer group flex flex-col"
+										class="flex-grow cursor-pointer group flex flex-col has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
 									>
 										<input
 											type="radio"
@@ -170,7 +210,7 @@
 									</label>
 
 									<label
-										class="flex-grow cursor-pointer group flex flex-col"
+										class="flex-grow cursor-pointer group flex flex-col has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
 									>
 										<input
 											type="radio"
@@ -190,7 +230,7 @@
 									</label>
 
 									<label
-										class="flex-grow cursor-pointer group flex flex-col"
+										class="flex-grow cursor-pointer group flex flex-col has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
 									>
 										<input
 											type="radio"
@@ -223,7 +263,9 @@
 									data-js="qualities-list"
 									class="flex flex-col border border-slate-700 rounded-md overflow-hidden divide-y divide-slate-700 w-full"
 								>
-									<label class="cursor-pointer group">
+									<label
+										class="cursor-pointer group has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
+									>
 										<input
 											type="radio"
 											name="quality"
@@ -242,7 +284,9 @@
 										</div>
 									</label>
 
-									<label class="cursor-pointer group">
+									<label
+										class="cursor-pointer group has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
+									>
 										<input
 											type="radio"
 											name="quality"
@@ -255,12 +299,19 @@
 											<div
 												class="px-4 text-left text-md font-medium"
 											>
+												<span
+													data-tick
+													class="hidden text-blue-400 font-bold"
+													>✓
+												</span>
 												Bipolar
 											</div>
 										</div>
 									</label>
 
-									<label class="cursor-pointer group">
+									<label
+										class="cursor-pointer group has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
+									>
 										<input
 											type="radio"
 											name="quality"
@@ -273,12 +324,19 @@
 											<div
 												class="px-4 text-left text-md font-medium"
 											>
+												<span
+													data-tick
+													class="hidden text-blue-400 font-bold"
+													>✓
+												</span>
 												LAT
 											</div>
 										</div>
 									</label>
 
-									<label class="cursor-pointer group">
+									<label
+										class="cursor-pointer group has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
+									>
 										<input
 											type="radio"
 											name="quality"
@@ -296,7 +354,9 @@
 										</div>
 									</label>
 
-									<label class="cursor-pointer group">
+									<label
+										class="cursor-pointer group has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
+									>
 										<input
 											type="radio"
 											name="quality"
@@ -309,12 +369,19 @@
 											<div
 												class="px-4 text-left text-md font-medium"
 											>
+												<span
+													data-tick
+													class="hidden text-blue-400 font-bold"
+													>✓
+												</span>
 												ExtEML
 											</div>
 										</div>
 									</label>
 
-									<label class="cursor-pointer group">
+									<label
+										class="cursor-pointer group has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
+									>
 										<input
 											type="radio"
 											name="quality"
@@ -331,8 +398,9 @@
 											</div>
 										</div>
 									</label>
-
-									<label class="cursor-pointer group">
+									<label
+										class="cursor-pointer group has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
+									>
 										<input
 											type="radio"
 											name="quality"
@@ -349,62 +417,28 @@
 											</div>
 										</div>
 									</label>
+									<label
+										class="cursor-pointer group has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
+									>
+										<input
+											type="radio"
+											name="quality"
+											value="combined"
+											class="sr-only peer"
+										/>
+										<div
+											class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+										>
+											<div
+												class="px-4 text-left text-md font-medium"
+											>
+												Combined
+											</div>
+										</div>
+									</label>
 								</div>
 							</fieldset>
 						</div>
-						<fieldset
-							class="border border-slate-500 rounded-lg p-2"
-						>
-							<legend
-								class="px-2 text-sm text-slate-300 font-bold"
-							>
-								Combined
-							</legend>
-							<label
-								class="flex items-center justify-center cursor-pointer bg-slate-700 px-4 py-1 rounded-md hover:bg-slate-600 transition-colors border border-slate-600 w-full"
-							>
-								<input
-									type="checkbox"
-									id="mixed-mode-toggle"
-									class="sr-only peer"
-								/>
-								<div
-									class="text-md font-medium text-slate-200 peer-checked:text-blue-400"
-								>
-									Dynamic LAT + Bipolar wave gradient + ExtEML
-								</div>
-							</label>
-							<div
-								id="polar-bar"
-								class="hidden flex flex-col gap-1 mt-2 w-full"
-							>
-								<div
-									class="text-sm text-center font-bold text-slate-300"
-								>
-									Bipolar
-								</div>
-								<div
-									class="flex flex-row items-stretch gap-2 h-10"
-								>
-									<div
-										id="polar-min"
-										class="flex items-center justify-center text-sm text-center font-bold bg-black rounded-md px-2 w-14"
-									>
-										min
-									</div>
-									<canvas
-										id="polar-canvas"
-										class="flex-grow rounded-md shadow-inner"
-									></canvas>
-									<div
-										id="polar-max"
-										class="flex items-center justify-center text-sm text-center font-bold bg-black rounded-md px-2 w-14"
-									>
-										max
-									</div>
-								</div>
-							</div>
-						</fieldset>
 						<fieldset
 							class="border border-slate-500 rounded-lg p-2"
 						>
@@ -470,10 +504,6 @@
 								</div>
 							</div>
 						</fieldset>
-						<select
-							id="loaded-meshes-dropdown"
-							class="hidden block w-full p-2 bg-slate-700 hover:bg-slate-600 text-center rounded-md cursor-pointer transition-colors font-medium text-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-						></select>
 					</div>
 				</div>
 			</div>

@@ -18,6 +18,7 @@ export function setupFileHandlers(dependencies) {
 					sceneManager,
 					state,
 				});
+				e.target.value = "";
 			}
 		});
 
@@ -68,38 +69,31 @@ export function renderMeshDropdown(state) {
 
 	const fileOption = document.createElement("option");
 	fileOption.value = "file";
-	fileOption.text = "Local file...";
+	fileOption.text = "Load from file...";
 	dropdown.appendChild(fileOption);
 
 	testMeshes.forEach((tm) => {
-		if (!state.meshes.some((m) => m.filename === tm.filename)) {
-			const option = document.createElement("option");
-			option.value = tm.filename;
-			option.text = "Load '" + tm.filename + "'";
-			dropdown.appendChild(option);
-		}
-	});
-}
-
-export function updateMeshesList(state) {
-	renderMeshDropdown(state);
-	const dropdown = document.getElementById("loaded-meshes-dropdown");
-	dropdown.innerHTML = "";
-
-	if (state.meshes.length === 0) {
-		dropdown.classList.add("hidden");
-		return;
-	}
-
-	dropdown.classList.remove("hidden");
-
-	state.meshes.forEach((mesh, index) => {
+		const loadedIndex = state.meshes.findIndex(
+			(m) => m.filename === tm.filename,
+		);
 		const option = document.createElement("option");
-		option.value = index;
-		option.text = mesh.filename;
-		if (index === state.activeMeshIndex) {
-			option.selected = true;
+		option.text = tm.filename;
+
+		if (loadedIndex !== -1) {
+			option.value = loadedIndex;
+		} else {
+			option.value = tm.filename;
 		}
 		dropdown.appendChild(option);
+	});
+
+	state.meshes.forEach((m, index) => {
+		const isTestMesh = testMeshes.some((tm) => tm.filename === m.filename);
+		if (!isTestMesh) {
+			const option = document.createElement("option");
+			option.value = index;
+			option.text = m.filename;
+			dropdown.appendChild(option);
+		}
 	});
 }
