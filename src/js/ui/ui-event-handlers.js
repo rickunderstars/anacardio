@@ -172,7 +172,6 @@ export function setupEventHandlers(dependencies) {
 				];
 				const combinedRestrictedModes = [
 					VisMode.COLOR_RAMP,
-					VisMode.TANGENT_FIELD,
 				];
 
 				if (
@@ -302,8 +301,7 @@ export function setupEventHandlers(dependencies) {
 				) {
 					state.activeQuality = "unipolar";
 				} else if (
-					(newMode === VisMode.COLOR_RAMP ||
-						newMode === VisMode.TANGENT_FIELD) &&
+					newMode === VisMode.COLOR_RAMP &&
 					state.activeQuality === combinedQuality
 				) {
 					state.activeQuality = "unipolar";
@@ -421,7 +419,7 @@ function updateControlsState(state) {
 	const restrictedModes = [VisMode.ANIMATED, VisMode.TANGENT_FIELD];
 
 	const combinedQuality = "combined";
-	const combinedRestrictedModes = [VisMode.COLOR_RAMP, VisMode.TANGENT_FIELD];
+	const combinedRestrictedModes = [VisMode.COLOR_RAMP];
 
 	modeRadios.forEach((radio) => {
 		radio.disabled = isDisabled;

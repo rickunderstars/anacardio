@@ -78,7 +78,7 @@ export function colorizeGradient(state, time = 0) {
 
 	const mode = state ? state.mode : VisMode.COLOR_RAMP;
 
-	if (state.activeQuality === "combined") {
+	if (state.activeQuality === "combined" && mode === VisMode.ANIMATED) {
 		const startColor = SHADER_COLORS.WAVE_START.map((c) => c * 255);
 		const blue = SHADER_COLORS.WAVE_POLAR_START.map((c) => c * 255);
 		const green = SHADER_COLORS.WAVE_POLAR_END.map((c) => c * 255);

@@ -46,38 +46,66 @@ export function updateActiveMesh(dependencies) {
 
 		state.isBinary = false;
 		hideAllTangentFields(state);
-		activeMesh.mesh.material = new THREE.ShaderMaterial({
-			uniforms: {
-				uBipAbsMin: { value: bipAbsMin },
-				uBipMin: { value: bipMin },
-				uBipMax: { value: bipMax },
-				uLatAbsMin: { value: latAbsMin },
-				uLatMin: { value: latAbsMin },
-				uLatMax: { value: latMax },
-				uTime: { value: 0 },
-				uAmbientLightIntensity: { value: state.ambientLightIntensity },
-				uTimeSpeed: { value: state.wavesSpeed },
-				uNumWaves: { value: state.wavesNumber },
-				uNullColor: {
-					value: new THREE.Vector3(...SHADER_COLORS.NULL),
+
+		if (state.mode === VisMode.TANGENT_FIELD) {
+			activeMesh.mesh.material = new THREE.ShaderMaterial({
+				uniforms: {
+					uMin: { value: latAbsMin },
+					uMax: { value: latMax },
+					uAmbientLightIntensity: {
+						value: state.ambientLightIntensity,
+					},
+					uColor: {
+						value: new THREE.Vector3(
+							...SHADER_COLORS.GRADIENT_BACKGROUND,
+						),
+					},
 				},
-				uWaveStartColor: {
-					value: new THREE.Vector3(...SHADER_COLORS.WAVE_START),
+				vertexShader: tanVShader,
+				fragmentShader: tanFShader,
+				side: THREE.DoubleSide,
+			});
+			activeMesh.tangentFieldMeshes["lat"].visible = true;
+		} else {
+			activeMesh.mesh.material = new THREE.ShaderMaterial({
+				uniforms: {
+					uBipAbsMin: { value: bipAbsMin },
+					uBipMin: { value: bipMin },
+					uBipMax: { value: bipMax },
+					uLatAbsMin: { value: latAbsMin },
+					uLatMin: { value: latAbsMin },
+					uLatMax: { value: latMax },
+					uTime: { value: 0 },
+					uAmbientLightIntensity: {
+						value: state.ambientLightIntensity,
+					},
+					uTimeSpeed: { value: state.wavesSpeed },
+					uNumWaves: { value: state.wavesNumber },
+					uNullColor: {
+						value: new THREE.Vector3(...SHADER_COLORS.NULL),
+					},
+					uWaveStartColor: {
+						value: new THREE.Vector3(...SHADER_COLORS.WAVE_START),
+					},
+					uWavePolarStart: {
+						value: new THREE.Vector3(
+							...SHADER_COLORS.WAVE_POLAR_START,
+						),
+					},
+					uWavePolarEnd: {
+						value: new THREE.Vector3(
+							...SHADER_COLORS.WAVE_POLAR_END,
+						),
+					},
+					uExtemlColor: {
+						value: new THREE.Vector3(...SHADER_COLORS.EXTEML),
+					},
 				},
-				uWavePolarStart: {
-					value: new THREE.Vector3(...SHADER_COLORS.WAVE_POLAR_START),
-				},
-				uWavePolarEnd: {
-					value: new THREE.Vector3(...SHADER_COLORS.WAVE_POLAR_END),
-				},
-				uExtemlColor: {
-					value: new THREE.Vector3(...SHADER_COLORS.EXTEML),
-				},
-			},
-			vertexShader: mixVShader,
-			fragmentShader: mixFShader,
-			side: THREE.DoubleSide,
-		});
+				vertexShader: mixVShader,
+				fragmentShader: mixFShader,
+				side: THREE.DoubleSide,
+			});
+		}
 
 		return { min: latMin, max: latMax };
 	}
