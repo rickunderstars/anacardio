@@ -167,11 +167,43 @@ export function setupEventHandlers(dependencies) {
 		.querySelector('[data-js="qualities-list"]')
 		.addEventListener("change", function (e) {
 			if (e.target.name === "quality") {
-				state.activeQuality = e.target.value;
+				const newQuality = e.target.value;
+				const restrictedQualities = [
+					"eml",
+					"exteml",
+					"scar",
+					"groupid",
+				];
+				const combinedRestrictedModes = [
+					VisMode.COLOR_RAMP,
+					VisMode.TANGENT_FIELD,
+				];
+
+				if (
+					restrictedQualities.includes(newQuality) &&
+					(state.mode === VisMode.ANIMATED ||
+						state.mode === VisMode.TANGENT_FIELD)
+				) {
+					state.mode = VisMode.COLOR_RAMP;
+				} else if (
+					newQuality === "combined" &&
+					combinedRestrictedModes.includes(state.mode)
+				) {
+					state.mode = VisMode.ANIMATED;
+				}
+
+				state.activeQuality = newQuality;
 				const selectedMode = document.querySelector(
 					'[data-js="modes-list"] input[name="mode"]:checked',
 				).value;
-				state.mode = selectedMode;
+
+				if (state.mode !== selectedMode) {
+					const modeInput = document.querySelector(
+						`input[name="mode"][value="${state.mode}"]`,
+					);
+					if (modeInput) modeInput.checked = true;
+				}
+
 				updateUIForMode(state);
 				const { min, max } = updateActiveMesh({ shaders, state });
 				updateMinMaxUI(min, max);
@@ -260,19 +292,52 @@ export function setupEventHandlers(dependencies) {
 				if (state.activeMeshIndex === -1 || !state.activeMesh) return;
 
 				const newMode = e.target.value;
-				if (state.mode != newMode) {
-					state.mode = newMode;
-					updateUIForMode(state);
-					const { min, max } = updateActiveMesh({ shaders, state });
-					updateMinMaxUI(min, max);
+				const restrictedQualities = [
+					"eml",
+					"exteml",
+					"scar",
+					"groupid",
+				];
+				const combinedQuality = "combined";
 
-					if (newMode === VisMode.ANIMATED) {
-						sceneManager.startClock();
-						sceneManager.resetAnimationState();
-						sceneManager.runAnimationLoop(state);
-					} else {
-						sceneManager.render();
-					}
+				if (
+					(newMode === VisMode.ANIMATED ||
+						newMode === VisMode.TANGENT_FIELD) &&
+					restrictedQualities.includes(state.activeQuality)
+				) {
+					state.activeQuality = "unipolar";
+				} else if (
+					(newMode === VisMode.COLOR_RAMP ||
+						newMode === VisMode.TANGENT_FIELD) &&
+					state.activeQuality === combinedQuality
+				) {
+					state.activeQuality = "unipolar";
+				}
+
+				state.mode = newMode;
+
+				const selectedQuality = document.querySelector(
+					'[data-js="qualities-list"] input[name="quality"]:checked',
+				).value;
+				if (state.activeQuality !== selectedQuality) {
+					const qualityInput = document.querySelector(
+						`input[name="quality"][value="${state.activeQuality}"]`,
+					);
+					if (qualityInput) qualityInput.checked = true;
+				}
+
+				if (state.mode != newMode) {
+				}
+				updateUIForMode(state);
+				const { min, max } = updateActiveMesh({ shaders, state });
+				updateMinMaxUI(min, max);
+
+				if (newMode === VisMode.ANIMATED) {
+					sceneManager.startClock();
+					sceneManager.resetAnimationState();
+					sceneManager.runAnimationLoop(state);
+				} else {
+					sceneManager.render();
 				}
 			}
 		});
@@ -354,42 +419,50 @@ function updateControlsState(state) {
 	const combinedRestrictedModes = [VisMode.COLOR_RAMP, VisMode.TANGENT_FIELD];
 
 	modeRadios.forEach((radio) => {
+		radio.disabled = isDisabled;
+		const label = radio.closest("label");
+		if (!label) return;
+
 		if (isDisabled) {
-			radio.disabled = true;
+			return;
+		}
+
+		const isRestrictedByQualities =
+			restrictedModes.includes(radio.value) &&
+			restrictedQualities.includes(state.activeQuality);
+
+		const isRestrictedByCombined =
+			combinedRestrictedModes.includes(radio.value) &&
+			state.activeQuality === combinedQuality;
+
+		if (isRestrictedByQualities || isRestrictedByCombined) {
+			label.classList.add("opacity-50");
 		} else {
-			const isRestrictedByQualities =
-				restrictedModes.includes(radio.value) &&
-				restrictedQualities.includes(state.activeQuality);
-
-			const isRestrictedByCombined =
-				combinedRestrictedModes.includes(radio.value) &&
-				state.activeQuality === combinedQuality;
-
-			if (isRestrictedByQualities || isRestrictedByCombined) {
-				radio.disabled = true;
-			} else {
-				radio.disabled = false;
-			}
+			label.classList.remove("opacity-50");
 		}
 	});
 
 	qualityRadios.forEach((radio) => {
+		radio.disabled = isDisabled;
+		const label = radio.closest("label");
+		if (!label) return;
+
 		if (isDisabled) {
-			radio.disabled = true;
+			return;
+		}
+
+		const isRestrictedByModes =
+			restrictedQualities.includes(radio.value) &&
+			restrictedModes.includes(state.mode);
+
+		const isRestrictedByCombined =
+			radio.value === combinedQuality &&
+			combinedRestrictedModes.includes(state.mode);
+
+		if (isRestrictedByModes || isRestrictedByCombined) {
+			label.classList.add("opacity-50");
 		} else {
-			const isRestrictedByModes =
-				restrictedQualities.includes(radio.value) &&
-				restrictedModes.includes(state.mode);
-
-			const isRestrictedByCombined =
-				radio.value === combinedQuality &&
-				combinedRestrictedModes.includes(state.mode);
-
-			if (isRestrictedByModes || isRestrictedByCombined) {
-				radio.disabled = true;
-			} else {
-				radio.disabled = false;
-			}
+			label.classList.remove("opacity-50");
 		}
 	});
 
