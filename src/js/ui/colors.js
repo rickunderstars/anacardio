@@ -2,13 +2,13 @@ import { turboColormap, get2Min, getMax } from "@js/utils/math-utils.js";
 import { VisMode } from "@js/core/state-manager.js";
 
 export const SHADER_COLORS = {
-	NULL_STATIC: [0.5, 0.5, 0.5],
 	NULL: [0.45, 0.45, 0.45],
 	WAVE_START: [0.2, 0.2, 0.2],
 	WAVE_END: [0.3, 1.0, 1.0],
 	WAVE_POLAR_START: [0.3, 0.3, 1.0],
 	WAVE_POLAR_END: [0.0, 1.0, 0.0],
 	EXTEML: [0.55, 0.41, 0.41],
+	GRADIENT_BACKGROUND: [0.2, 0.1, 0.1],
 };
 
 export const SEGMENT_COLORS = {

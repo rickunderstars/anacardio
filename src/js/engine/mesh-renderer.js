@@ -5,8 +5,16 @@ import { SHADER_COLORS } from "@js/ui/colors.js";
 
 export function updateActiveMesh(dependencies) {
 	const { shaders, state } = dependencies;
-	const { vShader, fShader, dynVShader, dynFShader, mixVShader, mixFShader } =
-		shaders;
+	const {
+		vShader,
+		fShader,
+		dynVShader,
+		dynFShader,
+		mixVShader,
+		mixFShader,
+		tanVShader,
+		tanFShader,
+	} = shaders;
 
 	if (state.activeMeshIndex < 0) {
 		return;
@@ -80,10 +88,7 @@ export function updateActiveMesh(dependencies) {
 	);
 	activeMesh.mesh.material.dispose();
 
-	if (
-		state.mode === VisMode.COLOR_RAMP ||
-		state.mode === VisMode.TANGENT_FIELD
-	) {
+	if (state.mode === VisMode.COLOR_RAMP) {
 		activeMesh.mesh.material = new THREE.ShaderMaterial({
 			uniforms: {
 				uOnlyTwo: { value: areValuesClose(absMin, min) ? 1.0 : 0.0 },
@@ -96,9 +101,24 @@ export function updateActiveMesh(dependencies) {
 			side: THREE.DoubleSide,
 		});
 		hideAllTangentFields(state);
-		if (state.mode === VisMode.TANGENT_FIELD) {
-			state.activeMesh.tangentFieldMeshes[quality].visible = true;
-		}
+	} else if (state.mode === VisMode.TANGENT_FIELD) {
+		activeMesh.mesh.material = new THREE.ShaderMaterial({
+			uniforms: {
+				uMin: { value: min },
+				uMax: { value: max },
+				uAmbientLightIntensity: { value: state.ambientLightIntensity },
+				uColor: {
+					value: new THREE.Vector3(
+						...SHADER_COLORS.GRADIENT_BACKGROUND,
+					),
+				},
+			},
+			vertexShader: tanVShader,
+			fragmentShader: tanFShader,
+			side: THREE.DoubleSide,
+		});
+		hideAllTangentFields(state);
+		state.activeMesh.tangentFieldMeshes[quality].visible = true;
 	} else if (state.mode === VisMode.ANIMATED) {
 		hideAllTangentFields(state);
 		activeMesh.mesh.material = new THREE.ShaderMaterial({
