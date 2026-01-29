@@ -43,9 +43,8 @@ void main() {
 	vec3 nullAmbient = nullColor * uAmbientLightIntensity;
 	vec3 nullDiffuse = nullColor * lambert * (1.0 - uAmbientLightIntensity);
 
-	float binaryIsNull = step(0.1, vIsNull);
 	vec3 finalColor =
-		mix(ambient + diffuse, nullAmbient + nullDiffuse, binaryIsNull);
+		mix(ambient + diffuse, nullAmbient + nullDiffuse, vIsNull);
 	gl_FragColor = vec4(finalColor, 1.0);
 
 	/*

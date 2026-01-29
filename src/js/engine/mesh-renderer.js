@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { getMax, get2Min } from "@js/utils/math-utils.js";
+import { getMax, get2Min, areValuesClose } from "@js/utils/math-utils.js";
 import { VisMode } from "@js/core/state-manager.js";
 import { SHADER_COLORS } from "@js/ui/colors.js";
 
@@ -86,7 +86,7 @@ export function updateActiveMesh(dependencies) {
 	) {
 		activeMesh.mesh.material = new THREE.ShaderMaterial({
 			uniforms: {
-				uOnlyTwo: { value: absMin - min == 0 ? 1.0 : 0.0 },
+				uOnlyTwo: { value: areValuesClose(absMin, min) ? 1.0 : 0.0 },
 				uAbsMin: { value: absMin },
 				uMin: { value: min },
 				uMax: { value: max },

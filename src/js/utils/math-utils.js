@@ -61,6 +61,10 @@ export function turboColormap(x) {
 	];
 }
 
+export function areValuesClose(v1, v2) {
+	return Math.abs(v1 - v2) < 0.00001;
+}
+
 export function formatNumber(num, significantDigits = 5) {
 	if (Number.isInteger(num)) {
 		return num.toString();
