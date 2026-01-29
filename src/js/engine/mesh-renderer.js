@@ -39,6 +39,10 @@ export function updateActiveMesh(dependencies) {
 			"exteml",
 			new THREE.BufferAttribute(activeMesh.valueSets["exteml"], 1),
 		);
+		activeMesh.mesh.geometry.setAttribute(
+			"groupid",
+			new THREE.BufferAttribute(activeMesh.valueSets["groupid"], 1),
+		);
 
 		state.isBinary = false;
 		hideAllTangentFields(state);
@@ -48,7 +52,7 @@ export function updateActiveMesh(dependencies) {
 				uBipMin: { value: bipMin },
 				uBipMax: { value: bipMax },
 				uLatAbsMin: { value: latAbsMin },
-				uLatMin: { value: latMin },
+				uLatMin: { value: latAbsMin },
 				uLatMax: { value: latMax },
 				uTime: { value: 0 },
 				uAmbientLightIntensity: { value: state.ambientLightIntensity },

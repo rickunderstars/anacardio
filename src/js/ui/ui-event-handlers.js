@@ -24,10 +24,8 @@ export function updateMinMaxUI(min, max, state) {
 		bMax = getMax(state.activeMesh.valueSets["bipolar"]);
 	}
 
-	document.querySelector("#bipolar-min span").innerHTML =
-		formatNumber(bMin);
-	document.querySelector("#bipolar-max span").innerHTML =
-		formatNumber(bMax);
+	document.querySelector("#bipolar-min span").innerHTML = formatNumber(bMin);
+	document.querySelector("#bipolar-max span").innerHTML = formatNumber(bMax);
 }
 
 export function setupEventHandlers(dependencies) {
@@ -238,7 +236,6 @@ export function setupEventHandlers(dependencies) {
 			state.activeMeshIndex = parseInt(value);
 			const { min, max } = updateActiveMesh({ shaders, state });
 			updateMinMaxUI(min, max, state);
-
 
 			for (let i = 0; i < state.meshes.length; i++) {
 				if (i != state.activeMeshIndex) {
@@ -475,7 +472,7 @@ function updateControlsState(state) {
 		}
 
 		if (state.activeQuality === "combined") {
-			if (["bipolar", "lat", "exteml"].includes(radio.value)) {
+			if (["bipolar", "lat", "exteml", "groupid"].includes(radio.value)) {
 				div.classList.add("border-purple-400");
 				div.classList.remove("border-transparent");
 			} else {
