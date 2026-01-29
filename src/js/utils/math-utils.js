@@ -74,3 +74,17 @@ export function formatNumber(num, significantDigits = 5) {
 	}
 	return parseFloat(num.toPrecision(significantDigits));
 }
+
+export function mixColors(c1, c2, t) {
+	return [
+		c1[0] * (1 - t) + c2[0] * t,
+		c1[1] * (1 - t) + c2[1] * t,
+		c1[2] * (1 - t) + c2[2] * t,
+	];
+}
+
+export function gradientWave(t, colorStart, colorEnd, power) {
+	t = 1.0 - t;
+	t = Math.pow(t, power);
+	return mixColors(colorStart, colorEnd, t);
+}

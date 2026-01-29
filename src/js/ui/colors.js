@@ -1,4 +1,10 @@
-import { turboColormap, get2Min, getMax } from "@js/utils/math-utils.js";
+import {
+	turboColormap,
+	get2Min,
+	getMax,
+	mixColors,
+	gradientWave,
+} from "@js/utils/math-utils.js";
 import { VisMode } from "@js/core/state-manager.js";
 
 export const SHADER_COLORS = {
@@ -18,20 +24,6 @@ export const SEGMENT_COLORS = {
 	END: [0.0, 0.0, 0.0],
 };
 
-function mixColors(c1, c2, t) {
-	return [
-		c1[0] * (1 - t) + c2[0] * t,
-		c1[1] * (1 - t) + c2[1] * t,
-		c1[2] * (1 - t) + c2[2] * t,
-	];
-}
-
-function gradientWave(t, colorStart, colorEnd, power) {
-	t = 1.0 - t;
-	t = Math.pow(t, power);
-	return mixColors(colorStart, colorEnd, t);
-}
-
 export function colorizeBinaryGradient() {
 	const gradient = document.getElementById("gradient-bar");
 	if (!gradient) return;
@@ -49,6 +41,41 @@ export function colorizeBinaryGradient() {
 
 	ctx.fillStyle = `rgb(${binColor2[0]}, ${binColor2[1]}, ${binColor2[2]})`;
 	ctx.fillRect(0, 0, width, height / 2);
+}
+
+export function colorizeGradientWithTurbo(ctx, width, height) {
+	for (let y = 0; y < height; y++) {
+		const t = 1 - y / height;
+		const [r, g, b] = turboColormap(t);
+		ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+		ctx.fillRect(0, y, width, 1);
+	}
+}
+
+export function colorizeGradientDynamic(
+	ctx,
+	width,
+	height,
+	state,
+	time,
+	colorLeft,
+	colorRight,
+	colorBase,
+	power = 3,
+) {
+	for (let y = 0; y < height; y++) {
+		const val = 1 - y / height;
+		const wave = (time * state.wavesSpeed - val) * state.wavesNumber;
+		const phase = wave - Math.floor(wave);
+
+		for (let x = 0; x < width; x++) {
+			const tHorizontal = width > 1 ? x / (width - 1) : 0;
+			const peakColor = mixColors(colorLeft, colorRight, tHorizontal);
+			const [r, g, b] = gradientWave(phase, colorBase, peakColor, power);
+			ctx.fillStyle = `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)})`;
+			ctx.fillRect(x, y, 1, 1);
+		}
+	}
 }
 
 export function colorizeGradient(state, time = 0) {
@@ -78,50 +105,44 @@ export function colorizeGradient(state, time = 0) {
 
 	const mode = state ? state.mode : VisMode.COLOR_RAMP;
 
+	if (state.isBinary) {
+		colorizeBinaryGradient();
+		return;
+	}
+
 	if (state.activeQuality === "combined" && mode === VisMode.ANIMATED) {
 		const startColor = SHADER_COLORS.WAVE_START.map((c) => c * 255);
 		const blue = SHADER_COLORS.WAVE_POLAR_START.map((c) => c * 255);
 		const green = SHADER_COLORS.WAVE_POLAR_END.map((c) => c * 255);
 
-		for (let y = 0; y < height; y++) {
-			const val = 1 - y / height;
-			const wave = (time * state.wavesSpeed - val) * state.wavesNumber;
-			const phase = wave - Math.floor(wave);
-
-			const colorLeft = gradientWave(phase, startColor, blue, 2);
-			const colorRight = gradientWave(phase, startColor, green, 2);
-
-			ctx.fillStyle = `rgb(${Math.round(colorLeft[0])}, ${Math.round(colorLeft[1])}, ${Math.round(colorLeft[2])})`;
-			ctx.fillRect(0, y, 1, 1);
-
-			ctx.fillStyle = `rgb(${Math.round(colorRight[0])}, ${Math.round(colorRight[1])}, ${Math.round(colorRight[2])})`;
-			ctx.fillRect(1, y, 1, 1);
-		}
+		colorizeGradientDynamic(
+			ctx,
+			width,
+			height,
+			state,
+			time,
+			blue,
+			green,
+			startColor,
+			2,
+		);
 	} else if (mode === VisMode.COLOR_RAMP || mode === VisMode.TANGENT_FIELD) {
-		if (state.isBinary) {
-			colorizeBinaryGradient();
-			return;
-		}
-
-		for (let y = 0; y < height; y++) {
-			const t = 1 - y / height;
-			const [r, g, b] = turboColormap(t);
-			ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
-			ctx.fillRect(0, y, width, 1);
-		}
+		colorizeGradientWithTurbo(ctx, width, height);
 	} else if (mode === VisMode.ANIMATED) {
 		const startColor = SHADER_COLORS.WAVE_START.map((c) => c * 255);
 		const endColor = SHADER_COLORS.WAVE_END.map((c) => c * 255);
 
-		for (let y = 0; y < height; y++) {
-			const val = 1 - y / height;
-			const wave = (time * state.wavesSpeed - val) * state.wavesNumber;
-			const phase = wave - Math.floor(wave);
-
-			const [r, g, b] = gradientWave(phase, startColor, endColor, 3);
-			ctx.fillStyle = `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)})`;
-			ctx.fillRect(0, y, width, 1);
-		}
+		colorizeGradientDynamic(
+			ctx,
+			width,
+			height,
+			state,
+			time,
+			endColor,
+			endColor,
+			startColor,
+			3,
+		);
 	}
 }
 
