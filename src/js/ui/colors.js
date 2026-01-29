@@ -129,12 +129,23 @@ export function colorizeGradient(state, time = 0) {
 
 	const mode = state ? state.mode : VisMode.COLOR_RAMP;
 
-	if (state.isBinary) {
+	if (mode === VisMode.TANGENT_FIELD) {
+		const bgColor = SHADER_COLORS.GRADIENT_BACKGROUND.map((c) => c * 255);
+		ctx.fillStyle = `rgb(${Math.round(bgColor[0])}, ${Math.round(bgColor[1])}, ${Math.round(bgColor[2])})`;
+		ctx.fillRect(0, 0, width, height);
+		return;
+	}
+
+	if (state && state.isBinary) {
 		colorizeBinaryGradient();
 		return;
 	}
 
-	if (state.activeQuality === "combined" && mode === VisMode.ANIMATED) {
+	if (
+		state &&
+		state.activeQuality === "combined" &&
+		mode === VisMode.ANIMATED
+	) {
 		const startColor = SHADER_COLORS.WAVE_START.map((c) => c * 255);
 		const blue = SHADER_COLORS.WAVE_POLAR_START.map((c) => c * 255);
 		const green = SHADER_COLORS.WAVE_POLAR_END.map((c) => c * 255);
@@ -150,7 +161,7 @@ export function colorizeGradient(state, time = 0) {
 			startColor,
 			2,
 		);
-	} else if (mode === VisMode.COLOR_RAMP || mode === VisMode.TANGENT_FIELD) {
+	} else if (mode === VisMode.COLOR_RAMP) {
 		colorizeGradientTurbo(ctx, width, height);
 	} else if (mode === VisMode.ANIMATED) {
 		const startColor = SHADER_COLORS.WAVE_START.map((c) => c * 255);

@@ -389,10 +389,17 @@ function updateUIForMode(state) {
 	const colorGauge = document.getElementById("color-gauge");
 
 	if (state.activeQuality === "combined") {
-		horizontalTitle.classList.remove("hidden");
 		verticalTitle.innerHTML = "&LongLeftArrow; LAT &LongRightArrow;";
-		document.getElementById("bipolar-min").classList.remove("hidden");
-		document.getElementById("bipolar-max").classList.remove("hidden");
+
+		if (state.mode === VisMode.TANGENT_FIELD) {
+			horizontalTitle.classList.add("hidden");
+			document.getElementById("bipolar-min").classList.add("hidden");
+			document.getElementById("bipolar-max").classList.add("hidden");
+		} else {
+			horizontalTitle.classList.remove("hidden");
+			document.getElementById("bipolar-min").classList.remove("hidden");
+			document.getElementById("bipolar-max").classList.remove("hidden");
+		}
 
 		colorGauge.classList.remove("w-1/16");
 		colorGauge.classList.add("w-1/12");
