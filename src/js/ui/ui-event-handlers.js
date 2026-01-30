@@ -400,7 +400,7 @@ function updateUIForMode(state) {
 		"horizontal-gradient-title",
 	);
 
-	if (state.mode === VisMode.ANIMATED || state.activeQuality === "combined") {
+	if (state.mode === VisMode.ANIMATED) {
 		wavesNumberContainer.classList.remove("hidden");
 		wavesSpeedContainer.classList.remove("hidden");
 	} else {

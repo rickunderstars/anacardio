@@ -15,6 +15,8 @@ export const SHADER_COLORS = {
 	WAVE_POLAR_END: [0.0, 1.0, 0.0],
 	EXTEML: [0.55, 0.41, 0.41],
 	GRADIENT_BACKGROUND: [0.2, 0.1, 0.1],
+	GRADIENT_START: [0.0, 0.0, 1.0],
+	GRADIENT_END: [0.0, 1.0, 0.0],
 	BIN_COLOR_1: [0.0, 0.0, 1.0],
 	BIN_COLOR_2: [0.0, 1.0, 0.0],
 };
@@ -78,15 +80,7 @@ export function colorizeGradientDynamic(
 	}
 }
 
-export function colorizeGradient2D(
-	ctx,
-	width,
-	height,
-	cTL,
-	cTR,
-	cBL,
-	cBR,
-) {
+export function colorizeGradient2D(ctx, width, height, cTL, cTR, cBL, cBR) {
 	for (let y = 0; y < height; y++) {
 		const v = height > 1 ? y / (height - 1) : 0;
 		for (let x = 0; x < width; x++) {
@@ -130,9 +124,17 @@ export function colorizeGradient(state, time = 0) {
 	const mode = state ? state.mode : VisMode.COLOR_RAMP;
 
 	if (mode === VisMode.TANGENT_FIELD) {
-		const bgColor = SHADER_COLORS.GRADIENT_BACKGROUND.map((c) => c * 255);
-		ctx.fillStyle = `rgb(${Math.round(bgColor[0])}, ${Math.round(bgColor[1])}, ${Math.round(bgColor[2])})`;
-		ctx.fillRect(0, 0, width, height);
+		if (state.activeQuality === "combined") {
+			const start = SHADER_COLORS.GRADIENT_START.map((c) => c * 255);
+			const end = SHADER_COLORS.GRADIENT_END.map((c) => c * 255);
+			colorizeGradient2D(ctx, width, height, end, end, start, start);
+		} else {
+			const bgColor = SHADER_COLORS.GRADIENT_BACKGROUND.map(
+				(c) => c * 255,
+			);
+			ctx.fillStyle = `rgb(${Math.round(bgColor[0])}, ${Math.round(bgColor[1])}, ${Math.round(bgColor[2])})`;
+			ctx.fillRect(0, 0, width, height);
+		}
 		return;
 	}
 

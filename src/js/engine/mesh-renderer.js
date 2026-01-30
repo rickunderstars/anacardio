@@ -14,6 +14,8 @@ export function updateActiveMesh(dependencies) {
 		mixFShader,
 		tanVShader,
 		tanFShader,
+		gradVShader,
+		gradFShader,
 	} = shaders;
 
 	if (state.activeMeshIndex < 0) {
@@ -48,6 +50,10 @@ export function updateActiveMesh(dependencies) {
 		hideAllTangentFields(state);
 
 		if (state.mode === VisMode.TANGENT_FIELD) {
+			activeMesh.mesh.geometry.setAttribute(
+				"value",
+				new THREE.BufferAttribute(activeMesh.valueSets["bipolar"], 1),
+			);
 			activeMesh.mesh.material = new THREE.ShaderMaterial({
 				uniforms: {
 					uMin: { value: bipAbsMin },
@@ -55,14 +61,19 @@ export function updateActiveMesh(dependencies) {
 					uAmbientLightIntensity: {
 						value: state.ambientLightIntensity,
 					},
-					uColor: {
+					uColor1: {
 						value: new THREE.Vector3(
-							...SHADER_COLORS.GRADIENT_BACKGROUND,
+							...SHADER_COLORS.GRADIENT_START,
+						),
+					},
+					uColor2: {
+						value: new THREE.Vector3(
+							...SHADER_COLORS.GRADIENT_END,
 						),
 					},
 				},
-				vertexShader: tanVShader,
-				fragmentShader: tanFShader,
+				vertexShader: gradVShader,
+				fragmentShader: gradFShader,
 				side: THREE.DoubleSide,
 			});
 			activeMesh.tangentFieldMeshes["bipolar"].visible = true;
@@ -122,12 +133,10 @@ export function updateActiveMesh(dependencies) {
 	);
 	activeMesh.mesh.material.dispose();
 
-	const isBinary =
-		areValuesClose(absMin, min) || areValuesClose(min, max);
+	const isBinary = areValuesClose(absMin, min) || areValuesClose(min, max);
 	state.isBinary = isBinary;
 	const renderMin = isBinary ? absMin : min;
-	const renderMax =
-		isBinary && areValuesClose(absMin, max) ? max + 1.0 : max;
+	const renderMax = isBinary && areValuesClose(absMin, max) ? max + 1.0 : max;
 
 	if (state.mode === VisMode.COLOR_RAMP) {
 		activeMesh.mesh.material = new THREE.ShaderMaterial({
