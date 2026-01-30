@@ -29,7 +29,7 @@
 			</div>
 			<div
 				id="color-gauge"
-				class="w-1/16 flex flex-col items-center bg-slate-800 py-2 px-0"
+				class="w-1/16 flex flex-col items-center bg-slate-800 py-4 px-0"
 			>
 				<div
 					id="horizontal-gradient-title"
@@ -99,9 +99,9 @@
 			></div>
 
 			<div
-				class="w-full h-[50vh] md:w-3/7 md:h-full flex flex-col gap-3 p-4 bg-slate-800 overflow-y-auto"
+				class="w-full h-[50vh] md:w-3/7 md:h-full flex flex-col p-4 bg-slate-800 overflow-y-auto"
 			>
-				<div class="flex flex-wrap items-center gap-4 h-fit">
+				<div class="flex flex-wrap items-center gap-4 h-fit mb-4">
 					<div
 						class="flex flex-none items-center gap-2 text-4xl font-bold text-shadow-xl"
 					>
@@ -132,52 +132,9 @@
 						accept="text/*"
 						class="hidden"
 					/>
-					<fieldset class="border border-slate-500 rounded-lg p-2">
-						<legend class="px-2 text-sm text-slate-300 font-bold">
-							View
-						</legend>
-						<div class="grid grid-cols-3 gap-2">
-							<button
-								id="camera-front"
-								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer border border-slate-600"
-							>
-								Front
-							</button>
-							<button
-								id="camera-top"
-								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer border border-slate-600"
-							>
-								Top
-							</button>
-							<button
-								id="camera-left"
-								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer border border-slate-600"
-							>
-								Left
-							</button>
-							<button
-								id="camera-back"
-								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer border border-slate-600"
-							>
-								Back
-							</button>
-							<button
-								id="camera-bottom"
-								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer border border-slate-600"
-							>
-								Bottom
-							</button>
-							<button
-								id="camera-right"
-								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer border border-slate-600"
-							>
-								Right
-							</button>
-						</div>
-					</fieldset>
 				</div>
 
-				<div class="flex flex-grow gap-4">
+				<div class="flex flex-grow gap-4 mb-4">
 					<div class="flex flex-col flex-grow gap-4">
 						<div class="flex flex-row gap-4">
 							<fieldset
@@ -501,6 +458,51 @@
 							</div>
 						</fieldset>
 					</div>
+				</div>
+				<div class="flex flex-col gap-2">
+					<fieldset class="border border-slate-500 rounded-lg p-2">
+						<legend class="px-2 text-sm text-slate-300 font-bold">
+							View
+						</legend>
+						<div class="grid grid-cols-3 gap-2">
+							<button
+								id="camera-front"
+								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer border border-slate-600"
+							>
+								Front
+							</button>
+							<button
+								id="camera-top"
+								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer border border-slate-600"
+							>
+								Top
+							</button>
+							<button
+								id="camera-left"
+								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer border border-slate-600"
+							>
+								Left
+							</button>
+							<button
+								id="camera-back"
+								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer border border-slate-600"
+							>
+								Back
+							</button>
+							<button
+								id="camera-bottom"
+								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer border border-slate-600"
+							>
+								Bottom
+							</button>
+							<button
+								id="camera-right"
+								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer border border-slate-600"
+							>
+								Right
+							</button>
+						</div>
+					</fieldset>
 				</div>
 			</div>
 		</div>
