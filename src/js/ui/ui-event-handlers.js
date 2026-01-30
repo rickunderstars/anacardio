@@ -387,6 +387,9 @@ function updateUIForMode(state) {
 	}
 
 	const colorGauge = document.getElementById("color-gauge");
+	const isBipolarVisible =
+		state.activeQuality === "combined" &&
+		state.mode !== VisMode.TANGENT_FIELD;
 
 	if (state.activeQuality === "combined") {
 		verticalTitle.innerHTML = "&LongLeftArrow; LAT &LongRightArrow;";
@@ -400,9 +403,6 @@ function updateUIForMode(state) {
 			document.getElementById("bipolar-min").classList.remove("hidden");
 			document.getElementById("bipolar-max").classList.remove("hidden");
 		}
-
-		colorGauge.classList.remove("w-1/16");
-		colorGauge.classList.add("w-1/12");
 	} else {
 		horizontalTitle.classList.add("hidden");
 		verticalTitle.innerHTML =
@@ -411,7 +411,12 @@ function updateUIForMode(state) {
 			" &LongRightArrow;";
 		document.getElementById("bipolar-min").classList.add("hidden");
 		document.getElementById("bipolar-max").classList.add("hidden");
+	}
 
+	if (isBipolarVisible) {
+		colorGauge.classList.remove("w-1/16");
+		colorGauge.classList.add("w-1/12");
+	} else {
 		colorGauge.classList.remove("w-1/12");
 		colorGauge.classList.add("w-1/16");
 	}
