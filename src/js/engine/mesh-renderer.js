@@ -16,6 +16,8 @@ export function updateActiveMesh(dependencies) {
 		tanFShader,
 		gradVShader,
 		gradFShader,
+		mixStaticVShader,
+		mixStaticFShader,
 	} = shaders;
 
 	if (state.activeMeshIndex < 0) {
@@ -67,9 +69,7 @@ export function updateActiveMesh(dependencies) {
 						),
 					},
 					uColor2: {
-						value: new THREE.Vector3(
-							...SHADER_COLORS.GRADIENT_END,
-						),
+						value: new THREE.Vector3(...SHADER_COLORS.GRADIENT_END),
 					},
 					uExtemlColor: {
 						value: new THREE.Vector3(...SHADER_COLORS.EXTEML),
@@ -85,27 +85,22 @@ export function updateActiveMesh(dependencies) {
 			activeMesh.tangentFieldMeshes["combined"].visible = true;
 			return { min: bipMin, max: bipMax };
 		} else if (state.mode === VisMode.COLOR_RAMP) {
-			activeMesh.mesh.geometry.setAttribute(
-				"value",
-				new THREE.BufferAttribute(activeMesh.valueSets["lat"], 1),
-			);
 			activeMesh.mesh.material = new THREE.ShaderMaterial({
 				uniforms: {
-					uOnlyTwo: { value: 0.0 },
-					uMin: { value: latMin },
-					uMax: { value: latMax },
+					uLatMin: { value: latMin },
+					uLatMax: { value: latMax },
+					uBipMin: { value: bipMin },
+					uBipMax: { value: bipMax },
 					uAmbientLightIntensity: {
 						value: state.ambientLightIntensity,
 					},
-					uBinColor1: {
-						value: new THREE.Vector3(...SHADER_COLORS.BIN_COLOR_1),
-					},
-					uBinColor2: {
-						value: new THREE.Vector3(...SHADER_COLORS.BIN_COLOR_2),
-					},
+					uColorTL: { value: new THREE.Vector3(1, 0, 0) },
+					uColorTR: { value: new THREE.Vector3(0, 1, 0) },
+					uColorBL: { value: new THREE.Vector3(0, 0, 1) },
+					uColorBR: { value: new THREE.Vector3(1, 1, 1) },
 				},
-				vertexShader: vShader,
-				fragmentShader: fShader,
+				vertexShader: mixStaticVShader,
+				fragmentShader: mixStaticFShader,
 				side: THREE.DoubleSide,
 			});
 		} else {
