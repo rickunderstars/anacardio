@@ -18,11 +18,11 @@
 			></div>
 
 			<div
-				class="flex items-center justify-center text-sm font-bold bg-slate-800 text-slate-300 bg-slate-800"
+				class="relative flex items-center justify-center w-8 bg-slate-800 text-slate-300"
 			>
 				<span
 					id="vertical-gradient-title"
-					class="inline-block -rotate-90 whitespace-nowrap w-8"
+					class="absolute inline-block -rotate-90 whitespace-nowrap text-sm font-bold"
 				>
 					&LongLeftArrow; field &LongRightArrow;
 				</span>
@@ -52,7 +52,7 @@
 					<div class="flex flex-col flex-grow h-full min-w-0 gap-1">
 						<div
 							id="max-value"
-							class="text-sm text-center font-bold bg-black rounded-md w-full p-1 truncate"
+							class="text-sm text-center font-bold bg-black rounded-md w-full p-1"
 						>
 							---
 						</div>
@@ -70,7 +70,7 @@
 						</div>
 						<div
 							id="min-value"
-							class="text-sm text-center font-bold bg-black rounded-md w-full p-1 truncate"
+							class="text-sm text-center font-bold bg-black rounded-md w-full p-1"
 						>
 							---
 						</div>
@@ -86,13 +86,12 @@
 						>
 					</div>
 				</div>
-
-				<div
-					class="text-sm text-center font-bold bg-black rounded-md w-full mt-1 bg-slate-700 p-1"
-				>
-					<div id="sampler-value"></div>
-				</div>
 			</div>
+
+			<div
+				id="sampler-tooltip"
+				class="absolute hidden pointer-events-none bg-black text-white text-md font-bold px-2 py-1 rounded-md border border-slate-500 z-50 whitespace-nowrap"
+			></div>
 
 			<div
 				class="w-full h-[50vh] md:w-3/7 md:h-full flex flex-col gap-3 p-4 bg-slate-800 overflow-y-auto"

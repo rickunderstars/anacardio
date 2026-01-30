@@ -7,7 +7,6 @@ import { updateActiveMesh } from "@js/engine/mesh-renderer.js";
 import { addTestMesh } from "@js/io/test-loader.js";
 import { VisMode, AppEvents } from "@js/core/state-manager.js";
 import { formatNumber, get2Min, getMax } from "@js/utils/math-utils.js";
-import { processFile } from "@js/io/file-loader.js";
 import { CameraVersors } from "@js/engine/scene-manager.js";
 import { renderMeshDropdown } from "@js/ui/ui-file-handlers.js";
 
@@ -353,15 +352,23 @@ function onMouseMove(e, sceneManager, mouse, state) {
 		state,
 	});
 
+	const tooltip = document.getElementById("sampler-tooltip");
+
 	if (result && result.hovered) {
 		const { values, activeValue } = result;
 
-		document.getElementById("sampler-value").innerHTML =
-			formatNumber(activeValue);
+		if (tooltip) {
+			tooltip.innerHTML = formatNumber(activeValue);
+			tooltip.style.left = `${e.clientX + 15}px`;
+			tooltip.style.top = `${e.clientY + 15}px`;
+			tooltip.classList.remove("hidden");
+		}
 
 		setGaugeLine(activeValue, state);
 	} else {
-		document.getElementById("sampler-value").innerHTML = "---";
+		if (tooltip) {
+			tooltip.classList.add("hidden");
+		}
 	}
 }
 
