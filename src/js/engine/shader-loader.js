@@ -8,6 +8,10 @@ import combinedVertexShader from "@glsl/combined-dynamic-vertex.glsl";
 import combinedFragmentShader from "@glsl/combined-dynamic-fragment.glsl";
 import tangentVertexShader from "@glsl/tangent-vertex.glsl";
 import tangentFragmentShader from "@glsl/tangent-fragment.glsl";
+import gradientVertexShader from "@glsl/gradient-vertex.glsl";
+import gradientFragmentShader from "@glsl/gradient-fragment.glsl";
+import combinedStaticVertexShader from "@glsl/combined-static-vertex.glsl";
+import combinedStaticFragmentShader from "@glsl/combined-static-fragment.glsl";
 
 export async function loadShaders() {
 	if (!import.meta.env.DEV) {
@@ -20,6 +24,10 @@ export async function loadShaders() {
 			mixFShader: combinedFragmentShader,
 			tanVShader: tangentVertexShader,
 			tanFShader: tangentFragmentShader,
+			gradVShader: gradientVertexShader,
+			gradFShader: gradientFragmentShader,
+			mixStaticVShader: combinedStaticVertexShader,
+			mixStaticFShader: combinedStaticFragmentShader,
 		};
 	}
 
@@ -39,6 +47,10 @@ export async function loadShaders() {
 		mixFShader,
 		tanVShader,
 		tanFShader,
+		gradVShader,
+		gradFShader,
+		mixStaticVShader,
+		mixStaticFShader,
 	] = await Promise.all([
 		loadShader("glsl/static-vertex.glsl"),
 		loadShader("glsl/static-fragment.glsl"),
@@ -48,6 +60,10 @@ export async function loadShaders() {
 		loadShader("glsl/combined-dynamic-fragment.glsl"),
 		loadShader("glsl/tangent-vertex.glsl"),
 		loadShader("glsl/tangent-fragment.glsl"),
+		loadShader("glsl/gradient-vertex.glsl"),
+		loadShader("glsl/gradient-fragment.glsl"),
+		loadShader("glsl/combined-static-vertex.glsl"),
+		loadShader("glsl/combined-static-fragment.glsl"),
 	]);
 
 	return {
@@ -59,6 +75,10 @@ export async function loadShaders() {
 		mixFShader,
 		tanVShader,
 		tanFShader,
+		gradVShader,
+		gradFShader,
+		mixStaticVShader,
+		mixStaticFShader,
 	};
 }
 

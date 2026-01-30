@@ -159,6 +159,8 @@ Mesh::Float32ArrayOfTangentFieldSegments(std::string quality,
 	std::transform(quality.begin(), quality.end(), quality.begin(),
 				   [](unsigned char c) { return std::tolower(c); });
 
+	bool isCombined = (quality == "combined");
+
 	struct SegmentData {
 		glm::vec3 center;
 		glm::vec3 vector;
@@ -179,6 +181,11 @@ Mesh::Float32ArrayOfTangentFieldSegments(std::string quality,
 			return;
 		}
 
+		if (isCombined && (v0.ExtEML != 0 || v0.groupID != 0)) {
+			tempSegments.push_back({barycenter, glm::vec3(0.0f)});
+			return;
+		}
+
 		float d1 = val1 - val0;
 		float d2 = val2 - val0;
 
@@ -192,9 +199,8 @@ Mesh::Float32ArrayOfTangentFieldSegments(std::string quality,
 		tempSegments.push_back({barycenter, gradientVector});
 	};
 
-	auto floatIterator = floatVertexValueMap.find(quality);
-	if (floatIterator != floatVertexValueMap.end()) {
-		auto valuePointer = floatIterator->second;
+	if (isCombined) {
+		auto valuePointer = &Vertex::bipolar;
 		for (const auto &t : triangles) {
 			Vertex v0 = vertices.at(t.vertices.at(0));
 			Vertex v1 = vertices.at(t.vertices.at(1));
@@ -203,21 +209,33 @@ Mesh::Float32ArrayOfTangentFieldSegments(std::string quality,
 							v2.*valuePointer);
 		}
 	} else {
-		auto intIterator = intVertexValueMap.find(quality);
-		if (intIterator != intVertexValueMap.end()) {
-			auto valuePointer = intIterator->second;
+		auto floatIterator = floatVertexValueMap.find(quality);
+		if (floatIterator != floatVertexValueMap.end()) {
+			auto valuePointer = floatIterator->second;
 			for (const auto &t : triangles) {
 				Vertex v0 = vertices.at(t.vertices.at(0));
 				Vertex v1 = vertices.at(t.vertices.at(1));
 				Vertex v2 = vertices.at(t.vertices.at(2));
-				computeAndStore(v0, v1, v2,
-								static_cast<float>(v0.*valuePointer),
-								static_cast<float>(v1.*valuePointer),
-								static_cast<float>(v2.*valuePointer));
+				computeAndStore(v0, v1, v2, v0.*valuePointer, v1.*valuePointer,
+								v2.*valuePointer);
 			}
 		} else {
-			throw std::runtime_error("Quality '" + quality +
-									 "' was not found in global maps.");
+			auto intIterator = intVertexValueMap.find(quality);
+			if (intIterator != intVertexValueMap.end()) {
+				auto valuePointer = intIterator->second;
+				for (const auto &t : triangles) {
+					Vertex v0 = vertices.at(t.vertices.at(0));
+					Vertex v1 = vertices.at(t.vertices.at(1));
+					Vertex v2 = vertices.at(t.vertices.at(2));
+					computeAndStore(v0, v1, v2,
+									static_cast<float>(v0.*valuePointer),
+									static_cast<float>(v1.*valuePointer),
+									static_cast<float>(v2.*valuePointer));
+				}
+			} else {
+				throw std::runtime_error("Quality '" + quality +
+										 "' was not found in global maps.");
+			}
 		}
 	}
 

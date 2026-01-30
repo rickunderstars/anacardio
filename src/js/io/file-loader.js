@@ -77,7 +77,9 @@ export async function addMesh(dependencies) {
 		blending: THREE.AdditiveBlending,
 	});
 
-	FIELD_KEYS.forEach((key) => {
+	const TANGENT_KEYS = [...FIELD_KEYS, "combined"];
+
+	TANGENT_KEYS.forEach((key) => {
 		const rawSegments = mesh.Float32ArrayOfTangentFieldSegments(key, 2.8);
 
 		if (rawSegments && rawSegments.length > 0) {

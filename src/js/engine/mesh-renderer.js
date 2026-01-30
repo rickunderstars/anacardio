@@ -14,6 +14,10 @@ export function updateActiveMesh(dependencies) {
 		mixFShader,
 		tanVShader,
 		tanFShader,
+		gradVShader,
+		gradFShader,
+		mixStaticVShader,
+		mixStaticFShader,
 	} = shaders;
 
 	if (state.activeMeshIndex < 0) {
@@ -48,24 +52,73 @@ export function updateActiveMesh(dependencies) {
 		hideAllTangentFields(state);
 
 		if (state.mode === VisMode.TANGENT_FIELD) {
+			activeMesh.mesh.geometry.setAttribute(
+				"value",
+				new THREE.BufferAttribute(activeMesh.valueSets["bipolar"], 1),
+			);
 			activeMesh.mesh.material = new THREE.ShaderMaterial({
 				uniforms: {
-					uMin: { value: latAbsMin },
-					uMax: { value: latMax },
+					uMin: { value: bipAbsMin },
+					uMax: { value: bipMax },
 					uAmbientLightIntensity: {
 						value: state.ambientLightIntensity,
 					},
-					uColor: {
+					uColor1: {
 						value: new THREE.Vector3(
-							...SHADER_COLORS.GRADIENT_BACKGROUND,
+							...SHADER_COLORS.COMBINED_GRADIENT_START,
 						),
 					},
+					uColor2: {
+						value: new THREE.Vector3(
+							...SHADER_COLORS.COMBINED_GRADIENT_END,
+						),
+					},
+					uExtemlColor: {
+						value: new THREE.Vector3(...SHADER_COLORS.EXTEML),
+					},
+					uNullColor: {
+						value: new THREE.Vector3(...SHADER_COLORS.NULL),
+					},
 				},
-				vertexShader: tanVShader,
-				fragmentShader: tanFShader,
+				vertexShader: gradVShader,
+				fragmentShader: gradFShader,
 				side: THREE.DoubleSide,
 			});
-			activeMesh.tangentFieldMeshes["lat"].visible = true;
+			activeMesh.tangentFieldMeshes["combined"].visible = true;
+			return { min: bipMin, max: bipMax };
+		} else if (state.mode === VisMode.COLOR_RAMP) {
+			activeMesh.mesh.material = new THREE.ShaderMaterial({
+				uniforms: {
+					uLatMin: { value: latMin },
+					uLatMax: { value: latMax },
+					uBipMin: { value: bipMin },
+					uBipMax: { value: bipMax },
+					uAmbientLightIntensity: {
+						value: state.ambientLightIntensity,
+					},
+					uColorTL: {
+						value: new THREE.Vector3(...SHADER_COLORS.COMBINED_TL),
+					},
+					uColorTR: {
+						value: new THREE.Vector3(...SHADER_COLORS.COMBINED_TR),
+					},
+					uColorBL: {
+						value: new THREE.Vector3(...SHADER_COLORS.COMBINED_BL),
+					},
+					uColorBR: {
+						value: new THREE.Vector3(...SHADER_COLORS.COMBINED_BR),
+					},
+					uExtemlColor: {
+						value: new THREE.Vector3(...SHADER_COLORS.EXTEML),
+					},
+					uNullColor: {
+						value: new THREE.Vector3(...SHADER_COLORS.NULL),
+					},
+				},
+				vertexShader: mixStaticVShader,
+				fragmentShader: mixStaticFShader,
+				side: THREE.DoubleSide,
+			});
 		} else {
 			activeMesh.mesh.material = new THREE.ShaderMaterial({
 				uniforms: {
@@ -121,12 +174,10 @@ export function updateActiveMesh(dependencies) {
 	);
 	activeMesh.mesh.material.dispose();
 
-	const isBinary =
-		areValuesClose(absMin, min) || areValuesClose(min, max);
+	const isBinary = areValuesClose(absMin, min) || areValuesClose(min, max);
 	state.isBinary = isBinary;
 	const renderMin = isBinary ? absMin : min;
-	const renderMax =
-		isBinary && areValuesClose(absMin, max) ? max + 1.0 : max;
+	const renderMax = isBinary && areValuesClose(absMin, max) ? max + 1.0 : max;
 
 	if (state.mode === VisMode.COLOR_RAMP) {
 		activeMesh.mesh.material = new THREE.ShaderMaterial({
