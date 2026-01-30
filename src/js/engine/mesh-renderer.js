@@ -71,6 +71,12 @@ export function updateActiveMesh(dependencies) {
 							...SHADER_COLORS.GRADIENT_END,
 						),
 					},
+					uExtemlColor: {
+						value: new THREE.Vector3(...SHADER_COLORS.EXTEML),
+					},
+					uNullColor: {
+						value: new THREE.Vector3(...SHADER_COLORS.NULL),
+					},
 				},
 				vertexShader: gradVShader,
 				fragmentShader: gradFShader,
