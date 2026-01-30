@@ -19,7 +19,7 @@ export class StateManager extends EventTarget {
 
 	#activeMeshIndex = -1;
 	#activeQuality = "combined";
-	#mode = VisMode.ANIMATED;
+	#mode = VisMode.COLOR_RAMP;
 	#ambientLightIntensity = 0.6;
 	#wavesNumber = 10;
 	#wavesSpeed = 0.05;

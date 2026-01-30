@@ -84,6 +84,30 @@ export function updateActiveMesh(dependencies) {
 			});
 			activeMesh.tangentFieldMeshes["combined"].visible = true;
 			return { min: bipMin, max: bipMax };
+		} else if (state.mode === VisMode.COLOR_RAMP) {
+			activeMesh.mesh.geometry.setAttribute(
+				"value",
+				new THREE.BufferAttribute(activeMesh.valueSets["lat"], 1),
+			);
+			activeMesh.mesh.material = new THREE.ShaderMaterial({
+				uniforms: {
+					uOnlyTwo: { value: 0.0 },
+					uMin: { value: latMin },
+					uMax: { value: latMax },
+					uAmbientLightIntensity: {
+						value: state.ambientLightIntensity,
+					},
+					uBinColor1: {
+						value: new THREE.Vector3(...SHADER_COLORS.BIN_COLOR_1),
+					},
+					uBinColor2: {
+						value: new THREE.Vector3(...SHADER_COLORS.BIN_COLOR_2),
+					},
+				},
+				vertexShader: vShader,
+				fragmentShader: fShader,
+				side: THREE.DoubleSide,
+			});
 		} else {
 			activeMesh.mesh.material = new THREE.ShaderMaterial({
 				uniforms: {

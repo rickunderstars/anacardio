@@ -169,9 +169,7 @@ export function setupEventHandlers(dependencies) {
 					"scar",
 					"groupid",
 				];
-				const combinedRestrictedModes = [
-					VisMode.COLOR_RAMP,
-				];
+				const combinedRestrictedModes = [];
 
 				if (
 					restrictedQualities.includes(newQuality) &&
@@ -297,11 +295,6 @@ export function setupEventHandlers(dependencies) {
 					(newMode === VisMode.ANIMATED ||
 						newMode === VisMode.TANGENT_FIELD) &&
 					restrictedQualities.includes(state.activeQuality)
-				) {
-					state.activeQuality = "unipolar";
-				} else if (
-					newMode === VisMode.COLOR_RAMP &&
-					state.activeQuality === combinedQuality
 				) {
 					state.activeQuality = "unipolar";
 				}
@@ -453,7 +446,7 @@ function updateControlsState(state) {
 	const restrictedModes = [VisMode.ANIMATED, VisMode.TANGENT_FIELD];
 
 	const combinedQuality = "combined";
-	const combinedRestrictedModes = [VisMode.COLOR_RAMP];
+	const combinedRestrictedModes = [];
 
 	modeRadios.forEach((radio) => {
 		radio.disabled = isDisabled;
