@@ -65,11 +65,13 @@ export function updateActiveMesh(dependencies) {
 					},
 					uColor1: {
 						value: new THREE.Vector3(
-							...SHADER_COLORS.GRADIENT_START,
+							...SHADER_COLORS.COMBINED_GRADIENT_START,
 						),
 					},
 					uColor2: {
-						value: new THREE.Vector3(...SHADER_COLORS.GRADIENT_END),
+						value: new THREE.Vector3(
+							...SHADER_COLORS.COMBINED_GRADIENT_END,
+						),
 					},
 					uExtemlColor: {
 						value: new THREE.Vector3(...SHADER_COLORS.EXTEML),
@@ -94,10 +96,18 @@ export function updateActiveMesh(dependencies) {
 					uAmbientLightIntensity: {
 						value: state.ambientLightIntensity,
 					},
-					uColorTL: { value: new THREE.Vector3(1, 0, 0) },
-					uColorTR: { value: new THREE.Vector3(0, 1, 0) },
-					uColorBL: { value: new THREE.Vector3(0, 0, 1) },
-					uColorBR: { value: new THREE.Vector3(1, 1, 1) },
+					uColorTL: {
+						value: new THREE.Vector3(...SHADER_COLORS.COMBINED_TL),
+					},
+					uColorTR: {
+						value: new THREE.Vector3(...SHADER_COLORS.COMBINED_TR),
+					},
+					uColorBL: {
+						value: new THREE.Vector3(...SHADER_COLORS.COMBINED_BL),
+					},
+					uColorBR: {
+						value: new THREE.Vector3(...SHADER_COLORS.COMBINED_BR),
+					},
 				},
 				vertexShader: mixStaticVShader,
 				fragmentShader: mixStaticFShader,

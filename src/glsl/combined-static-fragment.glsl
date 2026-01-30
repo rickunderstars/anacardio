@@ -23,13 +23,10 @@ void main() {
 				   light3Diffuse * vec3(0.7) + light4Diffuse * vec3(0.7);
 	lambert = lambert / vec3(3.0);
 
-	float x = clamp(vLat, 0.0, 1.0);
-	float y = clamp(vBip, 0.0, 1.0);
+	float x = clamp(vBip, 0.0, 1.0);
+	float y = clamp(vLat, 0.0, 1.0);
 
 	// Bilinear interpolation
-	// y=0 (Bottom): mix BL -> BR based on x
-	// y=1 (Top):    mix TL -> TR based on x
-	// Then mix Bottom -> Top based on y
 
 	vec3 top = mix(uColorTL, uColorTR, x);
 	vec3 bottom = mix(uColorBL, uColorBR, x);

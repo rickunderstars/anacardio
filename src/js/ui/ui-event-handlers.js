@@ -200,11 +200,7 @@ export function setupEventHandlers(dependencies) {
 				const { min, max } = updateActiveMesh({ shaders, state });
 				updateMinMaxUI(min, max, state);
 
-				if (state.activeQuality === "combined") {
-					sceneManager.startClock();
-					sceneManager.resetAnimationState();
-					sceneManager.runAnimationLoop(state);
-				} else if (state.mode === VisMode.ANIMATED) {
+				if (state.mode === VisMode.ANIMATED) {
 					sceneManager.startClock();
 					sceneManager.resetAnimationState();
 					sceneManager.runAnimationLoop(state);
@@ -268,10 +264,7 @@ export function setupEventHandlers(dependencies) {
 	});
 
 	sceneManager.controls.addEventListener("change", () => {
-		if (
-			state.mode != VisMode.ANIMATED &&
-			state.activeQuality != "combined"
-		) {
+		if (state.mode != VisMode.ANIMATED) {
 			sceneManager.render();
 		}
 	});

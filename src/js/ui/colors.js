@@ -15,8 +15,12 @@ export const SHADER_COLORS = {
 	WAVE_POLAR_END: [0.0, 1.0, 0.0],
 	EXTEML: [0.55, 0.41, 0.41],
 	GRADIENT_BACKGROUND: [0.2, 0.1, 0.1],
-	GRADIENT_START: [0.0, 0.0, 1.0],
-	GRADIENT_END: [0.0, 1.0, 0.0],
+	COMBINED_GRADIENT_START: [0.0, 0.0, 1.0],
+	COMBINED_GRADIENT_END: [0.0, 1.0, 0.0],
+	COMBINED_TL: [0.2, 0.2, 0.2],
+	COMBINED_TR: [0.0, 1.0, 0.0],
+	COMBINED_BL: [0.2, 0.2, 0.2],
+	COMBINED_BR: [0.0, 0.0, 1.0],
 	BIN_COLOR_1: [0.0, 0.0, 1.0],
 	BIN_COLOR_2: [0.0, 1.0, 0.0],
 };
@@ -125,8 +129,10 @@ export function colorizeGradient(state, time = 0) {
 
 	if (mode === VisMode.TANGENT_FIELD) {
 		if (state.activeQuality === "combined") {
-			const start = SHADER_COLORS.GRADIENT_START.map((c) => c * 255);
-			const end = SHADER_COLORS.GRADIENT_END.map((c) => c * 255);
+			const start = SHADER_COLORS.COMBINED_GRADIENT_START.map(
+				(c) => c * 255,
+			);
+			const end = SHADER_COLORS.COMBINED_GRADIENT_END.map((c) => c * 255);
 			colorizeGradient2D(ctx, width, height, end, end, start, start);
 		} else {
 			const bgColor = SHADER_COLORS.GRADIENT_BACKGROUND.map(
@@ -164,7 +170,15 @@ export function colorizeGradient(state, time = 0) {
 			2,
 		);
 	} else if (mode === VisMode.COLOR_RAMP) {
-		colorizeGradientTurbo(ctx, width, height);
+		if (state.activeQuality === "combined") {
+			const cTL = SHADER_COLORS.COMBINED_TL.map((c) => c * 255);
+			const cTR = SHADER_COLORS.COMBINED_TR.map((c) => c * 255);
+			const cBL = SHADER_COLORS.COMBINED_BL.map((c) => c * 255);
+			const cBR = SHADER_COLORS.COMBINED_BR.map((c) => c * 255);
+			colorizeGradient2D(ctx, width, height, cTL, cTR, cBL, cBR);
+		} else {
+			colorizeGradientTurbo(ctx, width, height);
+		}
 	} else if (mode === VisMode.ANIMATED) {
 		const startColor = SHADER_COLORS.WAVE_START.map((c) => c * 255);
 		const endColor = SHADER_COLORS.WAVE_END.map((c) => c * 255);

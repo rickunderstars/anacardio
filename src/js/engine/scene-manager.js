@@ -101,10 +101,7 @@ export class SceneManager {
 	}
 
 	runAnimationLoop(state, timeStamp = 0) {
-		if (
-			state.mode != VisMode.ANIMATED &&
-			state.activeQuality != "combined"
-		) {
+		if (state.mode != VisMode.ANIMATED) {
 			this.render();
 			return;
 		}
