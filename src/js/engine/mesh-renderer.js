@@ -50,8 +50,8 @@ export function updateActiveMesh(dependencies) {
 		if (state.mode === VisMode.TANGENT_FIELD) {
 			activeMesh.mesh.material = new THREE.ShaderMaterial({
 				uniforms: {
-					uMin: { value: latAbsMin },
-					uMax: { value: latMax },
+					uMin: { value: bipAbsMin },
+					uMax: { value: bipMax },
 					uAmbientLightIntensity: {
 						value: state.ambientLightIntensity,
 					},
@@ -65,7 +65,8 @@ export function updateActiveMesh(dependencies) {
 				fragmentShader: tanFShader,
 				side: THREE.DoubleSide,
 			});
-			activeMesh.tangentFieldMeshes["lat"].visible = true;
+			activeMesh.tangentFieldMeshes["bipolar"].visible = true;
+			return { min: bipMin, max: bipMax };
 		} else {
 			activeMesh.mesh.material = new THREE.ShaderMaterial({
 				uniforms: {

@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { VisMode } from "@js/core/state-manager.js";
 
 export function surfaceSampler(dependencies) {
 	const { mouse, camera, state } = dependencies;
@@ -80,7 +81,8 @@ export function surfaceSampler(dependencies) {
 				activeValue = groupid;
 				break;
 			case "combined":
-				activeValue = lat;
+				activeValue =
+					state.mode === VisMode.TANGENT_FIELD ? bipolar : lat;
 				break;
 		}
 

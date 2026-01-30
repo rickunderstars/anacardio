@@ -414,13 +414,13 @@ function updateUIForMode(state) {
 		state.mode !== VisMode.TANGENT_FIELD;
 
 	if (state.activeQuality === "combined") {
-		verticalTitle.innerHTML = "&LongLeftArrow; LAT &LongRightArrow;";
-
 		if (state.mode === VisMode.TANGENT_FIELD) {
+			verticalTitle.innerHTML = "&LongLeftArrow; BIPOLAR &LongRightArrow;";
 			horizontalTitle.classList.add("hidden");
 			document.getElementById("bipolar-min").classList.add("hidden");
 			document.getElementById("bipolar-max").classList.add("hidden");
 		} else {
+			verticalTitle.innerHTML = "&LongLeftArrow; LAT &LongRightArrow;";
 			horizontalTitle.classList.remove("hidden");
 			document.getElementById("bipolar-min").classList.remove("hidden");
 			document.getElementById("bipolar-max").classList.remove("hidden");

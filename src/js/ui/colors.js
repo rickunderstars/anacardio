@@ -186,8 +186,10 @@ export function setGaugeLine(value, state) {
 		return;
 	}
 
-	const quality =
-		state.activeQuality === "combined" ? "lat" : state.activeQuality;
+	let quality = state.activeQuality;
+	if (state.activeQuality === "combined") {
+		quality = state.mode === VisMode.TANGENT_FIELD ? "bipolar" : "lat";
+	}
 
 	if (!state.activeMesh.valueSets[quality]) {
 		return;
