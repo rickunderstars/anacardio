@@ -39,11 +39,33 @@ export function setupEventHandlers(dependencies) {
 		"camera-right": CameraVersors.RIGHT,
 	};
 
+	const setActiveCameraButton = (activeId) => {
+		Object.keys(cameraViews).forEach((id) => {
+			const btn = document.getElementById(id);
+			if (id === activeId) {
+				btn.classList.remove(
+					"bg-slate-700",
+					"hover:bg-slate-600",
+					"border-slate-600",
+				);
+				btn.classList.add("bg-slate-500", "border-slate-400");
+			} else {
+				btn.classList.add(
+					"bg-slate-700",
+					"hover:bg-slate-600",
+					"border-slate-600",
+				);
+				btn.classList.remove("bg-slate-500", "border-slate-400");
+			}
+		});
+	};
+
 	Object.entries(cameraViews).forEach(([id, versor]) => {
 		document.getElementById(id).addEventListener("click", () => {
 			if (state.activeMesh) {
 				const mesh = state.activeMesh;
 				sceneManager.setCamera(mesh.center, mesh.radius, versor, 2.5);
+				setActiveCameraButton(id);
 			}
 		});
 	});
@@ -264,6 +286,7 @@ export function setupEventHandlers(dependencies) {
 	});
 
 	sceneManager.controls.addEventListener("change", () => {
+		setActiveCameraButton(null);
 		if (state.mode != VisMode.ANIMATED) {
 			sceneManager.render();
 		}
