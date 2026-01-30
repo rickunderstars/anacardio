@@ -39,6 +39,11 @@ export class SceneManager {
 
 		this.isPaused = false;
 		this.accumulatedTime = 0;
+
+		this.resizeObserver = new ResizeObserver(() => {
+			this.onWindowResize();
+		});
+		this.resizeObserver.observe(this.viewport);
 	}
 
 	#createRenderer() {
