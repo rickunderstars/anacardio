@@ -19,6 +19,11 @@ export class SceneManager {
 		this.renderer = this.#createRenderer();
 		this.camera = this.#createCamera();
 
+		this.gimbalScene = new THREE.Scene();
+		this.gimbalScene.add(new THREE.AxesHelper(1.5));
+		this.gimbalCamera = new THREE.OrthographicCamera(-2, 2, 2, -2, 0.1, 10);
+		this.gimbalCamera.position.z = 5;
+
 		this.controls = new OrbitControls(
 			this.camera,
 			this.renderer.domElement,
@@ -55,7 +60,49 @@ export class SceneManager {
 		if (this.onRender) {
 			this.onRender();
 		}
+
+		this.renderer.setViewport(
+			0,
+			0,
+			this.viewport.clientWidth,
+			this.viewport.clientHeight,
+		);
+		this.renderer.setScissor(
+			0,
+			0,
+			this.viewport.clientWidth,
+			this.viewport.clientHeight,
+		);
+		this.renderer.setScissorTest(true);
+
 		this.renderer.render(this.scene, this.camera);
+
+		const minDim = Math.min(
+			this.viewport.clientWidth,
+			this.viewport.clientHeight,
+		);
+		const gimbalSize = minDim * 0.2;
+		const padding = minDim * 0.02;
+		const left = this.viewport.clientWidth - gimbalSize - padding;
+		const bottom = this.viewport.clientHeight - gimbalSize - padding;
+
+		this.gimbalCamera.position
+			.copy(this.camera.position)
+			.sub(this.controls.target)
+			.normalize()
+			.multiplyScalar(5);
+		this.gimbalCamera.lookAt(0, 0, 0);
+
+		this.renderer.setViewport(left, bottom, gimbalSize, gimbalSize);
+		this.renderer.setScissor(left, bottom, gimbalSize, gimbalSize);
+		this.renderer.setScissorTest(true);
+
+		this.renderer.autoClear = false;
+		this.renderer.clearDepth();
+		this.renderer.render(this.gimbalScene, this.gimbalCamera);
+		this.renderer.autoClear = true;
+
+		this.renderer.setScissorTest(false);
 	}
 
 	onWindowResize() {
