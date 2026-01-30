@@ -7,8 +7,18 @@ import {
 } from "@js/utils/math-utils.js";
 import { VisMode } from "@js/core/state-manager.js";
 
+function hsl(h, s, l) {
+	const a = s * Math.min(l, 1 - l);
+	const f = (n, k = (n + h / 30) % 12) =>
+		l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+	return [f(0), f(8), f(4)];
+}
+
+const H_GREEN = 120;
+const H_BLUE = 240;
+
 export const SHADER_COLORS = {
-	NULL: [0.45, 0.45, 0.45],
+	NULL: [0.3, 0.3, 0.3],
 	WAVE_START: [0.2, 0.2, 0.2],
 	WAVE_END: [0.3, 1.0, 1.0],
 	WAVE_POLAR_START: [0.3, 0.3, 1.0],
@@ -17,10 +27,10 @@ export const SHADER_COLORS = {
 	GRADIENT_BACKGROUND: [0.2, 0.1, 0.1],
 	COMBINED_GRADIENT_START: [0.0, 0.0, 1.0],
 	COMBINED_GRADIENT_END: [0.0, 1.0, 0.0],
-	COMBINED_TL: [0.2, 0.2, 0.2],
-	COMBINED_TR: [0.0, 1.0, 0.0],
-	COMBINED_BL: [0.2, 0.2, 0.2],
-	COMBINED_BR: [0.0, 0.0, 1.0],
+	COMBINED_TL: hsl(H_GREEN, 0.2, 0.5),
+	COMBINED_TR: hsl(H_GREEN, 1.0, 0.5),
+	COMBINED_BL: hsl(H_BLUE, 0.2, 0.5),
+	COMBINED_BR: hsl(H_BLUE, 1.0, 0.5),
 	BIN_COLOR_1: [0.0, 0.0, 1.0],
 	BIN_COLOR_2: [0.0, 1.0, 0.0],
 };
