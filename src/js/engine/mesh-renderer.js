@@ -82,7 +82,7 @@ export function updateActiveMesh(dependencies) {
 				fragmentShader: gradFShader,
 				side: THREE.DoubleSide,
 			});
-			activeMesh.tangentFieldMeshes["bipolar"].visible = true;
+			activeMesh.tangentFieldMeshes["combined"].visible = true;
 			return { min: bipMin, max: bipMax };
 		} else {
 			activeMesh.mesh.material = new THREE.ShaderMaterial({
