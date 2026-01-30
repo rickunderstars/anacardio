@@ -358,7 +358,22 @@ function onMouseMove(e, sceneManager, mouse, state) {
 		const { values, activeValue } = result;
 
 		if (tooltip) {
-			tooltip.innerHTML = formatNumber(activeValue);
+			if (state.activeQuality === "combined") {
+				tooltip.innerHTML = `LAT: ${formatNumber(values.lat)}<br>Bipolar: ${formatNumber(values.bipolar)}`;
+			} else {
+				const labels = {
+					unipolar: "Unipolar",
+					bipolar: "Bipolar",
+					lat: "LAT",
+					eml: "EML",
+					exteml: "ExtEML",
+					scar: "SCAR",
+					groupid: "GroupID",
+				};
+				const label = labels[state.activeQuality] || state.activeQuality;
+				tooltip.innerHTML = `${label}: ${formatNumber(activeValue)}`;
+			}
+
 			tooltip.style.left = `${e.clientX + 15}px`;
 			tooltip.style.top = `${e.clientY + 15}px`;
 			tooltip.classList.remove("hidden");
