@@ -1,29 +1,18 @@
-uniform float uTime;
-uniform float uAmbientLightIntensity;
-uniform float uTimeSpeed;
-uniform int uNumWaves;
-uniform vec3 uNullColor;
-uniform vec3 uWaveStartColor;
-uniform vec3 uWavePolarStart;
-uniform vec3 uWavePolarEnd;
+uniform vec3 uColorTL;
+uniform vec3 uColorTR;
+uniform vec3 uColorBL;
+uniform vec3 uColorBR;
 uniform vec3 uExtemlColor;
+uniform vec3 uNullColor;
+uniform float uAmbientLightIntensity;
 
-varying float lt;
-varying float bip;
-varying float xtml;
-varying float vIsNull;
+varying float vLat;
+varying float vBip;
+varying float vXtml;
+varying float vGroupId;
 varying vec3 vNormal;
 
-vec3 gradientWave(float t, vec3 colorStart, vec3 colorEnd) {
-	t = 1.0 - t;
-	t = t * t;
-	return mix(colorStart, colorEnd, t);
-}
-
 void main() {
-	float wave = (uTime * uTimeSpeed - lt) * float(uNumWaves);
-	float phase = fract(wave);
-
 	vec3 light1Dir = normalize(vec3(-1.0, 1.0, 1.0));
 	vec3 light2Dir = normalize(vec3(1.0, 1.0, 1.0));
 	vec3 light3Dir = normalize(vec3(1.0, -1.0, 1.0));
@@ -38,10 +27,17 @@ void main() {
 				   light3Diffuse * vec3(0.7) + light4Diffuse * vec3(0.7);
 	lambert = lambert / vec3(3.0);
 
+	float x = clamp(vBip, 0.0, 1.0);
+	float y = clamp(vLat, 0.0, 1.0);
+
+	// Bilinear interpolation
+
+	vec3 top = mix(uColorTL, uColorTR, x);
+	vec3 bottom = mix(uColorBL, uColorBR, x);
+	vec3 color = mix(bottom, top, y);
+
 	vec3 exteml = uExtemlColor;
 	vec3 nullColor = uNullColor;
-	vec3 waveColor = mix(uWavePolarStart, uWavePolarEnd, bip);
-	vec3 color = gradientWave(phase, uWaveStartColor, waveColor);
 
 	vec3 ambient = color * uAmbientLightIntensity;
 	vec3 diffuse = color * lambert * (1.0 - uAmbientLightIntensity);
@@ -51,17 +47,12 @@ void main() {
 	vec3 extemlAmbient = exteml * uAmbientLightIntensity;
 	vec3 extemlDiffuse = exteml * lambert * (1.0 - uAmbientLightIntensity);
 
-	float binaryIsNull = step(0.1, vIsNull);
-	float binaryXtml = step(0.3, xtml);
+	float binaryIsNull = step(0.1, abs(vGroupId));
+	float binaryXtml = step(0.3, vXtml);
 
 	vec3 finalColor =
 		mix(mix(ambient + diffuse, nullAmbient + nullDiffuse, binaryIsNull),
 			extemlAmbient + extemlDiffuse, binaryXtml);
-	gl_FragColor = vec4(finalColor, 1.0);
 
-	/*
-	if (dFdx(wave) * dFdx(wave) + dFdy(wave) * dFdy(wave) > 0.006) {
-		gl_FragColor.rgb = vec3(1.0, 0.0, 1.0);
-	}
-	*/
+	gl_FragColor = vec4(finalColor, 1.0);
 }

@@ -2,12 +2,11 @@ import * as THREE from "three";
 
 import { reloadShaderMaterial } from "@js/engine/shader-loader.js";
 import { surfaceSampler } from "@js/engine/raycaster.js";
-import { setGaugeLine } from "@js/ui/colors.js";
+import { setGaugeLine, SHADER_COLORS } from "@js/ui/colors.js";
 import { updateActiveMesh } from "@js/engine/mesh-renderer.js";
 import { addTestMesh } from "@js/io/test-loader.js";
 import { VisMode, AppEvents } from "@js/core/state-manager.js";
 import { formatNumber, get2Min, getMax } from "@js/utils/math-utils.js";
-import { processFile } from "@js/io/file-loader.js";
 import { CameraVersors } from "@js/engine/scene-manager.js";
 import { renderMeshDropdown } from "@js/ui/ui-file-handlers.js";
 
@@ -24,10 +23,8 @@ export function updateMinMaxUI(min, max, state) {
 		bMax = getMax(state.activeMesh.valueSets["bipolar"]);
 	}
 
-	document.querySelector("#bipolar-min span").innerHTML =
-		formatNumber(bMin);
-	document.querySelector("#bipolar-max span").innerHTML =
-		formatNumber(bMax);
+	document.querySelector("#bipolar-min span").innerHTML = formatNumber(bMin);
+	document.querySelector("#bipolar-max span").innerHTML = formatNumber(bMax);
 }
 
 export function setupEventHandlers(dependencies) {
@@ -42,11 +39,33 @@ export function setupEventHandlers(dependencies) {
 		"camera-right": CameraVersors.RIGHT,
 	};
 
+	const setActiveCameraButton = (activeId) => {
+		Object.keys(cameraViews).forEach((id) => {
+			const btn = document.getElementById(id);
+			if (id === activeId) {
+				btn.classList.remove(
+					"bg-slate-700",
+					"hover:bg-slate-600",
+					"border-slate-600",
+				);
+				btn.classList.add("bg-slate-500", "border-slate-400");
+			} else {
+				btn.classList.add(
+					"bg-slate-700",
+					"hover:bg-slate-600",
+					"border-slate-600",
+				);
+				btn.classList.remove("bg-slate-500", "border-slate-400");
+			}
+		});
+	};
+
 	Object.entries(cameraViews).forEach(([id, versor]) => {
 		document.getElementById(id).addEventListener("click", () => {
 			if (state.activeMesh) {
 				const mesh = state.activeMesh;
 				sceneManager.setCamera(mesh.center, mesh.radius, versor, 2.5);
+				setActiveCameraButton(id);
 			}
 		});
 	});
@@ -172,10 +191,7 @@ export function setupEventHandlers(dependencies) {
 					"scar",
 					"groupid",
 				];
-				const combinedRestrictedModes = [
-					VisMode.COLOR_RAMP,
-					VisMode.TANGENT_FIELD,
-				];
+				const combinedRestrictedModes = [];
 
 				if (
 					restrictedQualities.includes(newQuality) &&
@@ -206,11 +222,7 @@ export function setupEventHandlers(dependencies) {
 				const { min, max } = updateActiveMesh({ shaders, state });
 				updateMinMaxUI(min, max, state);
 
-				if (state.activeQuality === "combined") {
-					sceneManager.startClock();
-					sceneManager.resetAnimationState();
-					sceneManager.runAnimationLoop(state);
-				} else if (state.mode === VisMode.ANIMATED) {
+				if (state.mode === VisMode.ANIMATED) {
 					sceneManager.startClock();
 					sceneManager.resetAnimationState();
 					sceneManager.runAnimationLoop(state);
@@ -238,7 +250,6 @@ export function setupEventHandlers(dependencies) {
 			state.activeMeshIndex = parseInt(value);
 			const { min, max } = updateActiveMesh({ shaders, state });
 			updateMinMaxUI(min, max, state);
-
 
 			for (let i = 0; i < state.meshes.length; i++) {
 				if (i != state.activeMeshIndex) {
@@ -275,10 +286,8 @@ export function setupEventHandlers(dependencies) {
 	});
 
 	sceneManager.controls.addEventListener("change", () => {
-		if (
-			state.mode != VisMode.ANIMATED &&
-			state.activeQuality != "combined"
-		) {
+		setActiveCameraButton(null);
+		if (state.mode != VisMode.ANIMATED) {
 			sceneManager.render();
 		}
 	});
@@ -302,12 +311,6 @@ export function setupEventHandlers(dependencies) {
 					(newMode === VisMode.ANIMATED ||
 						newMode === VisMode.TANGENT_FIELD) &&
 					restrictedQualities.includes(state.activeQuality)
-				) {
-					state.activeQuality = "unipolar";
-				} else if (
-					(newMode === VisMode.COLOR_RAMP ||
-						newMode === VisMode.TANGENT_FIELD) &&
-					state.activeQuality === combinedQuality
 				) {
 					state.activeQuality = "unipolar";
 				}
@@ -358,15 +361,38 @@ function onMouseMove(e, sceneManager, mouse, state) {
 		state,
 	});
 
+	const tooltip = document.getElementById("sampler-tooltip");
+
 	if (result && result.hovered) {
 		const { values, activeValue } = result;
 
-		document.getElementById("sampler-value").innerHTML =
-			formatNumber(activeValue);
+		if (tooltip) {
+			if (state.activeQuality === "combined") {
+				tooltip.innerHTML = `LAT: ${formatNumber(values.lat)}<br>Bipolar: ${formatNumber(values.bipolar)}`;
+			} else {
+				const labels = {
+					unipolar: "Unipolar",
+					bipolar: "Bipolar",
+					lat: "LAT",
+					eml: "EML",
+					exteml: "ExtEML",
+					scar: "SCAR",
+					groupid: "GroupID",
+				};
+				const label = labels[state.activeQuality] || state.activeQuality;
+				tooltip.innerHTML = `${label}: ${formatNumber(activeValue)}`;
+			}
 
-		setGaugeLine(activeValue, state);
+			tooltip.style.left = `${e.clientX + 15}px`;
+			tooltip.style.top = `${e.clientY + 15}px`;
+			tooltip.classList.remove("hidden");
+		}
+
+		setGaugeLine(activeValue, state, values);
 	} else {
-		document.getElementById("sampler-value").innerHTML = "---";
+		if (tooltip) {
+			tooltip.classList.add("hidden");
+		}
 	}
 }
 
@@ -383,7 +409,7 @@ function updateUIForMode(state) {
 		"horizontal-gradient-title",
 	);
 
-	if (state.mode === VisMode.ANIMATED || state.activeQuality === "combined") {
+	if (state.mode === VisMode.ANIMATED) {
 		wavesNumberContainer.classList.remove("hidden");
 		wavesSpeedContainer.classList.remove("hidden");
 	} else {
@@ -392,15 +418,22 @@ function updateUIForMode(state) {
 	}
 
 	const colorGauge = document.getElementById("color-gauge");
+	const isBipolarVisible =
+		state.activeQuality === "combined" &&
+		state.mode !== VisMode.TANGENT_FIELD;
 
 	if (state.activeQuality === "combined") {
-		horizontalTitle.classList.remove("hidden");
-		verticalTitle.innerHTML = "&LongLeftArrow; LAT &LongRightArrow;";
-		document.getElementById("bipolar-min").classList.remove("hidden");
-		document.getElementById("bipolar-max").classList.remove("hidden");
-
-		colorGauge.classList.remove("w-1/16");
-		colorGauge.classList.add("w-1/12");
+		if (state.mode === VisMode.TANGENT_FIELD) {
+			verticalTitle.innerHTML = "&LongLeftArrow; BIPOLAR &LongRightArrow;";
+			horizontalTitle.classList.add("hidden");
+			document.getElementById("bipolar-min").classList.add("hidden");
+			document.getElementById("bipolar-max").classList.add("hidden");
+		} else {
+			verticalTitle.innerHTML = "&LongLeftArrow; LAT &LongRightArrow;";
+			horizontalTitle.classList.remove("hidden");
+			document.getElementById("bipolar-min").classList.remove("hidden");
+			document.getElementById("bipolar-max").classList.remove("hidden");
+		}
 	} else {
 		horizontalTitle.classList.add("hidden");
 		verticalTitle.innerHTML =
@@ -409,7 +442,12 @@ function updateUIForMode(state) {
 			" &LongRightArrow;";
 		document.getElementById("bipolar-min").classList.add("hidden");
 		document.getElementById("bipolar-max").classList.add("hidden");
+	}
 
+	if (isBipolarVisible) {
+		colorGauge.classList.remove("w-1/16");
+		colorGauge.classList.add("w-1/12");
+	} else {
 		colorGauge.classList.remove("w-1/12");
 		colorGauge.classList.add("w-1/16");
 	}
@@ -424,7 +462,7 @@ function updateControlsState(state) {
 	const restrictedModes = [VisMode.ANIMATED, VisMode.TANGENT_FIELD];
 
 	const combinedQuality = "combined";
-	const combinedRestrictedModes = [VisMode.COLOR_RAMP, VisMode.TANGENT_FIELD];
+	const combinedRestrictedModes = [];
 
 	modeRadios.forEach((radio) => {
 		radio.disabled = isDisabled;
@@ -453,7 +491,8 @@ function updateControlsState(state) {
 	qualityRadios.forEach((radio) => {
 		radio.disabled = isDisabled;
 		const label = radio.closest("label");
-		if (!label) return;
+		const div = label?.querySelector("div");
+		if (!label || !div) return;
 
 		if (isDisabled) {
 			return;
@@ -472,14 +511,42 @@ function updateControlsState(state) {
 		} else {
 			label.classList.remove("opacity-50");
 		}
+
+		if (state.activeQuality === "combined") {
+			if (["bipolar", "lat", "exteml", "groupid"].includes(radio.value)) {
+				div.classList.add("border-purple-400");
+				div.classList.remove("border-transparent");
+			} else {
+				div.classList.remove("border-purple-400");
+				div.classList.add("border-transparent");
+			}
+		} else {
+			div.classList.remove("border-purple-400");
+			div.classList.add("border-transparent");
+		}
 	});
 
 	const ticks = document.querySelectorAll("span[data-tick]");
 	ticks.forEach((tick) => {
-		if (state.activeQuality === "combined") {
-			tick.classList.remove("hidden");
-		} else {
-			tick.classList.add("hidden");
-		}
+		tick.classList.add("hidden");
 	});
+
+	const indicatorExteml = document.getElementById("indicator-exteml");
+	const indicatorGroupid = document.getElementById("indicator-groupid");
+
+	if (state.activeQuality === "combined") {
+		if (indicatorExteml) {
+			const c = SHADER_COLORS.EXTEML.map((x) => Math.round(x * 255));
+			indicatorExteml.style.backgroundColor = `rgb(${c[0]}, ${c[1]}, ${c[2]})`;
+			indicatorExteml.classList.remove("hidden");
+		}
+		if (indicatorGroupid) {
+			const c = SHADER_COLORS.NULL.map((x) => Math.round(x * 255));
+			indicatorGroupid.style.backgroundColor = `rgb(${c[0]}, ${c[1]}, ${c[2]})`;
+			indicatorGroupid.classList.remove("hidden");
+		}
+	} else {
+		indicatorExteml?.classList.add("hidden");
+		indicatorGroupid?.classList.add("hidden");
+	}
 }

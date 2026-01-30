@@ -1,9 +1,9 @@
 uniform float uAmbientLightIntensity;
-uniform vec3 uNullColor;
 uniform float uOnlyTwo;
+uniform vec3 uBinColor1;
+uniform vec3 uBinColor2;
 
 varying float val;
-varying float vIsNull;
 varying vec3 vNormal;
 
 vec3 TurboColormap(in float x) {
@@ -40,23 +40,17 @@ void main() {
 				   light3Diffuse * vec3(0.7) + light4Diffuse * vec3(0.7);
 	lambert = lambert / vec3(3.0);
 
-	vec3 nullColor = uNullColor;
-
-	float effectiveVal = val;
+	vec3 color;
 	if (uOnlyTwo > 0.5) {
-		effectiveVal = step(0.5, val);
-		effectiveVal = mix(1.0 / 10.0, 1.0 / 10.0 * 9.0, effectiveVal);
+		float snappedVal = step(0.5, val);
+		color = mix(uBinColor1, uBinColor2, snappedVal);
+	} else {
+		color = TurboColormap(val);
 	}
-
-	vec3 color = TurboColormap(effectiveVal);
 
 	vec3 ambient = color * uAmbientLightIntensity;
 	vec3 diffuse = color * lambert * (1.0 - uAmbientLightIntensity);
-	vec3 nullAmbient = nullColor * uAmbientLightIntensity;
-	vec3 nullDiffuse = nullColor * lambert * (1.0 - uAmbientLightIntensity);
 
-	float binaryIsNull = step(0.1, vIsNull);
-	vec3 finalColor =
-		mix(ambient + diffuse, nullAmbient + nullDiffuse, binaryIsNull);
+	vec3 finalColor = ambient + diffuse;
 	gl_FragColor = vec4(finalColor, 1.0);
 }

@@ -61,9 +61,30 @@ export function turboColormap(x) {
 	];
 }
 
+export function areValuesClose(v1, v2) {
+	return Math.abs(v1 - v2) < 0.00001;
+}
+
 export function formatNumber(num, significantDigits = 5) {
+	if (num === undefined || num === null) {
+		return "---";
+	}
 	if (Number.isInteger(num)) {
 		return num.toString();
 	}
 	return parseFloat(num.toPrecision(significantDigits));
+}
+
+export function mixColors(c1, c2, t) {
+	return [
+		c1[0] * (1 - t) + c2[0] * t,
+		c1[1] * (1 - t) + c2[1] * t,
+		c1[2] * (1 - t) + c2[2] * t,
+	];
+}
+
+export function gradientWave(t, colorStart, colorEnd, power) {
+	t = 1.0 - t;
+	t = Math.pow(t, power);
+	return mixColors(colorStart, colorEnd, t);
 }

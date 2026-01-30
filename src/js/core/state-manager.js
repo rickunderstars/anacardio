@@ -11,17 +11,19 @@ export const AppEvents = Object.freeze({
 	LIGHT_INTENSITY_CHANGED: "light-intensity-changed",
 	WAVES_NUMBER_CHANGED: "waves-number-changed",
 	WAVES_SPEED_CHANGED: "waves-speed-changed",
+	IS_BINARY_CHANGED: "is-binary-changed",
 });
 
 export class StateManager extends EventTarget {
 	meshes = [];
 
 	#activeMeshIndex = -1;
-	#activeQuality = "unipolar";
+	#activeQuality = "combined";
 	#mode = VisMode.COLOR_RAMP;
 	#ambientLightIntensity = 0.6;
 	#wavesNumber = 10;
 	#wavesSpeed = 0.05;
+	#isBinary = false;
 
 	get activeMesh() {
 		return this.meshes[this.#activeMeshIndex] ?? null;
@@ -86,6 +88,16 @@ export class StateManager extends EventTarget {
 		if (this.#wavesSpeed == speed) return;
 		this.#wavesSpeed = speed;
 		this.dispatchEvent(new CustomEvent(AppEvents.WAVES_SPEED_CHANGED));
+	}
+
+	get isBinary() {
+		return this.#isBinary;
+	}
+
+	set isBinary(value) {
+		if (this.#isBinary === value) return;
+		this.#isBinary = value;
+		this.dispatchEvent(new CustomEvent(AppEvents.IS_BINARY_CHANGED));
 	}
 
 	addMesh(meshData) {

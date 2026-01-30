@@ -1,25 +1,10 @@
-uniform float uTime;
 uniform float uAmbientLightIntensity;
-uniform float uTimeSpeed;
-uniform int uNumWaves;
-uniform vec3 uWaveStartColor;
-uniform vec3 uWaveEndColor;
+uniform vec3 uColor;
 
 varying float val;
-varying float vIsNull;
 varying vec3 vNormal;
 
-vec3 gradientWave(float t, vec3 colorStart, vec3 colorEnd) {
-	t = 1.0 - t;
-	t = t * t * t;
-	return mix(colorStart, colorEnd, t);
-}
-
 void main() {
-
-	float wave = (uTime * uTimeSpeed - val) * float(uNumWaves);
-	float phase = fract(wave);
-
 	vec3 light1Dir = normalize(vec3(-1.0, 1.0, 1.0));
 	vec3 light2Dir = normalize(vec3(1.0, 1.0, 1.0));
 	vec3 light3Dir = normalize(vec3(1.0, -1.0, 1.0));
@@ -34,17 +19,11 @@ void main() {
 				   light3Diffuse * vec3(0.7) + light4Diffuse * vec3(0.7);
 	lambert = lambert / vec3(3.0);
 
-	vec3 color = gradientWave(phase, uWaveStartColor, uWaveEndColor);
+	vec3 color = uColor;
 
 	vec3 ambient = color * uAmbientLightIntensity;
 	vec3 diffuse = color * lambert * (1.0 - uAmbientLightIntensity);
 
 	vec3 finalColor = ambient + diffuse;
 	gl_FragColor = vec4(finalColor, 1.0);
-
-	/*
-	if (dFdx(wave) * dFdx(wave) + dFdy(wave) * dFdy(wave) > 0.006) {
-		gl_FragColor.rgb = vec3(1.0, 0.0, 1.0);
-	}
-	*/
 }

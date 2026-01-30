@@ -7,7 +7,7 @@
 	</head>
 
 	<body
-		class="bg-slate-900 text-white antialiased font-sans font-bold italic"
+		class="bg-slate-900 text-white antialiased [&_*]:transition-all font-sans font-bold italic"
 	>
 		<div
 			class="flex flex-col md:flex-row h-screen w-full overflow-hidden bg-slate-800"
@@ -18,18 +18,18 @@
 			></div>
 
 			<div
-				class="flex items-center justify-center text-sm font-bold bg-slate-800 text-slate-300 bg-slate-800"
+				class="relative flex items-center justify-center w-8 bg-slate-800 text-slate-300"
 			>
 				<span
 					id="vertical-gradient-title"
-					class="inline-block -rotate-90 whitespace-nowrap w-8"
+					class="absolute inline-block -rotate-90 whitespace-nowrap text-sm font-bold"
 				>
 					&LongLeftArrow; field &LongRightArrow;
 				</span>
 			</div>
 			<div
 				id="color-gauge"
-				class="w-1/16 flex flex-col items-center bg-slate-800 py-2 px-0"
+				class="w-1/16 flex flex-col items-center bg-slate-800 py-4 px-0"
 			>
 				<div
 					id="horizontal-gradient-title"
@@ -52,7 +52,7 @@
 					<div class="flex flex-col flex-grow h-full min-w-0 gap-1">
 						<div
 							id="max-value"
-							class="text-sm text-center font-bold bg-black rounded-md w-full p-1 truncate"
+							class="text-sm text-center font-bold bg-black rounded-md w-full p-1"
 						>
 							---
 						</div>
@@ -66,11 +66,16 @@
 							<div
 								id="gauge-line"
 								class="absolute w-12/11 h-0.5 rounded border-y border-white pointer-events-none transform translate-y-1/2"
-							></div>
+							>
+								<div
+									id="gauge-dot"
+									class="absolute w-2 h-2 bg-white rounded-full top-1/2 -translate-y-1/2 -translate-x-1/2 hidden shadow-sm"
+								></div>
+							</div>
 						</div>
 						<div
 							id="min-value"
-							class="text-sm text-center font-bold bg-black rounded-md w-full p-1 truncate"
+							class="text-sm text-center font-bold bg-black rounded-md w-full p-1"
 						>
 							---
 						</div>
@@ -86,18 +91,17 @@
 						>
 					</div>
 				</div>
-
-				<div
-					class="text-sm text-center font-bold bg-black rounded-md w-full mt-1 bg-slate-700 p-1"
-				>
-					<div id="sampler-value"></div>
-				</div>
 			</div>
 
 			<div
-				class="w-full h-[50vh] md:w-3/7 md:h-full flex flex-col gap-3 p-4 bg-slate-800 overflow-y-auto"
+				id="sampler-tooltip"
+				class="absolute hidden pointer-events-none bg-black text-white text-md font-bold px-2 py-1 rounded-md border border-slate-500 z-50 whitespace-nowrap"
+			></div>
+
+			<div
+				class="w-full h-[50vh] md:w-3/7 md:h-full flex flex-col p-4 bg-slate-800 overflow-y-auto"
 			>
-				<div class="flex flex-wrap items-center gap-4 h-fit">
+				<div class="flex flex-wrap items-center gap-4 h-fit mb-4">
 					<div
 						class="flex flex-none items-center gap-2 text-4xl font-bold text-shadow-xl"
 					>
@@ -116,7 +120,7 @@
 						</legend>
 						<select
 							id="add-mesh-dropdown"
-							class="flex-1 p-2 bg-blue-600 text-center rounded-md cursor-pointer font-medium appearance-none hover:bg-blue-500 transition-all focus:outline-none"
+							class="flex-1 p-2 bg-blue-600 text-center rounded-md cursor-pointer font-medium appearance-none hover:bg-blue-500 focus:outline-none"
 						></select>
 					</fieldset>
 				</div>
@@ -128,52 +132,9 @@
 						accept="text/*"
 						class="hidden"
 					/>
-					<fieldset class="border border-slate-500 rounded-lg p-2">
-						<legend class="px-2 text-sm text-slate-300 font-bold">
-							View
-						</legend>
-						<div class="grid grid-cols-3 gap-2">
-							<button
-								id="camera-front"
-								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer transition-all border border-slate-600"
-							>
-								Front
-							</button>
-							<button
-								id="camera-top"
-								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer transition-all border border-slate-600"
-							>
-								Top
-							</button>
-							<button
-								id="camera-left"
-								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer transition-all border border-slate-600"
-							>
-								Left
-							</button>
-							<button
-								id="camera-back"
-								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer transition-all border border-slate-600"
-							>
-								Back
-							</button>
-							<button
-								id="camera-bottom"
-								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer transition-all border border-slate-600"
-							>
-								Bottom
-							</button>
-							<button
-								id="camera-right"
-								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer transition-all border border-slate-600"
-							>
-								Right
-							</button>
-						</div>
-					</fieldset>
 				</div>
 
-				<div class="flex flex-grow gap-4">
+				<div class="flex flex-grow gap-4 mb-4">
 					<div class="flex flex-col flex-grow gap-4">
 						<div class="flex flex-row gap-4">
 							<fieldset
@@ -199,7 +160,7 @@
 											checked
 										/>
 										<div
-											class="flex-grow flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+											class="flex-grow flex items-center gap-3 px-2 py-1 bg-slate-800 border-l-3 border-transparent peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 										>
 											<div
 												class="px-4 text-center text-xl font-medium w-full"
@@ -219,7 +180,7 @@
 											class="sr-only peer"
 										/>
 										<div
-											class="flex-grow flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+											class="flex-grow flex items-center gap-3 px-2 py-1 bg-slate-800 border-l-3 border-transparent peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 										>
 											<div
 												class="px-4 text-center text-xl font-medium w-full"
@@ -239,7 +200,7 @@
 											class="sr-only peer"
 										/>
 										<div
-											class="flex-grow flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+											class="flex-grow flex items-center gap-3 px-2 py-1 bg-slate-800 border-l-3 border-transparent peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 										>
 											<div
 												class="px-4 text-center text-xl font-medium w-full"
@@ -269,12 +230,31 @@
 										<input
 											type="radio"
 											name="quality"
-											value="unipolar"
+											value="combined"
 											class="sr-only peer"
 											checked
 										/>
 										<div
-											class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+											class="flex items-center gap-3 px-2 py-1 bg-slate-800 border-l-3 border-transparent peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+										>
+											<div
+												class="px-4 text-left text-md font-black"
+											>
+												Combined
+											</div>
+										</div>
+									</label>
+									<label
+										class="cursor-pointer group has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
+									>
+										<input
+											type="radio"
+											name="quality"
+											value="unipolar"
+											class="sr-only peer"
+										/>
+										<div
+											class="flex items-center gap-3 px-2 py-1 bg-slate-800 border-l-3 border-transparent peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 										>
 											<div
 												class="px-4 text-left text-md font-medium"
@@ -294,16 +274,11 @@
 											class="sr-only peer"
 										/>
 										<div
-											class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+											class="flex items-center gap-3 px-2 py-1 bg-slate-800 border-l-3 border-transparent peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 										>
 											<div
 												class="px-4 text-left text-md font-medium"
 											>
-												<span
-													data-tick
-													class="hidden text-blue-400 font-bold"
-													>✓
-												</span>
 												Bipolar
 											</div>
 										</div>
@@ -319,16 +294,11 @@
 											class="sr-only peer"
 										/>
 										<div
-											class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+											class="flex items-center gap-3 px-2 py-1 bg-slate-800 border-l-3 border-transparent peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 										>
 											<div
 												class="px-4 text-left text-md font-medium"
 											>
-												<span
-													data-tick
-													class="hidden text-blue-400 font-bold"
-													>✓
-												</span>
 												LAT
 											</div>
 										</div>
@@ -344,7 +314,7 @@
 											class="sr-only peer"
 										/>
 										<div
-											class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+											class="flex items-center gap-3 px-2 py-1 bg-slate-800 border-l-3 border-transparent peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 										>
 											<div
 												class="px-4 text-left text-md font-medium"
@@ -364,79 +334,62 @@
 											class="sr-only peer"
 										/>
 										<div
-											class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+											class="flex items-center gap-3 px-2 py-1 bg-slate-800 border-l-3 border-transparent peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
 										>
-											<div
-												class="px-4 text-left text-md font-medium"
-											>
-												<span
-													data-tick
-													class="hidden text-blue-400 font-bold"
-													>✓
-												</span>
-												ExtEML
-											</div>
-										</div>
-									</label>
-
-									<label
-										class="cursor-pointer group has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
-									>
-										<input
-											type="radio"
-											name="quality"
-											value="scar"
-											class="sr-only peer"
-										/>
-										<div
-											class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
-										>
-											<div
-												class="px-4 text-left text-md font-medium"
-											>
-												SCAR
-											</div>
-										</div>
-									</label>
-									<label
-										class="cursor-pointer group has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
-									>
-										<input
-											type="radio"
-											name="quality"
-											value="groupid"
-											class="sr-only peer"
-										/>
-										<div
-											class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
-										>
-											<div
-												class="px-4 text-left text-md font-medium"
-											>
-												GroupID
-											</div>
-										</div>
-									</label>
-									<label
-										class="cursor-pointer group has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
-									>
-										<input
-											type="radio"
-											name="quality"
-											value="combined"
-											class="sr-only peer"
-										/>
-										<div
-											class="flex items-center gap-3 px-4 py-1 bg-slate-800 border-l-2 border-transparent transition-all peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
-										>
-											<div
-												class="px-4 text-left text-md font-medium"
-											>
-												Combined
-											</div>
-										</div>
-									</label>
-								</div>
+																					<div
+																						class="px-4 text-left text-md font-medium"
+																					>
+																						ExtEML
+																					</div>
+																															<div
+																																id="indicator-exteml"
+																																class="w-4 h-4 rounded-full ml-auto mr-2 hidden"
+																															></div>
+																														</div>
+																													</label>
+																					
+																													<label
+																														class="cursor-pointer group has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
+																													>
+																														<input
+																															type="radio"
+																															name="quality"
+																															value="scar"
+																															class="sr-only peer"
+																														/>
+																														<div
+																															class="flex items-center gap-3 px-2 py-1 bg-slate-800 border-l-3 border-transparent peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+																														>
+																															<div
+																																class="px-4 text-left text-md font-medium"
+																															>
+																																SCAR
+																															</div>
+																														</div>
+																													</label>
+																													<label
+																														class="cursor-pointer group has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
+																													>
+																														<input
+																															type="radio"
+																															name="quality"
+																															value="groupid"
+																															class="sr-only peer"
+																														/>
+																														<div
+																															class="flex items-center gap-3 px-2 py-1 bg-slate-800 border-l-3 border-transparent peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+																														>
+																															<div
+																																class="px-4 text-left text-md font-medium"
+																															>
+																																GroupID
+																															</div>
+																															<div
+																																id="indicator-groupid"
+																																class="w-4 h-4 rounded-full ml-auto mr-2 hidden"
+																															></div>
+																				</div>
+																			</label>								</div>
 							</fieldset>
 						</div>
 						<fieldset
@@ -505,6 +458,51 @@
 							</div>
 						</fieldset>
 					</div>
+				</div>
+				<div class="flex flex-col gap-2">
+					<fieldset class="border border-slate-500 rounded-lg p-2">
+						<legend class="px-2 text-sm text-slate-300 font-bold">
+							View
+						</legend>
+						<div class="grid grid-cols-3 gap-2">
+							<button
+								id="camera-front"
+								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer border border-slate-600"
+							>
+								Front
+							</button>
+							<button
+								id="camera-top"
+								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer border border-slate-600"
+							>
+								Top
+							</button>
+							<button
+								id="camera-left"
+								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer border border-slate-600"
+							>
+								Left
+							</button>
+							<button
+								id="camera-back"
+								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer border border-slate-600"
+							>
+								Back
+							</button>
+							<button
+								id="camera-bottom"
+								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer border border-slate-600"
+							>
+								Bottom
+							</button>
+							<button
+								id="camera-right"
+								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer border border-slate-600"
+							>
+								Right
+							</button>
+						</div>
+					</fieldset>
 				</div>
 			</div>
 		</div>

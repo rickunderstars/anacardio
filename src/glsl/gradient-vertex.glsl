@@ -1,21 +1,19 @@
 attribute float value;
+attribute float exteml;
+attribute float groupid;
 
 uniform float uMin;
 uniform float uMax;
-uniform float uOnlyTwo;
 
 varying float val;
+varying float xtml;
+varying float vGroupId;
 varying vec3 vNormal;
 
-float normalizeValue(float value, float minVal, float maxVal) {
-	return (value - minVal) / (maxVal - minVal);
-}
-
 void main() {
-
-	val = normalizeValue(value, uMin, uMax);
-
+	val = value;
+	xtml = step(0.5, exteml);
+	vGroupId = groupid;
 	vNormal = normalize(normalMatrix * normal);
-
 	gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
 }

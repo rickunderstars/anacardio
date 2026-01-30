@@ -1,6 +1,7 @@
 attribute float bipolar;
 attribute float lat;
 attribute float exteml;
+attribute float groupid;
 
 uniform float uBipAbsMin;
 uniform float uBipMin;
@@ -13,6 +14,7 @@ varying float lt;
 varying float bip;
 varying float xtml;
 varying float vIsNull;
+varying float vGroupId;
 varying vec3 vNormal;
 
 float normalizeValue(float value, float minVal, float maxVal) {
@@ -24,9 +26,10 @@ void main() {
 	lt = normalizeValue(lat, uLatMin, uLatMax);
 	bip = normalizeValue(bipolar, uBipMin, uBipMax);
 	xtml = step(0.5, exteml);
+	vGroupId = groupid;
 
 	float epsilon = 0.0001;
-	vIsNull = step(lat, uLatMin + epsilon);
+	vIsNull = 0.0;
 
 	vNormal = normalize(normalMatrix * normal);
 
