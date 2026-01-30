@@ -207,7 +207,7 @@ export function colorizeGradient(state, time = 0) {
 	}
 }
 
-export function setGaugeLine(value, state) {
+export function setGaugeLine(value, state, values = null) {
 	if (!state.activeMesh) {
 		return;
 	}
@@ -222,19 +222,35 @@ export function setGaugeLine(value, state) {
 	}
 
 	const line = document.getElementById("gauge-line");
+	const dot = document.getElementById("gauge-dot");
 
 	const [, min] = get2Min(state.activeMesh.valueSets[quality]);
 	const max = getMax(state.activeMesh.valueSets[quality]);
 
 	if (value > max) {
 		line.style.bottom = `100%`;
-		return;
 	} else if (value < min) {
 		line.style.bottom = `0%`;
-		return;
+	} else {
+		const position = (value - min) / (max - min);
+		line.style.bottom = `${position * 100}%`;
 	}
 
-	const position = (value - min) / (max - min);
+	if (
+		dot &&
+		state.activeQuality === "combined" &&
+		(state.mode === VisMode.COLOR_RAMP || state.mode === VisMode.ANIMATED)
+	) {
+		dot.classList.remove("hidden");
+		if (values && values.bipolar !== undefined) {
+			const [, bMin] = get2Min(state.activeMesh.valueSets["bipolar"]);
+			const bMax = getMax(state.activeMesh.valueSets["bipolar"]);
 
-	line.style.bottom = `${position * 100}%`;
+			let bPos = (values.bipolar - bMin) / (bMax - bMin);
+			bPos = Math.max(0, Math.min(1, bPos));
+			dot.style.left = `${bPos * 100}%`;
+		}
+	} else if (dot) {
+		dot.classList.add("hidden");
+	}
 }

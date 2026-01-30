@@ -365,7 +365,7 @@ function onMouseMove(e, sceneManager, mouse, state) {
 			tooltip.classList.remove("hidden");
 		}
 
-		setGaugeLine(activeValue, state);
+		setGaugeLine(activeValue, state, values);
 	} else {
 		if (tooltip) {
 			tooltip.classList.add("hidden");
