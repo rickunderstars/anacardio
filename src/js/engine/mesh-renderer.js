@@ -108,6 +108,12 @@ export function updateActiveMesh(dependencies) {
 					uColorBR: {
 						value: new THREE.Vector3(...SHADER_COLORS.COMBINED_BR),
 					},
+					uExtemlColor: {
+						value: new THREE.Vector3(...SHADER_COLORS.EXTEML),
+					},
+					uNullColor: {
+						value: new THREE.Vector3(...SHADER_COLORS.NULL),
+					},
 				},
 				vertexShader: mixStaticVShader,
 				fragmentShader: mixStaticFShader,

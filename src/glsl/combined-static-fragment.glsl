@@ -2,10 +2,14 @@ uniform vec3 uColorTL;
 uniform vec3 uColorTR;
 uniform vec3 uColorBL;
 uniform vec3 uColorBR;
+uniform vec3 uExtemlColor;
+uniform vec3 uNullColor;
 uniform float uAmbientLightIntensity;
 
 varying float vLat;
 varying float vBip;
+varying float vXtml;
+varying float vGroupId;
 varying vec3 vNormal;
 
 void main() {
@@ -32,9 +36,23 @@ void main() {
 	vec3 bottom = mix(uColorBL, uColorBR, x);
 	vec3 color = mix(bottom, top, y);
 
+	vec3 exteml = uExtemlColor;
+	vec3 nullColor = uNullColor;
+
 	vec3 ambient = color * uAmbientLightIntensity;
 	vec3 diffuse = color * lambert * (1.0 - uAmbientLightIntensity);
 
-	vec3 finalColor = ambient + diffuse;
+	vec3 nullAmbient = nullColor * uAmbientLightIntensity;
+	vec3 nullDiffuse = nullColor * lambert * (1.0 - uAmbientLightIntensity);
+	vec3 extemlAmbient = exteml * uAmbientLightIntensity;
+	vec3 extemlDiffuse = exteml * lambert * (1.0 - uAmbientLightIntensity);
+
+	float binaryIsNull = step(0.1, abs(vGroupId));
+	float binaryXtml = step(0.3, vXtml);
+
+	vec3 finalColor =
+		mix(mix(ambient + diffuse, nullAmbient + nullDiffuse, binaryIsNull),
+			extemlAmbient + extemlDiffuse, binaryXtml);
+
 	gl_FragColor = vec4(finalColor, 1.0);
 }
