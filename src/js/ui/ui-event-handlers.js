@@ -2,7 +2,7 @@ import * as THREE from "three";
 
 import { reloadShaderMaterial } from "@js/engine/shader-loader.js";
 import { surfaceSampler } from "@js/engine/raycaster.js";
-import { setGaugeLine } from "@js/ui/colors.js";
+import { setGaugeLine, SHADER_COLORS } from "@js/ui/colors.js";
 import { updateActiveMesh } from "@js/engine/mesh-renderer.js";
 import { addTestMesh } from "@js/io/test-loader.js";
 import { VisMode, AppEvents } from "@js/core/state-manager.js";
@@ -507,4 +507,23 @@ function updateControlsState(state) {
 	ticks.forEach((tick) => {
 		tick.classList.add("hidden");
 	});
+
+	const indicatorExteml = document.getElementById("indicator-exteml");
+	const indicatorGroupid = document.getElementById("indicator-groupid");
+
+	if (state.activeQuality === "combined") {
+		if (indicatorExteml) {
+			const c = SHADER_COLORS.EXTEML.map((x) => Math.round(x * 255));
+			indicatorExteml.style.backgroundColor = `rgb(${c[0]}, ${c[1]}, ${c[2]})`;
+			indicatorExteml.classList.remove("hidden");
+		}
+		if (indicatorGroupid) {
+			const c = SHADER_COLORS.NULL.map((x) => Math.round(x * 255));
+			indicatorGroupid.style.backgroundColor = `rgb(${c[0]}, ${c[1]}, ${c[2]})`;
+			indicatorGroupid.classList.remove("hidden");
+		}
+	} else {
+		indicatorExteml?.classList.add("hidden");
+		indicatorGroupid?.classList.add("hidden");
+	}
 }
