@@ -1,6 +1,15 @@
 import { processFile } from "@js/io/file-loader.js";
 import { testMeshes } from "@js/io/test-loader.js";
 
+export function toggleLoading(show) {
+	const el = document.getElementById("loading-indicator");
+	if (show) {
+		el.classList.remove("hidden");
+	} else {
+		el.classList.add("hidden");
+	}
+}
+
 export function setupFileHandlers(dependencies) {
 	const { shaders, sceneManager, state } = dependencies;
 	const viewport = sceneManager.viewport;
@@ -9,16 +18,21 @@ export function setupFileHandlers(dependencies) {
 
 	document
 		.getElementById("raw-mesh")
-		.addEventListener("change", function (e) {
+		.addEventListener("change", async function (e) {
 			if (e.target.files.length > 0) {
+				toggleLoading(true);
 				const file = e.target.files[0];
-				processFile({
-					file,
-					shaders,
-					sceneManager,
-					state,
-				});
-				e.target.value = "";
+				try {
+					await processFile({
+						file,
+						shaders,
+						sceneManager,
+						state,
+					});
+				} finally {
+					toggleLoading(false);
+					e.target.value = "";
+				}
 			}
 		});
 
@@ -41,17 +55,23 @@ export function setupFileHandlers(dependencies) {
 		});
 	});
 
-	viewport.addEventListener("drop", (e) => {
+	viewport.addEventListener("drop", async (e) => {
 		const files = e.dataTransfer.files;
 		if (files.length > 0) {
-			Array.from(files).forEach((file) => {
-				processFile({
-					file,
-					shaders,
-					sceneManager,
-					state,
-				});
-			});
+			toggleLoading(true);
+			try {
+				const promises = Array.from(files).map((file) =>
+					processFile({
+						file,
+						shaders,
+						sceneManager,
+						state,
+					}),
+				);
+				await Promise.all(promises);
+			} finally {
+				toggleLoading(false);
+			}
 		}
 	});
 }
@@ -62,7 +82,7 @@ export function renderMeshDropdown(state) {
 
 	const placeholder = document.createElement("option");
 	placeholder.value = "";
-	placeholder.text = "Select";
+	placeholder.text = state.activeMesh ? state.activeMesh.filename : "Select";
 	placeholder.hidden = true;
 	placeholder.selected = true;
 	dropdown.appendChild(placeholder);
