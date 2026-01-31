@@ -21,34 +21,44 @@ export const FIELD_KEYS = [
 export function processFile(dependencies) {
 	const { file, shaders, sceneManager, state } = dependencies;
 
-	if (state.meshes.some((item) => item.filename === file.name)) {
-		console.log("Mesh already uploaded");
-		return;
-	}
+	return new Promise((resolve, reject) => {
+		if (state.meshes.some((item) => item.filename === file.name)) {
+			console.log("Mesh already uploaded");
+			resolve();
+			return;
+		}
 
-	HeartModule().then((cpp) => {
-		const reader = new FileReader();
+		HeartModule().then((cpp) => {
+			const reader = new FileReader();
 
-		reader.onload = function (e) {
-			const fileContent = e.target.result;
-			let mesh;
-			try {
-				mesh = cpp.importMesh(fileContent);
-			} catch (e) {
-				console.error("Error: ", e.message);
-				return;
-			}
+			reader.onload = function (e) {
+				const fileContent = e.target.result;
+				let mesh;
+				try {
+					mesh = cpp.importMesh(fileContent);
+				} catch (e) {
+					console.error("Error: ", e.message);
+					reject(e);
+					return;
+				}
 
-			const filename = file.name;
-			addMesh({
-				mesh,
-				filename,
-				shaders,
-				sceneManager,
-				state,
-			});
-		};
-		reader.readAsText(file);
+				const filename = file.name;
+				addMesh({
+					mesh,
+					filename,
+					shaders,
+					sceneManager,
+					state,
+				});
+				resolve();
+			};
+
+			reader.onerror = (e) => {
+				reject(e);
+			};
+
+			reader.readAsText(file);
+		});
 	});
 }
 

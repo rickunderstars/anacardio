@@ -8,7 +8,10 @@ import { addTestMesh } from "@js/io/test-loader.js";
 import { VisMode, AppEvents } from "@js/core/state-manager.js";
 import { formatNumber, get2Min, getMax } from "@js/utils/math-utils.js";
 import { CameraVersors } from "@js/engine/scene-manager.js";
-import { renderMeshDropdown } from "@js/ui/ui-file-handlers.js";
+import {
+	renderMeshDropdown,
+	toggleLoading,
+} from "@js/ui/ui-file-handlers.js";
 
 export function updateMinMaxUI(min, max, state) {
 	document.getElementById("min-value").innerHTML = formatNumber(min);
@@ -267,6 +270,7 @@ export function setupEventHandlers(dependencies) {
 		document.body.style.cursor = "wait";
 		meshDropdown.disabled = true;
 		renderMeshDropdown(state);
+		toggleLoading(true);
 
 		try {
 			await addTestMesh(
@@ -283,6 +287,7 @@ export function setupEventHandlers(dependencies) {
 		} finally {
 			meshDropdown.disabled = false;
 			document.body.style.cursor = "default";
+			toggleLoading(false);
 		}
 	});
 
