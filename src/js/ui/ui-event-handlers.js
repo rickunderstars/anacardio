@@ -8,7 +8,10 @@ import { addTestMesh } from "@js/io/test-loader.js";
 import { VisMode, AppEvents } from "@js/core/state-manager.js";
 import { formatNumber, get2Min, getMax } from "@js/utils/math-utils.js";
 import { CameraVersors } from "@js/engine/scene-manager.js";
-import { renderMeshDropdown } from "@js/ui/ui-file-handlers.js";
+import {
+	renderMeshDropdown,
+	toggleLoading,
+} from "@js/ui/ui-file-handlers.js";
 
 export function updateMinMaxUI(min, max, state) {
 	document.getElementById("min-value").innerHTML = formatNumber(min);
@@ -170,6 +173,7 @@ export function setupEventHandlers(dependencies) {
 
 	state.addEventListener(AppEvents.MESH_CHANGED, () => {
 		updateControlsState(state);
+		renderMeshDropdown(state);
 	});
 
 	state.addEventListener(AppEvents.MODE_CHANGED, () => {
@@ -260,12 +264,13 @@ export function setupEventHandlers(dependencies) {
 			}
 
 			sceneManager.restoreCameraVersor(state.activeMesh);
-			renderMeshDropdown(state);
 			return;
 		}
 
 		document.body.style.cursor = "wait";
 		meshDropdown.disabled = true;
+		renderMeshDropdown(state);
+		toggleLoading(true);
 
 		try {
 			await addTestMesh(
@@ -282,6 +287,7 @@ export function setupEventHandlers(dependencies) {
 		} finally {
 			meshDropdown.disabled = false;
 			document.body.style.cursor = "default";
+			toggleLoading(false);
 		}
 	});
 
@@ -506,10 +512,12 @@ function updateControlsState(state) {
 			radio.value === combinedQuality &&
 			combinedRestrictedModes.includes(state.mode);
 
+		const textElement = div.querySelector("div");
+
 		if (isRestrictedByModes || isRestrictedByCombined) {
-			label.classList.add("opacity-50");
+			if (textElement) textElement.classList.add("opacity-50");
 		} else {
-			label.classList.remove("opacity-50");
+			if (textElement) textElement.classList.remove("opacity-50");
 		}
 
 		if (state.activeQuality === "combined") {
