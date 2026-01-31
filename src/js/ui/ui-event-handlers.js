@@ -512,10 +512,12 @@ function updateControlsState(state) {
 			radio.value === combinedQuality &&
 			combinedRestrictedModes.includes(state.mode);
 
+		const textElement = div.querySelector("div");
+
 		if (isRestrictedByModes || isRestrictedByCombined) {
-			label.classList.add("opacity-50");
+			if (textElement) textElement.classList.add("opacity-50");
 		} else {
-			label.classList.remove("opacity-50");
+			if (textElement) textElement.classList.remove("opacity-50");
 		}
 
 		if (state.activeQuality === "combined") {
