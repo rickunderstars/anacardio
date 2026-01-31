@@ -62,7 +62,7 @@ export function renderMeshDropdown(state) {
 
 	const placeholder = document.createElement("option");
 	placeholder.value = "";
-	placeholder.text = "Select";
+	placeholder.text = state.activeMesh ? state.activeMesh.filename : "Select";
 	placeholder.hidden = true;
 	placeholder.selected = true;
 	dropdown.appendChild(placeholder);

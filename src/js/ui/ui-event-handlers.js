@@ -170,6 +170,7 @@ export function setupEventHandlers(dependencies) {
 
 	state.addEventListener(AppEvents.MESH_CHANGED, () => {
 		updateControlsState(state);
+		renderMeshDropdown(state);
 	});
 
 	state.addEventListener(AppEvents.MODE_CHANGED, () => {
@@ -260,12 +261,12 @@ export function setupEventHandlers(dependencies) {
 			}
 
 			sceneManager.restoreCameraVersor(state.activeMesh);
-			renderMeshDropdown(state);
 			return;
 		}
 
 		document.body.style.cursor = "wait";
 		meshDropdown.disabled = true;
+		renderMeshDropdown(state);
 
 		try {
 			await addTestMesh(

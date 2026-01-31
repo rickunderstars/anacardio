@@ -177,7 +177,6 @@ export async function addMesh(dependencies) {
 	}
 
 	sceneManager.render();
-	renderMeshDropdown(state);
 
 	console.log(
 		"Mesh loaded successfully. Meshes loaded:",
