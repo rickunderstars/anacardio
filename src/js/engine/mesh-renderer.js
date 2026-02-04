@@ -85,13 +85,13 @@ export function updateActiveMesh(dependencies) {
 				side: THREE.DoubleSide,
 			});
 			activeMesh.tangentFieldMeshes["combined"].visible = true;
-			return { min: bipMin, max: bipMax };
+			return { min: bipAbsMin, max: bipMax };
 		} else if (state.mode === VisMode.COLOR_RAMP) {
 			activeMesh.mesh.material = new THREE.ShaderMaterial({
 				uniforms: {
-					uLatMin: { value: latMin },
+					uLatMin: { value: latAbsMin },
 					uLatMax: { value: latMax },
-					uBipMin: { value: bipMin },
+					uBipMin: { value: bipAbsMin },
 					uBipMax: { value: bipMax },
 					uAmbientLightIntensity: {
 						value: state.ambientLightIntensity,
@@ -123,7 +123,7 @@ export function updateActiveMesh(dependencies) {
 			activeMesh.mesh.material = new THREE.ShaderMaterial({
 				uniforms: {
 					uBipAbsMin: { value: bipAbsMin },
-					uBipMin: { value: bipMin },
+					uBipMin: { value: bipAbsMin },
 					uBipMax: { value: bipMax },
 					uLatAbsMin: { value: latAbsMin },
 					uLatMin: { value: latAbsMin },
@@ -160,7 +160,7 @@ export function updateActiveMesh(dependencies) {
 			});
 		}
 
-		return { min: latMin, max: latMax };
+		return { min: latAbsMin, max: latMax };
 	}
 
 	const activeMesh = state.activeMesh;
@@ -176,7 +176,7 @@ export function updateActiveMesh(dependencies) {
 
 	const isBinary = areValuesClose(absMin, min) || areValuesClose(min, max);
 	state.isBinary = isBinary;
-	const renderMin = isBinary ? absMin : min;
+	const renderMin = absMin;
 	const renderMax = isBinary && areValuesClose(absMin, max) ? max + 1.0 : max;
 
 	if (state.mode === VisMode.COLOR_RAMP) {
@@ -220,7 +220,7 @@ export function updateActiveMesh(dependencies) {
 		hideAllTangentFields(state);
 		activeMesh.mesh.material = new THREE.ShaderMaterial({
 			uniforms: {
-				uMin: { value: min },
+				uMin: { value: absMin },
 				uMax: { value: max },
 				uTime: { value: 0 },
 				uAmbientLightIntensity: { value: state.ambientLightIntensity },
@@ -239,7 +239,7 @@ export function updateActiveMesh(dependencies) {
 		});
 	}
 
-	return { min, max };
+	return { min: absMin, max };
 }
 
 export function hideAllTangentFields(state) {
