@@ -21,7 +21,7 @@ export function updateMinMaxUI(min, max, state) {
 	let bMax = max;
 
 	if (state && state.activeQuality === "combined" && state.activeMesh) {
-		const [, foundMin] = get2Min(state.activeMesh.valueSets["bipolar"]);
+		const [foundMin] = get2Min(state.activeMesh.valueSets["bipolar"]);
 		bMin = foundMin;
 		bMax = getMax(state.activeMesh.valueSets["bipolar"]);
 	}
