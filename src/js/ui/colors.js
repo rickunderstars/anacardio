@@ -224,7 +224,7 @@ export function setGaugeLine(value, state, values = null) {
 	const line = document.getElementById("gauge-line");
 	const dot = document.getElementById("gauge-dot");
 
-	const [, min] = get2Min(state.activeMesh.valueSets[quality]);
+	const [min] = get2Min(state.activeMesh.valueSets[quality]);
 	const max = getMax(state.activeMesh.valueSets[quality]);
 
 	if (value > max) {
@@ -243,7 +243,7 @@ export function setGaugeLine(value, state, values = null) {
 	) {
 		dot.classList.remove("hidden");
 		if (values && values.bipolar !== undefined) {
-			const [, bMin] = get2Min(state.activeMesh.valueSets["bipolar"]);
+			const [bMin] = get2Min(state.activeMesh.valueSets["bipolar"]);
 			const bMax = getMax(state.activeMesh.valueSets["bipolar"]);
 
 			let bPos = (values.bipolar - bMin) / (bMax - bMin);
