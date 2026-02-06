@@ -14,23 +14,20 @@ function hsl(h, s, l) {
 	return [f(0), f(8), f(4)];
 }
 
-const H_GREEN = 120;
-const H_BLUE = 240;
-
 export const SHADER_COLORS = {
 	NULL: [0.3, 0.3, 0.3],
 	WAVE_START: [0.2, 0.2, 0.2],
 	WAVE_END: [0.3, 1.0, 1.0],
 	WAVE_POLAR_START: [0.3, 0.3, 1.0],
 	WAVE_POLAR_END: [0.0, 1.0, 0.0],
-	EXTEML: [0.55, 0.41, 0.41],
+	EXTEML: [0.4, 0.3, 0.3],
 	GRADIENT_BACKGROUND: [0.2, 0.1, 0.1],
 	COMBINED_GRADIENT_START: [0.0, 0.0, 1.0],
 	COMBINED_GRADIENT_END: [0.0, 1.0, 0.0],
-	COMBINED_TL: hsl(H_GREEN, 0.2, 0.5),
-	COMBINED_TR: hsl(H_GREEN, 1.0, 0.5),
-	COMBINED_BL: hsl(H_BLUE, 0.2, 0.5),
-	COMBINED_BR: hsl(H_BLUE, 1.0, 0.5),
+	COMBINED_TL: [0.0, 0.74, 0.74],
+	COMBINED_TR: [0.46, 0.94, 0.94],
+	COMBINED_BL: [0.94, 0.0, 0.0],
+	COMBINED_BR: [1.0, 0.54, 0.54],
 	BIN_COLOR_1: [0.0, 0.0, 1.0],
 	BIN_COLOR_2: [0.0, 1.0, 0.0],
 };
