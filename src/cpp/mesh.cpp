@@ -200,7 +200,7 @@ Mesh::Float32ArrayOfTangentFieldSegments(std::string quality,
 	};
 
 	if (isCombined) {
-		auto valuePointer = &Vertex::bipolar;
+		auto valuePointer = &Vertex::LAT;
 		for (const auto &t : triangles) {
 			Vertex v0 = vertices.at(t.vertices.at(0));
 			Vertex v1 = vertices.at(t.vertices.at(1));
