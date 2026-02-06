@@ -376,7 +376,7 @@ function onMouseMove(e, sceneManager, mouse, state) {
 				} else if (values.groupid !== 0) {
 					tooltip.innerHTML = "GroupID \u2260 0";
 				} else {
-					tooltip.innerHTML = `LAT: ${formatNumber(values.lat)}<br>Bipolar: ${formatNumber(values.bipolar)}`;
+					tooltip.innerHTML = `LAT = ${formatNumber(values.lat)}<br>Bipolar = ${formatNumber(values.bipolar)}`;
 				}
 			} else {
 				const labels = {
@@ -390,7 +390,7 @@ function onMouseMove(e, sceneManager, mouse, state) {
 				};
 				const label =
 					labels[state.activeQuality] || state.activeQuality;
-				tooltip.innerHTML = `${label}: ${formatNumber(activeValue)}`;
+				tooltip.innerHTML = `${label} = ${formatNumber(activeValue)}`;
 			}
 
 			tooltip.style.left = `${e.clientX + 15}px`;
