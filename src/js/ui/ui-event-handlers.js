@@ -8,10 +8,7 @@ import { addTestMesh } from "@js/io/test-loader.js";
 import { VisMode, AppEvents } from "@js/core/state-manager.js";
 import { formatNumber, get2Min, getMax } from "@js/utils/math-utils.js";
 import { CameraVersors } from "@js/engine/scene-manager.js";
-import {
-	renderMeshDropdown,
-	toggleLoading,
-} from "@js/ui/ui-file-handlers.js";
+import { renderMeshDropdown, toggleLoading } from "@js/ui/ui-file-handlers.js";
 
 export function updateMinMaxUI(min, max, state) {
 	document.getElementById("min-value").innerHTML = formatNumber(min);
@@ -374,7 +371,13 @@ function onMouseMove(e, sceneManager, mouse, state) {
 
 		if (tooltip) {
 			if (state.activeQuality === "combined") {
-				tooltip.innerHTML = `LAT: ${formatNumber(values.lat)}<br>Bipolar: ${formatNumber(values.bipolar)}`;
+				if (values.exteml === 1) {
+					tooltip.innerHTML = "ExtEML = 1";
+				} else if (values.groupid !== 0) {
+					tooltip.innerHTML = "GroupID \u2260 0";
+				} else {
+					tooltip.innerHTML = `LAT: ${formatNumber(values.lat)}<br>Bipolar: ${formatNumber(values.bipolar)}`;
+				}
 			} else {
 				const labels = {
 					unipolar: "Unipolar",
@@ -385,7 +388,8 @@ function onMouseMove(e, sceneManager, mouse, state) {
 					scar: "SCAR",
 					groupid: "GroupID",
 				};
-				const label = labels[state.activeQuality] || state.activeQuality;
+				const label =
+					labels[state.activeQuality] || state.activeQuality;
 				tooltip.innerHTML = `${label}: ${formatNumber(activeValue)}`;
 			}
 
@@ -430,7 +434,8 @@ function updateUIForMode(state) {
 
 	if (state.activeQuality === "combined") {
 		if (state.mode === VisMode.TANGENT_FIELD) {
-			verticalTitle.innerHTML = "&LongLeftArrow; BIPOLAR &LongRightArrow;";
+			verticalTitle.innerHTML =
+				"&LongLeftArrow; BIPOLAR &LongRightArrow;";
 			horizontalTitle.classList.add("hidden");
 			document.getElementById("bipolar-min").classList.add("hidden");
 			document.getElementById("bipolar-max").classList.add("hidden");
