@@ -365,6 +365,7 @@ function onMouseMove(e, sceneManager, mouse, state) {
 	});
 
 	const tooltip = document.getElementById("sampler-tooltip");
+	const gaugeLine = document.getElementById("gauge-line");
 
 	if (result && result.hovered) {
 		const { values, activeValue } = result;
@@ -376,7 +377,7 @@ function onMouseMove(e, sceneManager, mouse, state) {
 				} else if (values.groupid !== 0) {
 					tooltip.innerHTML = "GroupID \u2260 0";
 				} else {
-					tooltip.innerHTML = `LAT: ${formatNumber(values.lat)}<br>Bipolar: ${formatNumber(values.bipolar)}`;
+					tooltip.innerHTML = `LAT = ${formatNumber(values.lat)}<br>Bipolar = ${formatNumber(values.bipolar)}`;
 				}
 			} else {
 				const labels = {
@@ -390,7 +391,7 @@ function onMouseMove(e, sceneManager, mouse, state) {
 				};
 				const label =
 					labels[state.activeQuality] || state.activeQuality;
-				tooltip.innerHTML = `${label}: ${formatNumber(activeValue)}`;
+				tooltip.innerHTML = `${label} = ${formatNumber(activeValue)}`;
 			}
 
 			tooltip.style.left = `${e.clientX + 15}px`;
@@ -398,11 +399,23 @@ function onMouseMove(e, sceneManager, mouse, state) {
 			tooltip.classList.remove("hidden");
 		}
 
+		if (gaugeLine) {
+			const shouldHideGauge =
+				state.activeQuality === "combined" &&
+				(values.exteml === 1 || values.groupid !== 0);
+
+			if (shouldHideGauge) {
+				gaugeLine.classList.add("hidden");
+			} else {
+				gaugeLine.classList.remove("hidden");
+			}
+		}
 		setGaugeLine(activeValue, state, values);
 	} else {
 		if (tooltip) {
 			tooltip.classList.add("hidden");
 		}
+		if (gaugeLine) gaugeLine.classList.add("hidden");
 	}
 }
 
