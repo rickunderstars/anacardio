@@ -365,6 +365,7 @@ function onMouseMove(e, sceneManager, mouse, state) {
 	});
 
 	const tooltip = document.getElementById("sampler-tooltip");
+	const gaugeLine = document.getElementById("gauge-line");
 
 	if (result && result.hovered) {
 		const { values, activeValue } = result;
@@ -398,11 +399,23 @@ function onMouseMove(e, sceneManager, mouse, state) {
 			tooltip.classList.remove("hidden");
 		}
 
+		if (gaugeLine) {
+			const shouldHideGauge =
+				state.activeQuality === "combined" &&
+				(values.exteml === 1 || values.groupid !== 0);
+
+			if (shouldHideGauge) {
+				gaugeLine.classList.add("hidden");
+			} else {
+				gaugeLine.classList.remove("hidden");
+			}
+		}
 		setGaugeLine(activeValue, state, values);
 	} else {
 		if (tooltip) {
 			tooltip.classList.add("hidden");
 		}
+		if (gaugeLine) gaugeLine.classList.add("hidden");
 	}
 }
 
