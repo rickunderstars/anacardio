@@ -94,6 +94,12 @@ export function setupEventHandlers(dependencies) {
 	});
 
 	document.addEventListener("keydown", (k) => {
+		if (k.key.toLowerCase() === "l") {
+			document.body.classList.toggle("light-mode");
+		}
+	});
+
+	document.addEventListener("keydown", (k) => {
 		if (!state.activeMesh) return;
 		const mesh = state.activeMesh;
 		const key = k.key.toLowerCase();

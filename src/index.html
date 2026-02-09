@@ -7,25 +7,25 @@
 	</head>
 
 	<body
-		class="bg-slate-900 text-white antialiased [&_*]:transition-all font-sans font-bold italic"
+		class="bg-slate-900 light:bg-gray-200 text-white light:text-black antialiased [&_*]:transition-all font-sans font-bold italic"
 	>
 		<div
-			class="flex flex-col md:flex-row h-screen w-full overflow-hidden bg-slate-800"
+			class="flex flex-col md:flex-row h-screen w-full overflow-hidden bg-slate-800 light:bg-gray-200"
 		>
 			<div
 				id="viewport"
-				class="relative shrink-0 w-full h-[50vh] md:w-4/7 md:h-full border-b-[0.2em] md:border-b-0 md:border-r-[0.2em] border-[whitesmoke] bg-[#080808] shadow-[0.3vh_0.3vh_1vh_rgba(0,0,0,0.3)]"
+				class="relative shrink-0 w-full h-[50vh] md:w-4/7 md:h-full border-b-[0.2em] md:border-b-0 md:border-r-[0.2em] border-[whitesmoke] light:border-black bg-[#080808] light:bg-white shadow-[0.3vh_0.3vh_1vh_rgba(0,0,0,0.3)]"
 			>
 				<div
 					id="loading-indicator"
-					class="absolute top-0 left-0 text-white text-2xl p-12 hidden z-50 font-sans"
+					class="absolute top-0 left-0 text-white light:text-black text-2xl p-12 hidden z-50 font-sans"
 				>
 					Loading...
 				</div>
 			</div>
 
 			<div
-				class="relative flex items-center justify-center w-8 bg-slate-800 text-slate-300"
+				class="relative flex items-center justify-center w-8 bg-slate-800 light:bg-gray-200 text-slate-300 light:text-black"
 			>
 				<span
 					id="vertical-gradient-title"
@@ -36,11 +36,11 @@
 			</div>
 			<div
 				id="color-gauge"
-				class="w-1/16 flex flex-col items-center bg-slate-800 py-4 px-0"
+				class="w-1/16 flex flex-col items-center bg-slate-800 light:bg-gray-200 py-4 px-0"
 			>
 				<div
 					id="horizontal-gradient-title"
-					class="text-sm text-center font-bold text-slate-300 mb-1 whitespace-nowrap hidden"
+					class="text-sm text-center font-bold text-slate-300 light:text-black mb-1 whitespace-nowrap hidden"
 				>
 					BIPOLAR<br />&longleftrightarrow;
 				</div>
@@ -48,7 +48,7 @@
 				<div class="flex flex-row w-full flex-grow gap-1 items-center">
 					<div
 						id="bipolar-min"
-						class="w-1/5 min-w-[16px] flex-shrink-0 h-1/4 p-1 mr-1 bg-black rounded-md flex items-center justify-center hidden"
+						class="w-1/5 min-w-[16px] flex-shrink-0 h-1/4 p-1 mr-1 bg-black light:bg-white light:border light:border-black rounded-md flex items-center justify-center hidden"
 					>
 						<span
 							class="-rotate-90 whitespace-nowrap text-sm font-bold"
@@ -59,7 +59,7 @@
 					<div class="flex flex-col flex-grow h-full min-w-0 gap-1">
 						<div
 							id="max-value"
-							class="text-sm text-center font-bold bg-black rounded-md w-full p-1"
+							class="text-sm text-center font-bold bg-black light:bg-white light:border light:border-black rounded-md w-full p-1"
 						>
 							---
 						</div>
@@ -82,7 +82,7 @@
 						</div>
 						<div
 							id="min-value"
-							class="text-sm text-center font-bold bg-black rounded-md w-full p-1"
+							class="text-sm text-center font-bold bg-black light:bg-white light:border light:border-black rounded-md w-full p-1"
 						>
 							---
 						</div>
@@ -90,7 +90,7 @@
 
 					<div
 						id="bipolar-max"
-						class="w-1/5 min-w-[16px] flex-shrink-0 h-1/4 p-1 ml-1 bg-black rounded-md flex items-center justify-center hidden"
+						class="w-1/5 min-w-[16px] flex-shrink-0 h-1/4 p-1 ml-1 bg-black light:bg-white light:border light:border-black rounded-md flex items-center justify-center hidden"
 					>
 						<span
 							class="-rotate-90 whitespace-nowrap text-sm font-bold"
@@ -102,11 +102,11 @@
 
 			<div
 				id="sampler-tooltip"
-				class="absolute hidden pointer-events-none bg-black text-white text-md font-bold px-2 py-1 rounded-md border border-slate-500 z-50 whitespace-nowrap"
+				class="absolute hidden pointer-events-none bg-black light:bg-white text-white light:text-black text-md font-bold px-2 py-1 rounded-md border border-slate-500 light:border-black z-50 whitespace-nowrap"
 			></div>
 
 			<div
-				class="w-full h-[50vh] md:w-3/7 md:h-full flex flex-col p-4 bg-slate-800 overflow-y-auto"
+				class="w-full h-[50vh] md:w-3/7 md:h-full flex flex-col p-4 bg-slate-800 light:bg-gray-200 overflow-y-auto"
 			>
 				<div class="flex flex-wrap items-center gap-4 h-fit mb-4">
 					<div
@@ -120,14 +120,16 @@
 					</div>
 
 					<fieldset
-						class="flex-grow flex items-center gap-4 border border-slate-500 rounded-lg p-2 min-w-[300px]"
+						class="flex-grow flex items-center gap-4 border border-slate-500 light:border-slate-400 rounded-lg p-2 min-w-[300px]"
 					>
-						<legend class="px-2 text-sm text-slate-300 font-bold">
+						<legend
+							class="px-2 text-sm text-slate-300 light:text-black font-bold"
+						>
 							Model
 						</legend>
 						<select
 							id="add-mesh-dropdown"
-							class="flex-1 p-2 bg-blue-600 text-center rounded-md cursor-pointer font-medium appearance-none hover:bg-blue-500 focus:outline-none"
+							class="flex-1 p-2 bg-blue-600 text-center rounded-md cursor-pointer font-medium appearance-none hover:bg-blue-500 focus:outline-none light:text-white"
 						></select>
 					</fieldset>
 				</div>
@@ -145,16 +147,16 @@
 					<div class="flex flex-col flex-grow gap-4">
 						<div class="flex flex-row gap-4">
 							<fieldset
-								class="w-1/2 border border-slate-500 rounded-lg p-2"
+								class="w-1/2 border border-slate-500 light:border-slate-400 rounded-lg p-2"
 							>
 								<legend
-									class="px-2 text-sm text-slate-300 font-bold"
+									class="px-2 text-sm text-slate-300 light:text-black font-bold"
 								>
 									Mode
 								</legend>
 								<div
 									data-js="modes-list"
-									class="flex flex-col border border-slate-700 rounded-md overflow-hidden divide-y divide-slate-700 w-full h-full"
+									class="flex flex-col border border-slate-700 light:border-slate-400 rounded-md overflow-hidden divide-y divide-slate-700 light:divide-slate-400 w-full h-full"
 								>
 									<label
 										class="flex-grow cursor-pointer group flex flex-col has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
@@ -167,7 +169,7 @@
 											checked
 										/>
 										<div
-											class="flex-grow flex items-center gap-3 px-2 py-1 bg-slate-800 border-l-3 border-transparent peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+											class="flex-grow flex items-center gap-3 px-2 py-1 bg-slate-800 light:bg-gray-200 border-l-3 border-transparent peer-checked:bg-blue-600/20 light:peer-checked:bg-blue-200 peer-checked:border-blue-500 group-hover:bg-slate-700 light:group-hover:bg-gray-300"
 										>
 											<div
 												class="px-4 text-center text-xl font-medium w-full"
@@ -187,7 +189,7 @@
 											class="sr-only peer"
 										/>
 										<div
-											class="flex-grow flex items-center gap-3 px-2 py-1 bg-slate-800 border-l-3 border-transparent peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+											class="flex-grow flex items-center gap-3 px-2 py-1 bg-slate-800 light:bg-gray-200 border-l-3 border-transparent peer-checked:bg-blue-600/20 light:peer-checked:bg-blue-200 peer-checked:border-blue-500 group-hover:bg-slate-700 light:group-hover:bg-gray-300"
 										>
 											<div
 												class="px-4 text-center text-xl font-medium w-full"
@@ -207,7 +209,7 @@
 											class="sr-only peer"
 										/>
 										<div
-											class="flex-grow flex items-center gap-3 px-2 py-1 bg-slate-800 border-l-3 border-transparent peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+											class="flex-grow flex items-center gap-3 px-2 py-1 bg-slate-800 light:bg-gray-200 border-l-3 border-transparent peer-checked:bg-blue-600/20 light:peer-checked:bg-blue-200 peer-checked:border-blue-500 group-hover:bg-slate-700 light:group-hover:bg-gray-300"
 										>
 											<div
 												class="px-4 text-center text-xl font-medium w-full"
@@ -220,16 +222,16 @@
 							</fieldset>
 
 							<fieldset
-								class="w-1/2 border border-slate-500 rounded-lg p-2"
+								class="w-1/2 border border-slate-500 light:border-slate-400 rounded-lg p-2"
 							>
 								<legend
-									class="px-2 text-sm text-slate-300 font-bold"
+									class="px-2 text-sm text-slate-300 light:text-black font-bold"
 								>
 									Field
 								</legend>
 								<div
 									data-js="qualities-list"
-									class="flex flex-col border border-slate-700 rounded-md overflow-hidden divide-y divide-slate-700 w-full"
+									class="flex flex-col border border-slate-700 light:border-slate-400 rounded-md overflow-hidden divide-y divide-slate-700 light:divide-slate-400 w-full"
 								>
 									<label
 										class="cursor-pointer group has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
@@ -242,7 +244,7 @@
 											checked
 										/>
 										<div
-											class="flex items-center gap-3 px-2 py-1 bg-slate-800 border-l-3 border-transparent peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+											class="flex items-center gap-3 px-2 py-1 bg-slate-800 light:bg-gray-200 border-l-3 border-transparent peer-checked:bg-blue-600/20 light:peer-checked:bg-blue-200 peer-checked:border-blue-500 group-hover:bg-slate-700 light:group-hover:bg-gray-300"
 										>
 											<div
 												class="px-4 text-left text-md font-black"
@@ -261,7 +263,7 @@
 											class="sr-only peer"
 										/>
 										<div
-											class="flex items-center gap-3 px-2 py-1 bg-slate-800 border-l-3 border-transparent peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+											class="flex items-center gap-3 px-2 py-1 bg-slate-800 light:bg-gray-200 border-l-3 border-transparent peer-checked:bg-blue-600/20 light:peer-checked:bg-blue-200 peer-checked:border-blue-500 group-hover:bg-slate-700 light:group-hover:bg-gray-300"
 										>
 											<div
 												class="px-4 text-left text-md font-medium"
@@ -281,7 +283,7 @@
 											class="sr-only peer"
 										/>
 										<div
-											class="flex items-center gap-3 px-2 py-1 bg-slate-800 border-l-3 border-transparent peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+											class="flex items-center gap-3 px-2 py-1 bg-slate-800 light:bg-gray-200 border-l-3 border-transparent peer-checked:bg-blue-600/20 light:peer-checked:bg-blue-200 peer-checked:border-blue-500 group-hover:bg-slate-700 light:group-hover:bg-gray-300"
 										>
 											<div
 												class="px-4 text-left text-md font-medium"
@@ -301,7 +303,7 @@
 											class="sr-only peer"
 										/>
 										<div
-											class="flex items-center gap-3 px-2 py-1 bg-slate-800 border-l-3 border-transparent peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+											class="flex items-center gap-3 px-2 py-1 bg-slate-800 light:bg-gray-200 border-l-3 border-transparent peer-checked:bg-blue-600/20 light:peer-checked:bg-blue-200 peer-checked:border-blue-500 group-hover:bg-slate-700 light:group-hover:bg-gray-300"
 										>
 											<div
 												class="px-4 text-left text-md font-medium"
@@ -321,7 +323,7 @@
 											class="sr-only peer"
 										/>
 										<div
-											class="flex items-center gap-3 px-2 py-1 bg-slate-800 border-l-3 border-transparent peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+											class="flex items-center gap-3 px-2 py-1 bg-slate-800 light:bg-gray-200 border-l-3 border-transparent peer-checked:bg-blue-600/20 light:peer-checked:bg-blue-200 peer-checked:border-blue-500 group-hover:bg-slate-700 light:group-hover:bg-gray-300"
 										>
 											<div
 												class="px-4 text-left text-md font-medium"
@@ -341,7 +343,7 @@
 											class="sr-only peer"
 										/>
 										<div
-											class="flex items-center gap-3 px-2 py-1 bg-slate-800 border-l-3 border-transparent peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+											class="flex items-center gap-3 px-2 py-1 bg-slate-800 light:bg-gray-200 border-l-3 border-transparent peer-checked:bg-blue-600/20 light:peer-checked:bg-blue-200 peer-checked:border-blue-500 group-hover:bg-slate-700 light:group-hover:bg-gray-300"
 										>
 											<div
 												class="px-4 text-left text-md font-medium"
@@ -365,7 +367,7 @@
 											class="sr-only peer"
 										/>
 										<div
-											class="flex items-center gap-3 px-2 py-1 bg-slate-800 border-l-3 border-transparent peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+											class="flex items-center gap-3 px-2 py-1 bg-slate-800 light:bg-gray-200 border-l-3 border-transparent peer-checked:bg-blue-600/20 light:peer-checked:bg-blue-200 peer-checked:border-blue-500 group-hover:bg-slate-700 light:group-hover:bg-gray-300"
 										>
 											<div
 												class="px-4 text-left text-md font-medium"
@@ -384,7 +386,7 @@
 											class="sr-only peer"
 										/>
 										<div
-											class="flex items-center gap-3 px-2 py-1 bg-slate-800 border-l-3 border-transparent peer-checked:bg-blue-600/20 peer-checked:border-blue-500 group-hover:bg-slate-700"
+											class="flex items-center gap-3 px-2 py-1 bg-slate-800 light:bg-gray-200 border-l-3 border-transparent peer-checked:bg-blue-600/20 light:peer-checked:bg-blue-200 peer-checked:border-blue-500 group-hover:bg-slate-700 light:group-hover:bg-gray-300"
 										>
 											<div
 												class="px-4 text-left text-md font-medium"
@@ -401,11 +403,11 @@
 							</fieldset>
 						</div>
 						<fieldset
-							class="border border-slate-500 rounded-lg p-2"
+							class="border border-slate-500 light:border-slate-400 rounded-lg p-2"
 						>
 							<!--
 							<legend
-							class="px-2 text-sm text-slate-300 font-bold"
+							class="px-2 text-sm text-slate-300 light:text-black font-bold"
 							>
 							Parameters
 						</legend>
@@ -413,7 +415,7 @@
 							<div class="flex flex-col gap-2">
 								<div class="flex flex-row items-center">
 									<div
-										class="text-md text-slate-300 font-bold text-left w-1/3"
+										class="text-md text-slate-300 light:text-black font-bold text-left w-1/3"
 									>
 										Shading
 									</div>
@@ -423,15 +425,15 @@
 										max="100"
 										value="50"
 										id="light-slider"
-										class="w-full max-h-4 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
+										class="w-full max-h-4 bg-slate-700 light:bg-gray-300 rounded-lg appearance-none cursor-pointer accent-blue-500"
 									/>
 								</div>
 								<div
 									id="waves-number-container"
-									class="flex flex-row items-center border-t border-slate-700 pt-2"
+									class="flex flex-row items-center border-t border-slate-700 light:border-slate-400 pt-2"
 								>
 									<div
-										class="text-md text-slate-300 font-bold text-left w-1/3"
+										class="text-md text-slate-300 light:text-black font-bold text-left w-1/3"
 									>
 										Waves Number
 									</div>
@@ -441,16 +443,16 @@
 										max="30"
 										value="10"
 										id="waves-number-slider"
-										class="w-full max-h-4 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
+										class="w-full max-h-4 bg-slate-700 light:bg-gray-300 rounded-lg appearance-none cursor-pointer accent-blue-500"
 									/>
 								</div>
 
 								<div
 									id="waves-speed-container"
-									class="flex flex-row items-center border-t border-slate-700 pt-2"
+									class="flex flex-row items-center border-t border-slate-700 light:border-slate-400 pt-2"
 								>
 									<div
-										class="text-md text-slate-300 font-bold text-left w-1/3"
+										class="text-md text-slate-300 light:text-black font-bold text-left w-1/3"
 									>
 										Waves Speed
 									</div>
@@ -460,7 +462,7 @@
 										max="30"
 										value="5"
 										id="waves-speed-slider"
-										class="w-full max-h-4 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
+										class="w-full max-h-4 bg-slate-700 light:bg-gray-300 rounded-lg appearance-none cursor-pointer accent-blue-500"
 									/>
 								</div>
 							</div>
@@ -468,44 +470,48 @@
 					</div>
 				</div>
 				<div class="flex flex-col gap-2">
-					<fieldset class="border border-slate-500 rounded-lg p-2">
-						<legend class="px-2 text-sm text-slate-300 font-bold">
+					<fieldset
+						class="border border-slate-500 light:border-slate-400 rounded-lg p-2"
+					>
+						<legend
+							class="px-2 text-sm text-slate-300 light:text-black font-bold"
+						>
 							View
 						</legend>
 						<div class="grid grid-cols-3 gap-2">
 							<button
 								id="camera-front"
-								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer border border-slate-600"
+								class="p-2 bg-slate-700 light:bg-gray-300 light:text-black hover:bg-slate-600 light:hover:bg-gray-400 text-sm text-center rounded cursor-pointer border border-slate-600 light:border-gray-400"
 							>
 								Front
 							</button>
 							<button
 								id="camera-top"
-								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer border border-slate-600"
+								class="p-2 bg-slate-700 light:bg-gray-300 light:text-black hover:bg-slate-600 light:hover:bg-gray-400 text-sm text-center rounded cursor-pointer border border-slate-600 light:border-gray-400"
 							>
 								Top
 							</button>
 							<button
 								id="camera-left"
-								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer border border-slate-600"
+								class="p-2 bg-slate-700 light:bg-gray-300 light:text-black hover:bg-slate-600 light:hover:bg-gray-400 text-sm text-center rounded cursor-pointer border border-slate-600 light:border-gray-400"
 							>
 								Left
 							</button>
 							<button
 								id="camera-back"
-								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer border border-slate-600"
+								class="p-2 bg-slate-700 light:bg-gray-300 light:text-black hover:bg-slate-600 light:hover:bg-gray-400 text-sm text-center rounded cursor-pointer border border-slate-600 light:border-gray-400"
 							>
 								Back
 							</button>
 							<button
 								id="camera-bottom"
-								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer border border-slate-600"
+								class="p-2 bg-slate-700 light:bg-gray-300 light:text-black hover:bg-slate-600 light:hover:bg-gray-400 text-sm text-center rounded cursor-pointer border border-slate-600 light:border-gray-400"
 							>
 								Bottom
 							</button>
 							<button
 								id="camera-right"
-								class="p-2 bg-slate-700 hover:bg-slate-600 text-sm text-center rounded cursor-pointer border border-slate-600"
+								class="p-2 bg-slate-700 light:bg-gray-300 light:text-black hover:bg-slate-600 light:hover:bg-gray-400 text-sm text-center rounded cursor-pointer border border-slate-600 light:border-gray-400"
 							>
 								Right
 							</button>
