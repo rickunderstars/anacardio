@@ -372,6 +372,13 @@ function onMouseMove(e, sceneManager, mouse, state) {
 
 	const tooltip = document.getElementById("sampler-tooltip");
 	const gaugeLine = document.getElementById("gauge-line");
+	const indicatorExteml = document.getElementById("indicator-exteml");
+	const indicatorGroupid = document.getElementById("indicator-groupid");
+
+	if (indicatorExteml)
+		indicatorExteml.classList.remove("border-2", "border-white");
+	if (indicatorGroupid)
+		indicatorGroupid.classList.remove("border-2", "border-white");
 
 	if (result && result.hovered) {
 		const { values, activeValue } = result;
@@ -380,8 +387,18 @@ function onMouseMove(e, sceneManager, mouse, state) {
 			if (state.activeQuality === "combined") {
 				if (values.exteml === 1) {
 					tooltip.innerHTML = "ExtEML = 1";
+					if (indicatorExteml)
+						indicatorExteml.classList.add(
+							"border-2",
+							"border-white",
+						);
 				} else if (values.groupid !== 0) {
 					tooltip.innerHTML = "GroupID \u2260 0";
+					if (indicatorGroupid)
+						indicatorGroupid.classList.add(
+							"border-2",
+							"border-white",
+						);
 				} else {
 					tooltip.innerHTML = `LAT = ${formatNumber(values.lat)}<br>Bipolar = ${formatNumber(values.bipolar)}`;
 				}

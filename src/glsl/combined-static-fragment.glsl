@@ -30,8 +30,6 @@ void main() {
 	float x = clamp(vBip, 0.0, 1.0);
 	float y = clamp(vLat, 0.0, 1.0);
 
-	// Bilinear interpolation
-
 	vec3 top = mix(uColorTL, uColorTR, x);
 	vec3 bottom = mix(uColorBL, uColorBR, x);
 	vec3 color = mix(bottom, top, y);
