@@ -372,13 +372,13 @@ function onMouseMove(e, sceneManager, mouse, state) {
 
 	const tooltip = document.getElementById("sampler-tooltip");
 	const gaugeLine = document.getElementById("gauge-line");
-	const indicatorExteml = document.getElementById("indicator-exteml");
-	const indicatorGroupid = document.getElementById("indicator-groupid");
+	const indicatorExtemlDot = document.getElementById("indicator-exteml-dot");
+	const indicatorGroupidDot = document.getElementById(
+		"indicator-groupid-dot",
+	);
 
-	if (indicatorExteml)
-		indicatorExteml.classList.remove("border-2", "border-white");
-	if (indicatorGroupid)
-		indicatorGroupid.classList.remove("border-2", "border-white");
+	if (indicatorExtemlDot) indicatorExtemlDot.classList.add("hidden");
+	if (indicatorGroupidDot) indicatorGroupidDot.classList.add("hidden");
 
 	if (result && result.hovered) {
 		const { values, activeValue } = result;
@@ -387,18 +387,12 @@ function onMouseMove(e, sceneManager, mouse, state) {
 			if (state.activeQuality === "combined") {
 				if (values.exteml === 1) {
 					tooltip.innerHTML = "ExtEML = 1";
-					if (indicatorExteml)
-						indicatorExteml.classList.add(
-							"border-2",
-							"border-white",
-						);
+					if (indicatorExtemlDot)
+						indicatorExtemlDot.classList.remove("hidden");
 				} else if (values.groupid !== 0) {
 					tooltip.innerHTML = "GroupID \u2260 0";
-					if (indicatorGroupid)
-						indicatorGroupid.classList.add(
-							"border-2",
-							"border-white",
-						);
+					if (indicatorGroupidDot)
+						indicatorGroupidDot.classList.remove("hidden");
 				} else {
 					tooltip.innerHTML = `LAT = ${formatNumber(values.lat)}<br>Bipolar = ${formatNumber(values.bipolar)}`;
 				}
