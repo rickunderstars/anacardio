@@ -28,6 +28,10 @@ export const SHADER_COLORS = {
 	COMBINED_TR: [0.46, 0.94, 0.94],
 	COMBINED_BL: [0.94, 0.0, 0.0],
 	COMBINED_BR: [1.0, 0.54, 0.54],
+	//COMBINED_TL: [1.0, 0.0, 0.0],
+	//COMBINED_TR: [0.0, 0.0, 1.0],
+	//COMBINED_BL: [1.0, 0.0, 0.0],
+	//COMBINED_BR: [0.0, 0.0, 1.0],
 	BIN_COLOR_1: [0.0, 0.74, 0.74],
 	BIN_COLOR_2: [0.94, 0.0, 0.0],
 };
@@ -76,35 +80,64 @@ export function colorizeGradientDynamic(
 	colorBase,
 	power = 3,
 ) {
+	const imgData = ctx.createImageData(width, height);
+	const data = imgData.data;
+
+	const lerp = (start, end, t) => start + (end - start) * t;
+
 	for (let y = 0; y < height; y++) {
 		const val = 1 - y / height;
 		const wave = (time * state.wavesSpeed - val) * state.wavesNumber;
 		const phase = wave - Math.floor(wave);
 
+		const tWave = Math.pow(1.0 - phase, power);
+
 		for (let x = 0; x < width; x++) {
-			const tHorizontal = width > 1 ? x / (width - 1) : 0;
-			const peakColor = mixColors(colorLeft, colorRight, tHorizontal);
-			const [r, g, b] = gradientWave(phase, colorBase, peakColor, power);
-			ctx.fillStyle = `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)})`;
-			ctx.fillRect(x, y, 1, 1);
+			const u = width > 1 ? x / (width - 1) : 0;
+			const index = (y * width + x) * 4;
+
+			const rPeak = lerp(colorLeft[0], colorRight[0], u);
+			const gPeak = lerp(colorLeft[1], colorRight[1], u);
+			const bPeak = lerp(colorLeft[2], colorRight[2], u);
+
+			data[index] = lerp(colorBase[0], rPeak, tWave);
+			data[index + 1] = lerp(colorBase[1], gPeak, tWave);
+			data[index + 2] = lerp(colorBase[2], bPeak, tWave);
+			data[index + 3] = 255;
 		}
 	}
+	ctx.putImageData(imgData, 0, 0);
 }
 
-export function colorizeGradient2D(ctx, width, height, cTL, cTR, cBL, cBR) {
+function colorizeGradient2D(ctx, width, height, cTL, cTR, cBL, cBR) {
+	const imgData = ctx.createImageData(width, height);
+	const data = imgData.data;
+
+	const lerp = (start, end, t) => start + (end - start) * t;
+
 	for (let y = 0; y < height; y++) {
 		const v = height > 1 ? y / (height - 1) : 0;
+
+		const rLeft = lerp(cTL[0], cBL[0], v);
+		const gLeft = lerp(cTL[1], cBL[1], v);
+		const bLeft = lerp(cTL[2], cBL[2], v);
+
+		const rRight = lerp(cTR[0], cBR[0], v);
+		const gRight = lerp(cTR[1], cBR[1], v);
+		const bRight = lerp(cTR[2], cBR[2], v);
+
 		for (let x = 0; x < width; x++) {
 			const u = width > 1 ? x / (width - 1) : 0;
 
-			const cTop = mixColors(cTL, cTR, u);
-			const cBottom = mixColors(cBL, cBR, u);
-			const cFinal = mixColors(cTop, cBottom, v);
+			const index = (y * width + x) * 4;
 
-			ctx.fillStyle = `rgb(${Math.round(cFinal[0])}, ${Math.round(cFinal[1])}, ${Math.round(cFinal[2])})`;
-			ctx.fillRect(x, y, 1, 1);
+			data[index] = lerp(rLeft, rRight, u);
+			data[index + 1] = lerp(gLeft, gRight, u);
+			data[index + 2] = lerp(bLeft, bRight, u);
+			data[index + 3] = 255;
 		}
 	}
+	ctx.putImageData(imgData, 0, 0);
 }
 
 export function colorizeGradient(state, time = 0) {
