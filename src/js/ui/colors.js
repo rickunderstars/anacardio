@@ -28,10 +28,6 @@ export const SHADER_COLORS = {
 	COMBINED_TR: [0.46, 0.94, 0.94],
 	COMBINED_BL: [0.94, 0.0, 0.0],
 	COMBINED_BR: [1.0, 0.54, 0.54],
-	//COMBINED_TL: [1.0, 0.0, 0.0],
-	//COMBINED_TR: [0.0, 0.0, 1.0],
-	//COMBINED_BL: [1.0, 0.0, 0.0],
-	//COMBINED_BR: [0.0, 0.0, 1.0],
 	BIN_COLOR_1: [0.0, 0.74, 0.74],
 	BIN_COLOR_2: [0.94, 0.0, 0.0],
 };
@@ -148,6 +144,7 @@ export function colorizeGradient(state, time = 0) {
 	const rect = gradient.getBoundingClientRect();
 	const dpr = window.devicePixelRatio || 1;
 	const targetHeight = Math.floor(rect.height * dpr);
+	const targetWidth = Math.floor(rect.width * dpr);
 
 	if (gradient.style.position !== "absolute") {
 		gradient.style.position = "absolute";
@@ -157,8 +154,8 @@ export function colorizeGradient(state, time = 0) {
 		gradient.style.height = "100%";
 	}
 
-	if (gradient.height !== targetHeight || gradient.width !== 2) {
-		gradient.width = 2;
+	if (gradient.height !== targetHeight || gradient.width !== targetWidth) {
+		gradient.width = targetWidth;
 		gradient.height = targetHeight;
 	}
 
