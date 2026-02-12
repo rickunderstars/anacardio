@@ -409,15 +409,17 @@ function onMouseMove(e, sceneManager, mouse, state) {
 		if (tooltip) {
 			if (state.activeQuality === "combined") {
 				if (values.exteml === 1) {
-					tooltip.innerHTML = "ExtEML = 1";
+					tooltip.innerHTML =
+						'ExtEML = <span class="not-italic">1</span>';
 					if (indicatorExtemlDot)
 						indicatorExtemlDot.classList.remove("hidden");
 				} else if (values.groupid !== 0) {
-					tooltip.innerHTML = "GroupID \u2260 0";
+					tooltip.innerHTML =
+						'GroupID \u2260 <span class="not-italic">0</span>';
 					if (indicatorGroupidDot)
 						indicatorGroupidDot.classList.remove("hidden");
 				} else {
-					tooltip.innerHTML = `LAT = ${formatNumber(values.lat)}<br>Bipolar = ${formatNumber(values.bipolar)}`;
+					tooltip.innerHTML = `LAT = <span class="not-italic">${formatNumber(values.lat)}</span><br>Bipolar = <span class="not-italic">${formatNumber(values.bipolar)}</span>`;
 				}
 			} else {
 				const labels = {
@@ -431,7 +433,7 @@ function onMouseMove(e, sceneManager, mouse, state) {
 				};
 				const label =
 					labels[state.activeQuality] || state.activeQuality;
-				tooltip.innerHTML = `${label} = ${formatNumber(activeValue)}`;
+				tooltip.innerHTML = `${label} = <span class="not-italic">${formatNumber(activeValue)}</span>`;
 			}
 
 			tooltip.style.left = `${e.clientX + 15}px`;
