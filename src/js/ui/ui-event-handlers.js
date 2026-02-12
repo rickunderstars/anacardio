@@ -83,6 +83,16 @@ export function setupEventHandlers(dependencies) {
 	});
 
 	document.addEventListener("keydown", (k) => {
+		if (state.mode === VisMode.ANIMATED) {
+			if (k.key === "ArrowRight" || k.key === "ArrowUp") {
+				sceneManager.skipTime(0.1);
+			} else if (k.key === "ArrowLeft" || k.key === "ArrowDown") {
+				sceneManager.skipTime(-0.1);
+			}
+		}
+	});
+
+	document.addEventListener("keydown", (k) => {
 		if (k.key.toLowerCase() === "s") {
 			console.log("loading shaders...");
 			reloadShaderMaterial({ shaders, state }).then((res) => {

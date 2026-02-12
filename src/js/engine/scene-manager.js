@@ -143,9 +143,13 @@ export class SceneManager {
 		this.isPaused = !this.isPaused;
 	}
 
+	skipTime(amount) {
+		this.accumulatedTime = Math.max(0, this.accumulatedTime + amount);
+	}
+
 	startClock() {
 		this.clock.start();
-		this.accumulatedTime = 0;
+		this.accumulatedTime = 10000.0;
 	}
 
 	resetAnimationState() {
