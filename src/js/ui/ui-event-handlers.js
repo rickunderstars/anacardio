@@ -351,6 +351,29 @@ export function setupEventHandlers(dependencies) {
 				}
 			}
 		});
+
+	const aboutDialog = document.getElementById("about-dialog");
+	const aboutBtn = document.getElementById("about-btn");
+
+	if (aboutBtn && aboutDialog) {
+		aboutBtn.addEventListener("click", () => {
+			aboutDialog.showModal();
+		});
+	}
+
+	if (aboutDialog) {
+		aboutDialog.addEventListener("click", (e) => {
+			const rect = aboutDialog.getBoundingClientRect();
+			const isInDialog =
+				rect.top <= e.clientY &&
+				e.clientY <= rect.top + rect.height &&
+				rect.left <= e.clientX &&
+				e.clientX <= rect.left + rect.width;
+			if (!isInDialog) {
+				aboutDialog.close();
+			}
+		});
+	}
 }
 
 function cameraReset(sceneManager, state) {
