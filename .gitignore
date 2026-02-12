@@ -1,8 +1,6 @@
 .obsidian/workspace.json
 .obsidian/workspaces.json
 build/*
-!build/heart.out.js
-!build/heart.out.wasm
 
 .vite/
 node_modules/
