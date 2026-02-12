@@ -58,7 +58,7 @@ if(EMSCRIPTEN)
             -s MODULARIZE=1 \
             -s EXPORT_NAME='HeartModule' \
             -s EXPORTED_RUNTIME_METHODS=['ccall','cwrap','HEAPF32'] \
-			-s NO_DISABLE_EXCEPTION_CATCHING=1 \
+            -s NO_DISABLE_EXCEPTION_CATCHING=1 \
             -s ALLOW_MEMORY_GROWTH=1 \
             -s USE_WEBGL2=1 \
             -s FULL_ES3=1 \
