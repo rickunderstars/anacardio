@@ -48,7 +48,7 @@
 				<div class="flex flex-row w-full flex-grow gap-1 items-center">
 					<div
 						id="bipolar-min"
-						class="w-1/5 min-w-[16px] flex-shrink-0 h-1/4 p-1 mr-1 bg-black light:bg-white light:border light:border-black rounded-md flex items-center justify-center hidden"
+						class="w-1/5 min-w-[16px] flex-shrink-0 h-1/4 p-1 mr-1 bg-black light:bg-white light:border light:border-black rounded-md flex items-center justify-center hidden not-italic"
 					>
 						<span
 							class="-rotate-90 whitespace-nowrap text-sm font-bold"
@@ -59,7 +59,7 @@
 					<div class="flex flex-col flex-grow h-full min-w-0 gap-1">
 						<div
 							id="max-value"
-							class="text-sm text-center font-bold bg-black light:bg-white light:border light:border-black rounded-md w-full p-1"
+							class="text-sm text-center font-bold bg-black light:bg-white light:border light:border-black rounded-md w-full p-1 not-italic"
 						>
 							---
 						</div>
@@ -82,7 +82,7 @@
 						</div>
 						<div
 							id="min-value"
-							class="text-sm text-center font-bold bg-black light:bg-white light:border light:border-black rounded-md w-full p-1"
+							class="text-sm text-center font-bold bg-black light:bg-white light:border light:border-black rounded-md w-full p-1 not-italic"
 						>
 							---
 						</div>
@@ -90,7 +90,7 @@
 
 					<div
 						id="bipolar-max"
-						class="w-1/5 min-w-[16px] flex-shrink-0 h-1/4 p-1 ml-1 bg-black light:bg-white light:border light:border-black rounded-md flex items-center justify-center hidden"
+						class="w-1/5 min-w-[16px] flex-shrink-0 h-1/4 p-1 ml-1 bg-black light:bg-white light:border light:border-black rounded-md flex items-center justify-center hidden not-italic"
 					>
 						<span
 							class="-rotate-90 whitespace-nowrap text-sm font-bold"
@@ -356,7 +356,7 @@
 											>
 												<div
 													id="indicator-exteml-dot"
-													class="w-2.5 h-2.5 bg-white rounded-full hidden"
+													class="w-2 h-2 bg-white rounded-full hidden"
 												></div>
 											</div>
 										</div>
@@ -404,7 +404,7 @@
 											>
 												<div
 													id="indicator-groupid-dot"
-													class="w-2.5 h-2.5 bg-white rounded-full hidden"
+													class="w-2 h-2 bg-white rounded-full hidden"
 												></div>
 											</div>
 										</div>
@@ -527,9 +527,54 @@
 							</button>
 						</div>
 					</fieldset>
+					<div class="flex justify-center mt-2">
+						<button
+							id="about-btn"
+							class="text-slate-400 light:text-slate-600 hover:text-white light:hover:text-black hover:underline cursor-pointer text-sm font-normal"
+						>
+							About HeartVis
+						</button>
+					</div>
 				</div>
 			</div>
 		</div>
+
+		<dialog
+			id="about-dialog"
+			class="fixed inset-0 m-auto p-0 rounded-lg shadow-2xl backdrop:bg-black/80 bg-slate-800 text-slate-200 light:bg-white light:text-slate-800 border border-slate-600 light:border-gray-300 max-w-md w-11/12"
+		>
+			<div class="p-6 font-normal not-italic">
+				<h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+					HeartVis
+					<img
+						src="assets/images/heart-icon.png"
+						class="w-6 h-6 object-contain"
+					/>
+				</h2>
+				<p class="mb-4 text-sm leading-relaxed">
+					HeartVis is a prototype visualization tool specifically
+					designed for the analysis of
+					<i>Triangulated Mesh file format</i> by Biosense Webster's
+					devices.
+				</p>
+				<p class="mb-4 text-sm leading-relaxed">
+					<b>How to use:</b> Load a file by pressing <i>Select>Load
+					from file...</i>; the file format <b>must</b> be the
+					<i>Triangulated Mesh file format</i>. Use the controls on
+					the right to switch modes, fields and adjust parameters.
+					Interact with the 3D view using your mouse pointer: you can
+					rotate, scale, pan and zoom.
+				</p>
+				<class="mb-4 text-sm leading-relaxed">
+					This project originated from the bachelor's degree thesis of
+					Riccardo Bovo at the University of Milan (<a
+						href="https://www.unimi.it/en"
+						><u>Università degli Studi di Milano</u></a
+					>).
+					The source code can be found <a href="https://github.com/rickunderstars/heart-vis"><u>here</u></a>.
+				</p>
+			</div>
+		</dialog>
 
 		<script src="/js/emscripten/heart.out.js"></script>
 		<script type="module" src="js/main.js"></script>

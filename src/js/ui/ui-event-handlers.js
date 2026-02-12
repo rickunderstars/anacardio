@@ -83,6 +83,16 @@ export function setupEventHandlers(dependencies) {
 	});
 
 	document.addEventListener("keydown", (k) => {
+		if (state.mode === VisMode.ANIMATED) {
+			if (k.key === "ArrowRight" || k.key === "ArrowUp") {
+				sceneManager.skipTime(0.1);
+			} else if (k.key === "ArrowLeft" || k.key === "ArrowDown") {
+				sceneManager.skipTime(-0.1);
+			}
+		}
+	});
+
+	document.addEventListener("keydown", (k) => {
 		if (k.key.toLowerCase() === "s") {
 			console.log("loading shaders...");
 			reloadShaderMaterial({ shaders, state }).then((res) => {
@@ -351,6 +361,29 @@ export function setupEventHandlers(dependencies) {
 				}
 			}
 		});
+
+	const aboutDialog = document.getElementById("about-dialog");
+	const aboutBtn = document.getElementById("about-btn");
+
+	if (aboutBtn && aboutDialog) {
+		aboutBtn.addEventListener("click", () => {
+			aboutDialog.showModal();
+		});
+	}
+
+	if (aboutDialog) {
+		aboutDialog.addEventListener("click", (e) => {
+			const rect = aboutDialog.getBoundingClientRect();
+			const isInDialog =
+				rect.top <= e.clientY &&
+				e.clientY <= rect.top + rect.height &&
+				rect.left <= e.clientX &&
+				e.clientX <= rect.left + rect.width;
+			if (!isInDialog) {
+				aboutDialog.close();
+			}
+		});
+	}
 }
 
 function cameraReset(sceneManager, state) {
@@ -386,15 +419,17 @@ function onMouseMove(e, sceneManager, mouse, state) {
 		if (tooltip) {
 			if (state.activeQuality === "combined") {
 				if (values.exteml === 1) {
-					tooltip.innerHTML = "ExtEML = 1";
+					tooltip.innerHTML =
+						'ExtEML = <span class="not-italic">1</span>';
 					if (indicatorExtemlDot)
 						indicatorExtemlDot.classList.remove("hidden");
 				} else if (values.groupid !== 0) {
-					tooltip.innerHTML = "GroupID \u2260 0";
+					tooltip.innerHTML =
+						'GroupID \u2260 <span class="not-italic">0</span>';
 					if (indicatorGroupidDot)
 						indicatorGroupidDot.classList.remove("hidden");
 				} else {
-					tooltip.innerHTML = `LAT = ${formatNumber(values.lat)}<br>Bipolar = ${formatNumber(values.bipolar)}`;
+					tooltip.innerHTML = `LAT = <span class="not-italic">${formatNumber(values.lat)}</span><br>Bipolar = <span class="not-italic">${formatNumber(values.bipolar)}</span>`;
 				}
 			} else {
 				const labels = {
@@ -408,7 +443,7 @@ function onMouseMove(e, sceneManager, mouse, state) {
 				};
 				const label =
 					labels[state.activeQuality] || state.activeQuality;
-				tooltip.innerHTML = `${label} = ${formatNumber(activeValue)}`;
+				tooltip.innerHTML = `${label} = <span class="not-italic">${formatNumber(activeValue)}</span>`;
 			}
 
 			tooltip.style.left = `${e.clientX + 15}px`;

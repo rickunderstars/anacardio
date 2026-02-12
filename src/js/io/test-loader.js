@@ -1,6 +1,7 @@
 import { addMesh } from "@js/io/file-loader.js";
 
 export const testMeshes = [
+	/*
 	{
 		filename: "2-LA.mesh",
 		load: () => import("@assets/test-meshes/2-LA.mesh?raw"),
@@ -9,6 +10,7 @@ export const testMeshes = [
 		filename: "2-LA-FA.mesh",
 		load: () => import("@assets/test-meshes/2-LA-FA.mesh?raw"),
 	},
+	*/
 ];
 
 export async function addTestMesh(dependencies, meshFilename) {
