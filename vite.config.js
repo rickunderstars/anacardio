@@ -8,7 +8,7 @@ const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
 export default defineConfig({
 	root: "src",
-	base: "/heart-vis/",
+	base: "/anacardio/",
 	plugins: [glsl(), tailwindcss()],
 	resolve: {
 		alias: {

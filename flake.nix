@@ -1,5 +1,5 @@
 {
-  description = "Tirocinio Heart-Vis Dev Shell";
+  description = "AnaCardio Dev Shell";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";

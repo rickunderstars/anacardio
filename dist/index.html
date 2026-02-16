@@ -2,119 +2,585 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<link rel="icon" href="/heart-vis/assets/heart-icon-BH-iVJGz.png" type="image/png" />
-		<title>heart-vis</title>
-		<script type="module" crossorigin src="/heart-vis/assets/index-BXlXdJ72.js"></script>
-		<link rel="stylesheet" crossorigin href="/heart-vis/assets/index-BszPuwAv.css">
+		<link rel="icon" href="/anacardio/assets/heart-icon-BH-iVJGz.png" type="image/png" />
+		<title>AnaCardio</title>
+		<script type="module" crossorigin src="/anacardio/assets/index-CLSlogQX.js"></script>
+		<link rel="stylesheet" crossorigin href="/anacardio/assets/index-CVJNCxY2.css">
 	</head>
 
-	<body>
-		<div class="global-container">
-			<div id="viewport"></div>
-			<div class="right-column">
-				<div class="right-row">
-					<div class="title">
-						heart-vis
+	<body
+		class="bg-slate-900 light:bg-gray-200 text-white light:text-black antialiased [&_*]:transition-all font-sans font-bold italic"
+	>
+		<div
+			class="flex flex-col md:flex-row h-screen w-full overflow-hidden bg-slate-800 light:bg-gray-200"
+		>
+			<div
+				id="viewport"
+				class="relative shrink-0 w-full h-[50vh] md:w-4/7 md:h-full border-b-[0.2em] md:border-b-0 md:border-r-[0.2em] border-[whitesmoke] light:border-black bg-[#080808] light:bg-white shadow-[0.3vh_0.3vh_1vh_rgba(0,0,0,0.3)]"
+			>
+				<div
+					id="loading-indicator"
+					class="absolute top-0 left-0 text-white light:text-black text-2xl p-12 hidden z-50 font-sans"
+				>
+					Loading...
+				</div>
+			</div>
+
+			<div
+				class="relative flex items-center justify-center w-8 bg-slate-800 light:bg-gray-200 text-slate-300 light:text-black"
+			>
+				<span
+					id="vertical-gradient-title"
+					class="absolute inline-block -rotate-90 whitespace-nowrap text-sm font-bold"
+				>
+					&LongLeftArrow; field &LongRightArrow;
+				</span>
+			</div>
+			<div
+				id="color-gauge"
+				class="w-1/16 flex flex-col items-center bg-slate-800 light:bg-gray-200 py-4 px-0"
+			>
+				<div
+					id="horizontal-gradient-title"
+					class="text-sm text-center font-bold text-slate-300 light:text-black mb-1 whitespace-nowrap hidden"
+				>
+					BIPOLAR<br />&longleftrightarrow;
+				</div>
+
+				<div class="flex flex-row w-full flex-grow gap-1 items-center">
+					<div
+						id="bipolar-min"
+						class="w-1/5 min-w-[16px] flex-shrink-0 h-1/4 p-1 mr-1 bg-black light:bg-white light:border light:border-black rounded-md flex items-center justify-center hidden not-italic"
+					>
+						<span
+							class="-rotate-90 whitespace-nowrap text-sm font-bold"
+							>---</span
+						>
+					</div>
+
+					<div class="flex flex-col flex-grow h-full min-w-0 gap-1">
+						<div
+							id="max-value"
+							class="text-sm text-center font-bold bg-black light:bg-white light:border light:border-black rounded-md w-full p-1 not-italic"
+						>
+							---
+						</div>
+						<div
+							class="relative flex-grow w-full flex justify-center rounded"
+						>
+							<canvas
+								id="gradient-bar"
+								class="w-full h-full rounded-md box-shadow-xl"
+							></canvas>
+							<div
+								id="gauge-line"
+								class="absolute w-12/11 h-0.5 rounded border-y border-white pointer-events-none transform translate-y-1/2 hidden"
+							>
+								<div
+									id="gauge-dot"
+									class="absolute w-2 h-2 bg-white rounded-full top-1/2 -translate-y-1/2 -translate-x-1/2 hidden shadow-sm"
+								></div>
+							</div>
+						</div>
+						<div
+							id="min-value"
+							class="text-sm text-center font-bold bg-black light:bg-white light:border light:border-black rounded-md w-full p-1 not-italic"
+						>
+							---
+						</div>
+					</div>
+
+					<div
+						id="bipolar-max"
+						class="w-1/5 min-w-[16px] flex-shrink-0 h-1/4 p-1 ml-1 bg-black light:bg-white light:border light:border-black rounded-md flex items-center justify-center hidden not-italic"
+					>
+						<span
+							class="-rotate-90 whitespace-nowrap text-sm font-bold"
+							>---</span
+						>
+					</div>
+				</div>
+			</div>
+
+			<div
+				id="sampler-tooltip"
+				class="absolute hidden pointer-events-none bg-black light:bg-white text-white light:text-black text-md font-bold px-2 py-1 rounded-md border border-slate-500 light:border-black z-50 whitespace-nowrap"
+			></div>
+
+			<div
+				class="w-full h-[50vh] md:w-3/7 md:h-full flex flex-col p-4 bg-slate-800 light:bg-gray-200 overflow-y-auto"
+			>
+				<div
+					class="flex flex-wrap items-center justify-between gap-4 h-fit mb-4"
+				>
+					<div
+						class="flex flex-none items-center gap-2 text-4xl font-bold text-shadow-xl"
+					>
+						AnaCardio
 						<img
 							src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAYAAACLz2ctAAAC/klEQVR4nO3dwU3jUBRAUTOaFrJzBVQAK6ow/Uw7pAp2VJAKsksRTAVIb6SPbgads/6ysXP1FzzZ3jYAAAAAAICf6qE68bHvo3Xn6/Vz6XmH13xeedJt256G6z62ben17ts+ut7r9jw84to782vp0eAfCZCUAEkJkJQASQmQlABJCZCUAEktn4SsnnB8HsfsxOfZf+inF/wyXHobHu8ynHC8DY83nUect9n92/fhxOR6HZ95wg5ISoCkBEhKgKQESEqApARISoCkBEjqO54JSSYcq62+MdWE4xje5/PwPj8+Po5uzeXyZ3Q8OyApAZISICkBkhIgKQGSEiApAZISIKnf04Uvp9No3ftt+pTEYp/Dl0o9zGYc01dUzScX03VrJxzTdatdLrN1dkBSAiQlQFICJCVAUgIkJUBSAiQlQFLjScj77dY867F4wjH1YyYc42XjZ0emQ6LRD2IHJCVAUgIkJUBSAiQlQFICJCVAUgIkNZ6EZEw4vlg4W3bv7ICkBEhKgKQESEqApARISoCkBEhKgKTWT0Ki73rwf7IDkhIgKQGSEiApAZISICkBkhIgKQGSmn8nZPi2o4fpF9OnJx7yrMcXhhc8/WL66XRa+pCOHZCUAEkJkJQASQmQlABJCZCUAEkJkNT8OyHf+Vfw37jdbkuPZwckJUBSAiQlQFICJCVAUgIkJUBSAiS1/O1Yx50/O/JjLH7WY9/30e92vV5nJx6yA5ISICkBkhIgKQGSEiApAZISICkBklo+CZm+fer+JyazK1n9WZRj+HqsasJxPr+O1k3ZAUkJkJQASQmQlABJCZCUAEkJkJQASa3/YvpQNTF5G5638vo6mzQcx3HXE44pOyApAZISICkBkhIgKQGSEiApAZISIKmlX78uPQ3XfSyemKz+Avv6t1QtfmhlMTsgKQGSEiApAZISICkBkhIgKQGSEiCpHzMJmVo9MZnat+GEY3seHvG+JxxTdkBSAiQlQFICJCVAUgIkJUBSAiQlQAAAAAAAAPgWfwHoWH/FkEcUeQAAAABJRU5ErkJggg=="
-							class="title-icon"
+							class="w-10 h-10 object-contain drop-shadow-xl"
 						/>
 					</div>
+
+					<button
+						id="about-btn"
+						class="w-10 h-10 flex items-center justify-center rounded-lg border border-slate-500 light:border-slate-400 text-slate-400 light:text-slate-600 hover:text-white light:hover:text-black hover:border-white light:hover:border-black transition-colors cursor-pointer text-xl font-bold"
+						title="About AnaCardio"
+					>
+						?
+					</button>
+				</div>
+
+				<div class="mb-4">
+					<fieldset
+						class="w-full flex items-center gap-4 border border-slate-500 light:border-slate-400 rounded-lg p-2 min-w-[300px]"
+					>
+						<legend
+							class="px-2 text-sm text-slate-300 light:text-black font-bold"
+						>
+							Model
+						</legend>
+						<select
+							id="add-mesh-dropdown"
+							class="flex-1 p-2 bg-blue-600 text-center rounded-md cursor-pointer font-medium appearance-none hover:bg-blue-500 focus:outline-none light:text-white"
+						></select>
+					</fieldset>
+				</div>
+
+				<div class="flex flex-col gap-2">
 					<input
 						type="file"
 						id="raw-mesh"
 						accept="text/*"
-						class="hidden-btn-upload"
+						class="hidden"
 					/>
-					<label for="raw-mesh" class="btn-upload">
-						upload raw mesh file
-					</label>
-					<div id="filename" class="upload-info">
-						No file selected
-					</div>
 				</div>
-				<div class="right-row">
-					<label id="camera-reset" class="btn-camera"
-						>camera reset</label
-					>
-				</div>
-				<div class="right-row">
-					<div class="qualities-container">
-						<label class="quality-top">
-							<input
-								type="radio"
-								name="quality"
-								value="unipolar"
-								checked
-							/>
-							<span>Unipolar</span>
-						</label>
-						<label>
-							<input
-								type="radio"
-								name="quality"
-								value="bipolar"
-							/>
-							<span>Bipolar</span>
-						</label>
-						<label>
-							<input type="radio" name="quality" value="lat" />
-							<span>LAT</span>
-						</label>
-						<label>
-							<input type="radio" name="quality" value="eml" />
-							<span>EML</span>
-						</label>
-						<label>
-							<input type="radio" name="quality" value="exteml" />
-							<span>ExtEML</span>
-						</label>
-						<label>
-							<input type="radio" name="quality" value="scar" />
-							<span>SCAR</span>
-						</label>
-						<label class="quality-bottom">
-							<input
-								type="radio"
-								name="quality"
-								value="groupid"
-							/>
-							<span>groupID</span>
-						</label>
-					</div>
-					<div id="vertex-info" class="vertex-info"></div>
-					<div id="color-gauge" class="color-gauge">
-						<div id="max-value" class="max-value">max</div>
-						<div class="right-row">
-							<canvas
-								id="gradient-bar"
-								class="gradient-bar"
-							></canvas>
-							<div id="gauge-line" class="gauge-line"></div>
+
+				<div class="flex flex-grow gap-4 mb-4">
+					<div class="flex flex-col flex-grow gap-4">
+						<div class="flex flex-row gap-4">
+							<fieldset
+								class="w-1/2 border border-slate-500 light:border-slate-400 rounded-lg p-2"
+							>
+								<legend
+									class="px-2 text-sm text-slate-300 light:text-black font-bold"
+								>
+									Mode
+								</legend>
+								<div
+									data-js="modes-list"
+									class="flex flex-col border border-slate-700 light:border-slate-400 rounded-md overflow-hidden divide-y divide-slate-700 light:divide-slate-400 w-full h-full"
+								>
+									<label
+										class="flex-grow cursor-pointer group flex flex-col has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
+									>
+										<input
+											type="radio"
+											name="mode"
+											value="color-ramp"
+											class="sr-only peer"
+											checked
+										/>
+										<div
+											class="flex-grow flex items-center gap-3 px-2 py-1 bg-slate-800 light:bg-gray-200 border-l-3 border-transparent peer-checked:bg-blue-600/20 light:peer-checked:bg-blue-200 peer-checked:border-blue-500 group-hover:bg-slate-700 light:group-hover:bg-gray-300"
+										>
+											<div
+												class="px-4 text-center text-xl font-medium w-full"
+											>
+												Color Map
+											</div>
+										</div>
+									</label>
+
+									<label
+										class="flex-grow cursor-pointer group flex flex-col has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
+									>
+										<input
+											type="radio"
+											name="mode"
+											value="animated"
+											class="sr-only peer"
+										/>
+										<div
+											class="flex-grow flex items-center gap-3 px-2 py-1 bg-slate-800 light:bg-gray-200 border-l-3 border-transparent peer-checked:bg-blue-600/20 light:peer-checked:bg-blue-200 peer-checked:border-blue-500 group-hover:bg-slate-700 light:group-hover:bg-gray-300"
+										>
+											<div
+												class="px-4 text-center text-xl font-medium w-full"
+											>
+												Waves
+											</div>
+										</div>
+									</label>
+
+									<label
+										class="flex-grow cursor-pointer group flex flex-col has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
+									>
+										<input
+											type="radio"
+											name="mode"
+											value="tangent-field"
+											class="sr-only peer"
+										/>
+										<div
+											class="flex-grow flex items-center gap-3 px-2 py-1 bg-slate-800 light:bg-gray-200 border-l-3 border-transparent peer-checked:bg-blue-600/20 light:peer-checked:bg-blue-200 peer-checked:border-blue-500 group-hover:bg-slate-700 light:group-hover:bg-gray-300"
+										>
+											<div
+												class="px-4 text-center text-xl font-medium w-full"
+											>
+												Gradients
+											</div>
+										</div>
+									</label>
+								</div>
+							</fieldset>
+
+							<fieldset
+								class="w-1/2 border border-slate-500 light:border-slate-400 rounded-lg p-2"
+							>
+								<legend
+									class="px-2 text-sm text-slate-300 light:text-black font-bold"
+								>
+									Field
+								</legend>
+								<div
+									data-js="qualities-list"
+									class="flex flex-col border border-slate-700 light:border-slate-400 rounded-md overflow-hidden divide-y divide-slate-700 light:divide-slate-400 w-full"
+								>
+									<label
+										class="cursor-pointer group has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
+									>
+										<input
+											type="radio"
+											name="quality"
+											value="combined"
+											class="sr-only peer"
+											checked
+										/>
+										<div
+											class="flex items-center gap-3 px-2 py-1 bg-slate-800 light:bg-gray-200 border-l-3 border-transparent peer-checked:bg-blue-600/20 light:peer-checked:bg-blue-200 peer-checked:border-blue-500 group-hover:bg-slate-700 light:group-hover:bg-gray-300"
+										>
+											<div
+												class="px-4 text-left text-md font-black"
+											>
+												Combined
+											</div>
+										</div>
+									</label>
+									<label
+										class="cursor-pointer group has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
+									>
+										<input
+											type="radio"
+											name="quality"
+											value="unipolar"
+											class="sr-only peer"
+										/>
+										<div
+											class="flex items-center gap-3 px-2 py-1 bg-slate-800 light:bg-gray-200 border-l-3 border-transparent peer-checked:bg-blue-600/20 light:peer-checked:bg-blue-200 peer-checked:border-blue-500 group-hover:bg-slate-700 light:group-hover:bg-gray-300"
+										>
+											<div
+												class="px-4 text-left text-md font-medium"
+											>
+												Unipolar
+											</div>
+										</div>
+									</label>
+
+									<label
+										class="cursor-pointer group has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
+									>
+										<input
+											type="radio"
+											name="quality"
+											value="bipolar"
+											class="sr-only peer"
+										/>
+										<div
+											class="flex items-center gap-3 px-2 py-1 bg-slate-800 light:bg-gray-200 border-l-3 border-transparent peer-checked:bg-blue-600/20 light:peer-checked:bg-blue-200 peer-checked:border-blue-500 group-hover:bg-slate-700 light:group-hover:bg-gray-300"
+										>
+											<div
+												class="px-4 text-left text-md font-medium"
+											>
+												Bipolar
+											</div>
+										</div>
+									</label>
+
+									<label
+										class="cursor-pointer group has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
+									>
+										<input
+											type="radio"
+											name="quality"
+											value="lat"
+											class="sr-only peer"
+										/>
+										<div
+											class="flex items-center gap-3 px-2 py-1 bg-slate-800 light:bg-gray-200 border-l-3 border-transparent peer-checked:bg-blue-600/20 light:peer-checked:bg-blue-200 peer-checked:border-blue-500 group-hover:bg-slate-700 light:group-hover:bg-gray-300"
+										>
+											<div
+												class="px-4 text-left text-md font-medium"
+											>
+												LAT
+											</div>
+										</div>
+									</label>
+
+									<label
+										class="cursor-pointer group has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
+									>
+										<input
+											type="radio"
+											name="quality"
+											value="eml"
+											class="sr-only peer"
+										/>
+										<div
+											class="flex items-center gap-3 px-2 py-1 bg-slate-800 light:bg-gray-200 border-l-3 border-transparent peer-checked:bg-blue-600/20 light:peer-checked:bg-blue-200 peer-checked:border-blue-500 group-hover:bg-slate-700 light:group-hover:bg-gray-300"
+										>
+											<div
+												class="px-4 text-left text-md font-medium"
+											>
+												EML
+											</div>
+										</div>
+									</label>
+
+									<label
+										class="cursor-pointer group has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
+									>
+										<input
+											type="radio"
+											name="quality"
+											value="exteml"
+											class="sr-only peer"
+										/>
+										<div
+											class="flex items-center gap-3 px-2 py-1 bg-slate-800 light:bg-gray-200 border-l-3 border-transparent peer-checked:bg-blue-600/20 light:peer-checked:bg-blue-200 peer-checked:border-blue-500 group-hover:bg-slate-700 light:group-hover:bg-gray-300"
+										>
+											<div
+												class="px-4 text-left text-md font-medium"
+											>
+												ExtEML
+											</div>
+											<div
+												id="indicator-exteml"
+												class="w-5 h-5 rounded-full ml-auto mr-2 hidden flex items-center justify-center"
+											>
+												<div
+													id="indicator-exteml-dot"
+													class="w-2 h-2 bg-white rounded-full hidden"
+												></div>
+											</div>
+										</div>
+									</label>
+
+									<label
+										class="cursor-pointer group has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
+									>
+										<input
+											type="radio"
+											name="quality"
+											value="scar"
+											class="sr-only peer"
+										/>
+										<div
+											class="flex items-center gap-3 px-2 py-1 bg-slate-800 light:bg-gray-200 border-l-3 border-transparent peer-checked:bg-blue-600/20 light:peer-checked:bg-blue-200 peer-checked:border-blue-500 group-hover:bg-slate-700 light:group-hover:bg-gray-300"
+										>
+											<div
+												class="px-4 text-left text-md font-medium"
+											>
+												SCAR
+											</div>
+										</div>
+									</label>
+									<label
+										class="cursor-pointer group has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50"
+									>
+										<input
+											type="radio"
+											name="quality"
+											value="groupid"
+											class="sr-only peer"
+										/>
+										<div
+											class="flex items-center gap-3 px-2 py-1 bg-slate-800 light:bg-gray-200 border-l-3 border-transparent peer-checked:bg-blue-600/20 light:peer-checked:bg-blue-200 peer-checked:border-blue-500 group-hover:bg-slate-700 light:group-hover:bg-gray-300"
+										>
+											<div
+												class="px-4 text-left text-md font-medium"
+											>
+												GroupID
+											</div>
+											<div
+												id="indicator-groupid"
+												class="w-5 h-5 rounded-full ml-auto mr-2 hidden flex items-center justify-center"
+											>
+												<div
+													id="indicator-groupid-dot"
+													class="w-2 h-2 bg-white rounded-full hidden"
+												></div>
+											</div>
+										</div>
+									</label>
+								</div>
+							</fieldset>
 						</div>
-						<div id="min-value" class="min-value">min</div>
+						<fieldset
+							class="border border-slate-500 light:border-slate-400 rounded-lg p-2"
+						>
+							<!--
+							<legend
+							class="px-2 text-sm text-slate-300 light:text-black font-bold"
+							>
+							Parameters
+						</legend>
+						-->
+							<div class="flex flex-col gap-2">
+								<div class="flex flex-row items-center">
+									<div
+										class="text-md text-slate-300 light:text-black font-bold text-left w-1/3"
+									>
+										Shading
+									</div>
+									<input
+										type="range"
+										min="1"
+										max="100"
+										value="50"
+										id="light-slider"
+										class="w-full max-h-4 bg-slate-700 light:bg-gray-300 rounded-lg appearance-none cursor-pointer accent-blue-500"
+									/>
+								</div>
+								<div
+									id="waves-number-container"
+									class="flex flex-row items-center border-t border-slate-700 light:border-slate-400 pt-2"
+								>
+									<div
+										class="text-md text-slate-300 light:text-black font-bold text-left w-1/3"
+									>
+										Waves Number
+									</div>
+									<input
+										type="range"
+										min="1"
+										max="30"
+										value="10"
+										id="waves-number-slider"
+										class="w-full max-h-4 bg-slate-700 light:bg-gray-300 rounded-lg appearance-none cursor-pointer accent-blue-500"
+									/>
+								</div>
+
+								<div
+									id="waves-speed-container"
+									class="flex flex-row items-center border-t border-slate-700 light:border-slate-400 pt-2"
+								>
+									<div
+										class="text-md text-slate-300 light:text-black font-bold text-left w-1/3"
+									>
+										Waves Speed
+									</div>
+									<input
+										type="range"
+										min="1"
+										max="30"
+										value="5"
+										id="waves-speed-slider"
+										class="w-full max-h-4 bg-slate-700 light:bg-gray-300 rounded-lg appearance-none cursor-pointer accent-blue-500"
+									/>
+								</div>
+							</div>
+						</fieldset>
 					</div>
 				</div>
-				<div class="right-row">
-					<div id="loaded-meshes" class="meshes-container"></div>
-				</div>
-				<div class="right-row">
-					<label id="dynamic-animation" class="btn-animation"
-						>dynamic animation</label
+				<div class="flex flex-col gap-2">
+					<fieldset
+						class="border border-slate-500 light:border-slate-400 rounded-lg p-2"
 					>
-					<div class="slider-container">
-						<input
-							type="range"
-							min="20"
-							max="100"
-							value="60"
-							class="slider-knob"
-							id="light-slider"
-						/>
-					</div>
+						<legend
+							class="px-2 text-sm text-slate-300 light:text-black font-bold"
+						>
+							View
+						</legend>
+						<div class="grid grid-cols-3 gap-2">
+							<button
+								id="camera-front"
+								class="p-2 bg-slate-700 light:bg-gray-300 light:text-black hover:bg-slate-600 light:hover:bg-gray-400 text-sm text-center rounded cursor-pointer border border-slate-600 light:border-gray-400"
+							>
+								Front
+							</button>
+							<button
+								id="camera-top"
+								class="p-2 bg-slate-700 light:bg-gray-300 light:text-black hover:bg-slate-600 light:hover:bg-gray-400 text-sm text-center rounded cursor-pointer border border-slate-600 light:border-gray-400"
+							>
+								Top
+							</button>
+							<button
+								id="camera-left"
+								class="p-2 bg-slate-700 light:bg-gray-300 light:text-black hover:bg-slate-600 light:hover:bg-gray-400 text-sm text-center rounded cursor-pointer border border-slate-600 light:border-gray-400"
+							>
+								Left
+							</button>
+							<button
+								id="camera-back"
+								class="p-2 bg-slate-700 light:bg-gray-300 light:text-black hover:bg-slate-600 light:hover:bg-gray-400 text-sm text-center rounded cursor-pointer border border-slate-600 light:border-gray-400"
+							>
+								Back
+							</button>
+							<button
+								id="camera-bottom"
+								class="p-2 bg-slate-700 light:bg-gray-300 light:text-black hover:bg-slate-600 light:hover:bg-gray-400 text-sm text-center rounded cursor-pointer border border-slate-600 light:border-gray-400"
+							>
+								Bottom
+							</button>
+							<button
+								id="camera-right"
+								class="p-2 bg-slate-700 light:bg-gray-300 light:text-black hover:bg-slate-600 light:hover:bg-gray-400 text-sm text-center rounded cursor-pointer border border-slate-600 light:border-gray-400"
+							>
+								Right
+							</button>
+						</div>
+					</fieldset>
 				</div>
 			</div>
 		</div>
-		<script src="/heart-vis/js/emscripten/heart.out.js"></script>
+
+		<dialog
+			id="about-dialog"
+			class="fixed inset-0 m-auto p-0 rounded-lg shadow-2xl backdrop:bg-black/80 bg-slate-800 text-slate-200 light:bg-white light:text-slate-800 border border-slate-600 light:border-gray-300 max-w-md w-11/12"
+		>
+			<div class="p-6 font-normal not-italic">
+				<h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+					AnaCardio
+					<img
+						src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAYAAACLz2ctAAAC/klEQVR4nO3dwU3jUBRAUTOaFrJzBVQAK6ow/Uw7pAp2VJAKsksRTAVIb6SPbgads/6ysXP1FzzZ3jYAAAAAAICf6qE68bHvo3Xn6/Vz6XmH13xeedJt256G6z62ben17ts+ut7r9jw84to782vp0eAfCZCUAEkJkJQASQmQlABJCZCUAEktn4SsnnB8HsfsxOfZf+inF/wyXHobHu8ynHC8DY83nUect9n92/fhxOR6HZ95wg5ISoCkBEhKgKQESEqApARISoCkBEjqO54JSSYcq62+MdWE4xje5/PwPj8+Po5uzeXyZ3Q8OyApAZISICkBkhIgKQGSEiApAZISIKnf04Uvp9No3ftt+pTEYp/Dl0o9zGYc01dUzScX03VrJxzTdatdLrN1dkBSAiQlQFICJCVAUgIkJUBSAiQlQFLjScj77dY867F4wjH1YyYc42XjZ0emQ6LRD2IHJCVAUgIkJUBSAiQlQFICJCVAUgIkNZ6EZEw4vlg4W3bv7ICkBEhKgKQESEqApARISoCkBEhKgKTWT0Ki73rwf7IDkhIgKQGSEiApAZISICkBkhIgKQGSmn8nZPi2o4fpF9OnJx7yrMcXhhc8/WL66XRa+pCOHZCUAEkJkJQASQmQlABJCZCUAEkJkNT8OyHf+Vfw37jdbkuPZwckJUBSAiQlQFICJCVAUgIkJUBSAiS1/O1Yx50/O/JjLH7WY9/30e92vV5nJx6yA5ISICkBkhIgKQGSEiApAZISICkBklo+CZm+fer+JyazK1n9WZRj+HqsasJxPr+O1k3ZAUkJkJQASQmQlABJCZCUAEkJkJQASa3/YvpQNTF5G5638vo6mzQcx3HXE44pOyApAZISICkBkhIgKQGSEiApAZISIKmlX78uPQ3XfSyemKz+Avv6t1QtfmhlMTsgKQGSEiApAZISICkBkhIgKQGSEiCpHzMJmVo9MZnat+GEY3seHvG+JxxTdkBSAiQlQFICJCVAUgIkJUBSAiQlQAAAAAAAAPgWfwHoWH/FkEcUeQAAAABJRU5ErkJggg=="
+						class="w-6 h-6 object-contain"
+					/>
+				</h2>
+				<p class="mb-4 text-sm leading-relaxed">
+					AnaCardio is a prototype visualization tool for the
+					<i>Biosense Webster Triangulated Mesh file format 2.0</i>.
+				</p>
+				<p class="mb-4 text-sm leading-relaxed">
+					This project is part of Riccardo Bovo's bachelor degree
+					thesis in Computer Science of at the University of Milan (<a
+						href="https://www.unimi.it/en"
+						><u>Università degli Studi di Milano</u></a
+					>), under the supervision of
+					<a href="https://tarini.di.unimi.it/"
+						><u>Prof. Marco Tarini</u></a
+					>
+					and Dr. Massimo Walter Rivolta.
+				</p>
+				<p class="mb-4 text-sm leading-relaxed">
+					The source code is available
+					<a href="https://github.com/rickunderstars/anacardio"
+						><u>here</u></a
+					>.
+				</p>
+			</div>
+		</dialog>
+
+		<script src="/anacardio/js/emscripten/heart.out.js"></script>
 	</body>
 </html>
