@@ -39,6 +39,7 @@ export class SceneManager {
 
 		this.isPaused = false;
 		this.accumulatedTime = 0;
+		this.isGimbalVisible = true;
 
 		this.resizeObserver = new ResizeObserver(() => {
 			this.onWindowResize();
@@ -82,30 +83,32 @@ export class SceneManager {
 
 		this.renderer.render(this.scene, this.camera);
 
-		const minDim = Math.min(
-			this.viewport.clientWidth,
-			this.viewport.clientHeight,
-		);
-		const gimbalSize = minDim * 0.2;
-		const padding = minDim * 0.02;
-		const left = this.viewport.clientWidth - gimbalSize - padding;
-		const bottom = this.viewport.clientHeight - gimbalSize - padding;
+		if (this.isGimbalVisible) {
+			const minDim = Math.min(
+				this.viewport.clientWidth,
+				this.viewport.clientHeight,
+			);
+			const gimbalSize = minDim * 0.2;
+			const padding = minDim * 0.02;
+			const left = this.viewport.clientWidth - gimbalSize - padding;
+			const bottom = this.viewport.clientHeight - gimbalSize - padding;
 
-		this.gimbalCamera.position
-			.copy(this.camera.position)
-			.sub(this.controls.target)
-			.normalize()
-			.multiplyScalar(5);
-		this.gimbalCamera.lookAt(0, 0, 0);
+			this.gimbalCamera.position
+				.copy(this.camera.position)
+				.sub(this.controls.target)
+				.normalize()
+				.multiplyScalar(5);
+			this.gimbalCamera.lookAt(0, 0, 0);
 
-		this.renderer.setViewport(left, bottom, gimbalSize, gimbalSize);
-		this.renderer.setScissor(left, bottom, gimbalSize, gimbalSize);
-		this.renderer.setScissorTest(true);
+			this.renderer.setViewport(left, bottom, gimbalSize, gimbalSize);
+			this.renderer.setScissor(left, bottom, gimbalSize, gimbalSize);
+			this.renderer.setScissorTest(true);
 
-		this.renderer.autoClear = false;
-		this.renderer.clearDepth();
-		this.renderer.render(this.gimbalScene, this.gimbalCamera);
-		this.renderer.autoClear = true;
+			this.renderer.autoClear = false;
+			this.renderer.clearDepth();
+			this.renderer.render(this.gimbalScene, this.gimbalCamera);
+			this.renderer.autoClear = true;
+		}
 
 		this.renderer.setScissorTest(false);
 	}
@@ -141,6 +144,11 @@ export class SceneManager {
 
 	togglePause() {
 		this.isPaused = !this.isPaused;
+	}
+
+	toggleGimbal() {
+		this.isGimbalVisible = !this.isGimbalVisible;
+		this.render();
 	}
 
 	skipTime(amount) {

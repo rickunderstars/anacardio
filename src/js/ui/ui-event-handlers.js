@@ -110,6 +110,12 @@ export function setupEventHandlers(dependencies) {
 	});
 
 	document.addEventListener("keydown", (k) => {
+		if (k.key.toLowerCase() === "g") {
+			sceneManager.toggleGimbal();
+		}
+	});
+
+	document.addEventListener("keydown", (k) => {
 		if (!state.activeMesh) return;
 		const mesh = state.activeMesh;
 		const key = k.key.toLowerCase();
