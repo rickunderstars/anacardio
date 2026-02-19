@@ -219,4 +219,42 @@ export class SceneManager {
 		this.camera.position.copy(center).add(offset);
 		this.controls.update();
 	}
+
+	takeScreenshot(targetWidth = 2000) {
+		const aspect = this.viewport.clientWidth / this.viewport.clientHeight;
+		const width = Math.floor(targetWidth);
+		const height = Math.floor(width / aspect);
+
+		this.renderer.setSize(width, height);
+		this.camera.aspect = aspect;
+		this.camera.updateProjectionMatrix();
+
+		this.scene.traverse((object) => {
+			if (
+				object.isLineSegments2 &&
+				object.material &&
+				object.material.resolution
+			) {
+				object.material.resolution.set(width, height);
+			}
+		});
+
+		this.renderer.setViewport(0, 0, width, height);
+		this.renderer.setScissor(0, 0, width, height);
+		this.renderer.setScissorTest(false);
+		this.renderer.clear();
+		this.renderer.render(this.scene, this.camera);
+
+		try {
+			const dataURL = this.renderer.domElement.toDataURL("image/png");
+			const link = document.createElement("a");
+			link.download = `anacardio-capture-${Date.now()}.png`;
+			link.href = dataURL;
+			link.click();
+		} catch (e) {
+			console.error("Screenshot failed:", e);
+		}
+
+		this.onWindowResize();
+	}
 }

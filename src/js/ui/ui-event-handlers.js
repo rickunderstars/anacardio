@@ -93,13 +93,8 @@ export function setupEventHandlers(dependencies) {
 	});
 
 	document.addEventListener("keydown", (k) => {
-		if (k.key.toLowerCase() === "s") {
-			console.log("loading shaders...");
-			reloadShaderMaterial({ shaders, state }).then((res) => {
-				if (res) updateMinMaxUI(res.min, res.max, state);
-				sceneManager.render();
-			});
-			console.log("shaders loaded!!");
+		if (k.key.toLowerCase() === "c") {
+			sceneManager.takeScreenshot(2000);
 		}
 	});
 
