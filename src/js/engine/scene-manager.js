@@ -22,30 +22,33 @@ export class SceneManager {
 
 		this.gimbalScene = new THREE.Scene();
 
+		const textureLoader = new THREE.TextureLoader();
+		const texture = textureLoader.load(
+			`${import.meta.env.BASE_URL}faccino.png`,
+		);
+
 		const loader = new OBJLoader();
 		loader.load(
-			`${import.meta.env.BASE_URL}faccino-pelato.obj`,
+			`${import.meta.env.BASE_URL}faccino.obj`,
 			(obj) => {
 				const box = new THREE.Box3().setFromObject(obj);
 				const center = box.getCenter(new THREE.Vector3());
 				const size = box.getSize(new THREE.Vector3());
 
 				const maxDim = Math.max(size.x, size.y, size.z);
-				const scale = 2.5 / maxDim;
+				const scale = 2.0 / maxDim;
 
 				const wrapper = new THREE.Group();
 				wrapper.add(obj);
 
 				obj.position.sub(center);
 
-				obj.rotation.x = Math.PI / 2;
-				obj.rotation.y = -Math.PI / 2;
-
 				wrapper.scale.setScalar(scale);
 
 				obj.traverse((child) => {
 					if (child.isMesh) {
 						child.material = new THREE.MeshBasicMaterial({
+							map: texture,
 							vertexColors: !!child.geometry.attributes.color,
 						});
 					}
