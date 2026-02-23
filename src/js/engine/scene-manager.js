@@ -24,7 +24,7 @@ export class SceneManager {
 
 		const loader = new OBJLoader();
 		loader.load(
-			`${import.meta.env.BASE_URL}faccino-smile.obj`,
+			`${import.meta.env.BASE_URL}faccino-pelato.obj`,
 			(obj) => {
 				const box = new THREE.Box3().setFromObject(obj);
 				const center = box.getCenter(new THREE.Vector3());
