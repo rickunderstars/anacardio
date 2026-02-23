@@ -23,8 +23,14 @@ export function updateMinMaxUI(min, max, state) {
 			break;
 		case "lat":
 			unit = "ms";
+			break;
 		case "combined":
+			if (state.mode === VisMode.TANGENT_FIELD) {
+				unit = "mV";
+				break;
+			}
 			unit = "ms";
+			break;
 	}
 
 	document.getElementById("min-value").innerHTML =
