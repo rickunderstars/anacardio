@@ -9,10 +9,34 @@ import { VisMode, AppEvents } from "@js/core/state-manager.js";
 import { formatNumber, get2Min, getMax } from "@js/utils/math-utils.js";
 import { CameraVersors } from "@js/engine/scene-manager.js";
 import { renderMeshDropdown, toggleLoading } from "@js/ui/ui-file-handlers.js";
+import { uniform } from "three/tsl";
 
 export function updateMinMaxUI(min, max, state) {
-	document.getElementById("min-value").innerHTML = formatNumber(min);
-	document.getElementById("max-value").innerHTML = formatNumber(max);
+	let unit = "";
+
+	switch (state.activeQuality) {
+		case "unipolar":
+			unit = "mV";
+			break;
+		case "bipolar":
+			unit = "mV";
+			break;
+		case "lat":
+			unit = "ms";
+			break;
+		case "combined":
+			if (state.mode === VisMode.TANGENT_FIELD) {
+				unit = "mV";
+				break;
+			}
+			unit = "ms";
+			break;
+	}
+
+	document.getElementById("min-value").innerHTML =
+		formatNumber(min) + "<br>" + unit;
+	document.getElementById("max-value").innerHTML =
+		formatNumber(max) + "<br>" + unit;
 
 	let bMin = min;
 	let bMax = max;
@@ -23,8 +47,10 @@ export function updateMinMaxUI(min, max, state) {
 		bMax = getMax(state.activeMesh.valueSets["bipolar"]);
 	}
 
-	document.querySelector("#bipolar-min span").innerHTML = formatNumber(bMin);
-	document.querySelector("#bipolar-max span").innerHTML = formatNumber(bMax);
+	document.querySelector("#bipolar-min span").innerHTML =
+		formatNumber(bMin) + " mV";
+	document.querySelector("#bipolar-max span").innerHTML =
+		formatNumber(bMax) + " mV";
 }
 
 export function setupEventHandlers(dependencies) {
@@ -430,9 +456,21 @@ function onMouseMove(e, sceneManager, mouse, state) {
 					if (indicatorGroupidDot)
 						indicatorGroupidDot.classList.remove("hidden");
 				} else {
-					tooltip.innerHTML = `LAT = <span class="not-italic">${formatNumber(values.lat)}</span><br>Bipolar = <span class="not-italic">${formatNumber(values.bipolar)}</span>`;
+					tooltip.innerHTML = `LAT = <span class="not-italic">${formatNumber(values.lat)} ms</span><br>Bipolar = <span class="not-italic">${formatNumber(values.bipolar)} mV</span>`;
 				}
 			} else {
+				let unit = "";
+
+				switch (state.activeQuality) {
+					case "unipolar":
+						unit = "mV";
+						break;
+					case "bipolar":
+						unit = "mV";
+						break;
+					case "lat":
+						unit = "ms";
+				}
 				const labels = {
 					unipolar: "Unipolar",
 					bipolar: "Bipolar",
@@ -444,7 +482,7 @@ function onMouseMove(e, sceneManager, mouse, state) {
 				};
 				const label =
 					labels[state.activeQuality] || state.activeQuality;
-				tooltip.innerHTML = `${label} = <span class="not-italic">${formatNumber(activeValue)}</span>`;
+				tooltip.innerHTML = `${label} = <span class="not-italic">${formatNumber(activeValue)} ${unit} </span>`;
 			}
 
 			tooltip.style.left = `${e.clientX + 15}px`;

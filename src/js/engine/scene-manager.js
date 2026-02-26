@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { OBJLoader } from "three/addons/loaders/OBJLoader.js";
 import { VisMode } from "@js/core/state-manager.js";
 
 export const CameraVersors = Object.freeze({
@@ -20,7 +21,46 @@ export class SceneManager {
 		this.camera = this.#createCamera();
 
 		this.gimbalScene = new THREE.Scene();
-		this.gimbalScene.add(new THREE.AxesHelper(1.5));
+
+		const textureLoader = new THREE.TextureLoader();
+		const texture = textureLoader.load(
+			`${import.meta.env.BASE_URL}faccino.png`,
+		);
+
+		const loader = new OBJLoader();
+		loader.load(
+			`${import.meta.env.BASE_URL}faccino.obj`,
+			(obj) => {
+				const box = new THREE.Box3().setFromObject(obj);
+				const center = box.getCenter(new THREE.Vector3());
+				const size = box.getSize(new THREE.Vector3());
+
+				const maxDim = Math.max(size.x, size.y, size.z);
+				const scale = 2.0 / maxDim;
+
+				const wrapper = new THREE.Group();
+				wrapper.add(obj);
+
+				obj.position.sub(center);
+
+				wrapper.scale.setScalar(scale);
+
+				obj.traverse((child) => {
+					if (child.isMesh) {
+						child.material = new THREE.MeshBasicMaterial({
+							map: texture,
+							vertexColors: !!child.geometry.attributes.color,
+						});
+					}
+				});
+
+				this.gimbalScene.add(wrapper);
+			},
+			undefined,
+			(error) => {
+				console.error("Gimbal load error:", error);
+			},
+		);
 		this.gimbalCamera = new THREE.OrthographicCamera(-2, 2, 2, -2, 0.1, 10);
 		this.gimbalCamera.position.z = 5;
 
