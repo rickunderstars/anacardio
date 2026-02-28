@@ -21,7 +21,7 @@ export class StateManager extends EventTarget {
 	#activeQuality = "unipolar";
 	#mode = VisMode.COLOR_RAMP;
 	#ambientLightIntensity = 0.6;
-	#wavesNumber = 10;
+	#wavesNumber = 1;
 	#wavesSpeed = 0.05;
 	#isBinary = false;
 
