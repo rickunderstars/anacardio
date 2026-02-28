@@ -130,6 +130,10 @@ export function setupEventHandlers(dependencies) {
 		}
 	});
 
+	document.getElementById("light-mode-btn").addEventListener("click", () => {
+		document.body.classList.toggle("light-mode");
+	});
+
 	document.addEventListener("keydown", (k) => {
 		if (k.key.toLowerCase() === "g") {
 			sceneManager.toggleGimbal();
