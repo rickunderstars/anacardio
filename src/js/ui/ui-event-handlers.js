@@ -182,24 +182,26 @@ export function setupEventHandlers(dependencies) {
 		if (
 			state.activeMesh &&
 			state.activeMesh.mesh &&
-			state.activeMesh.mesh.material.uniforms &&
-			state.activeMesh.mesh.material.uniforms.uNumWaves
+			state.activeMesh.mesh.material.uniforms
 		) {
-			state.activeMesh.mesh.material.uniforms.uNumWaves.value = val;
+			const uniforms = state.activeMesh.mesh.material.uniforms;
+			if (uniforms.uNumWaves) uniforms.uNumWaves.value = val;
+			if (uniforms.uTimeSpeed) uniforms.uTimeSpeed.value = state.waveSpeed;
 		}
 		sceneManager.render();
 	};
 
 	document.getElementById("waves-speed-slider").oninput = function () {
 		const val = parseFloat(this.value) / 100;
-		state.waveSpeed = val;
+		state.waveSpeedMultiplier = val;
 		if (
 			state.activeMesh &&
 			state.activeMesh.mesh &&
 			state.activeMesh.mesh.material.uniforms &&
 			state.activeMesh.mesh.material.uniforms.uTimeSpeed
 		) {
-			state.activeMesh.mesh.material.uniforms.uTimeSpeed.value = val;
+			state.activeMesh.mesh.material.uniforms.uTimeSpeed.value =
+				state.waveSpeed;
 		}
 		sceneManager.render();
 	};
