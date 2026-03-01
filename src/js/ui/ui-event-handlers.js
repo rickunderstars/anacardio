@@ -178,7 +178,7 @@ export function setupEventHandlers(dependencies) {
 
 	document.getElementById("waves-number-slider").oninput = function () {
 		const val = parseFloat(this.value);
-		state.wavesNumber = val;
+		state.waveNumber = val;
 		if (
 			state.activeMesh &&
 			state.activeMesh.mesh &&
@@ -192,7 +192,7 @@ export function setupEventHandlers(dependencies) {
 
 	document.getElementById("waves-speed-slider").oninput = function () {
 		const val = parseFloat(this.value) / 100;
-		state.wavesSpeed = val;
+		state.waveSpeed = val;
 		if (
 			state.activeMesh &&
 			state.activeMesh.mesh &&
@@ -515,12 +515,10 @@ function onMouseMove(e, sceneManager, mouse, state) {
 }
 
 function updateUIForMode(state) {
-	const wavesNumberContainer = document.getElementById(
+	const waveNumberContainer = document.getElementById(
 		"waves-number-container",
 	);
-	const wavesSpeedContainer = document.getElementById(
-		"waves-speed-container",
-	);
+	const waveSpeedContainer = document.getElementById("waves-speed-container");
 	const verticalTitle = document.getElementById("vertical-gradient-title");
 
 	const horizontalTitle = document.getElementById(
@@ -528,11 +526,11 @@ function updateUIForMode(state) {
 	);
 
 	if (state.mode === VisMode.ANIMATED) {
-		wavesNumberContainer.classList.remove("hidden");
-		wavesSpeedContainer.classList.remove("hidden");
+		waveNumberContainer.classList.remove("hidden");
+		waveSpeedContainer.classList.remove("hidden");
 	} else {
-		wavesNumberContainer.classList.add("hidden");
-		wavesSpeedContainer.classList.add("hidden");
+		waveNumberContainer.classList.add("hidden");
+		waveSpeedContainer.classList.add("hidden");
 	}
 
 	const colorGauge = document.getElementById("color-gauge");

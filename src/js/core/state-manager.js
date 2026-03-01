@@ -21,8 +21,8 @@ export class StateManager extends EventTarget {
 	#activeQuality = "unipolar";
 	#mode = VisMode.COLOR_RAMP;
 	#ambientLightIntensity = 0.6;
-	#wavesNumber = 1;
-	#wavesSpeed = 0.05;
+	#waveNumber = 1;
+	#waveSpeed = 0.05;
 	#isBinary = false;
 
 	get activeMesh() {
@@ -70,23 +70,23 @@ export class StateManager extends EventTarget {
 		this.dispatchEvent(new CustomEvent(AppEvents.LIGHT_INTENSITY_CHANGED));
 	}
 
-	get wavesNumber() {
-		return this.#wavesNumber;
+	get waveNumber() {
+		return this.#waveNumber;
 	}
 
-	set wavesNumber(waves) {
-		if (this.#wavesNumber == waves) return;
-		this.#wavesNumber = waves;
+	set waveNumber(waves) {
+		if (this.#waveNumber == waves) return;
+		this.#waveNumber = waves;
 		this.dispatchEvent(new CustomEvent(AppEvents.WAVES_NUMBER_CHANGED));
 	}
 
-	get wavesSpeed() {
-		return this.#wavesSpeed;
+	get waveSpeed() {
+		return this.#waveSpeed;
 	}
 
-	set wavesSpeed(speed) {
-		if (this.#wavesSpeed == speed) return;
-		this.#wavesSpeed = speed;
+	set waveSpeed(speed) {
+		if (this.#waveSpeed == speed) return;
+		this.#waveSpeed = speed;
 		this.dispatchEvent(new CustomEvent(AppEvents.WAVES_SPEED_CHANGED));
 	}
 
