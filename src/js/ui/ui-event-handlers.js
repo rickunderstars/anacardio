@@ -108,6 +108,10 @@ export function setupEventHandlers(dependencies) {
 		}
 	});
 
+	document.getElementById("pause-btn").addEventListener("click", () => {
+		sceneManager.togglePause();
+	});
+
 	document.addEventListener("keydown", (k) => {
 		if (state.mode === VisMode.ANIMATED) {
 			if (k.key === "ArrowRight" || k.key === "ArrowUp") {
@@ -128,6 +132,10 @@ export function setupEventHandlers(dependencies) {
 		if (k.key.toLowerCase() === "l") {
 			document.body.classList.toggle("light-mode");
 		}
+	});
+
+	document.getElementById("light-mode-btn").addEventListener("click", () => {
+		document.body.classList.toggle("light-mode");
 	});
 
 	document.addEventListener("keydown", (k) => {
@@ -174,28 +182,31 @@ export function setupEventHandlers(dependencies) {
 
 	document.getElementById("waves-number-slider").oninput = function () {
 		const val = parseFloat(this.value);
-		state.wavesNumber = val;
+		state.waveNumber = val;
 		if (
 			state.activeMesh &&
 			state.activeMesh.mesh &&
-			state.activeMesh.mesh.material.uniforms &&
-			state.activeMesh.mesh.material.uniforms.uNumWaves
+			state.activeMesh.mesh.material.uniforms
 		) {
-			state.activeMesh.mesh.material.uniforms.uNumWaves.value = val;
+			const uniforms = state.activeMesh.mesh.material.uniforms;
+			if (uniforms.uNumWaves) uniforms.uNumWaves.value = val;
+			if (uniforms.uTimeSpeed)
+				uniforms.uTimeSpeed.value = state.waveSpeed;
 		}
 		sceneManager.render();
 	};
 
 	document.getElementById("waves-speed-slider").oninput = function () {
 		const val = parseFloat(this.value) / 100;
-		state.wavesSpeed = val;
+		state.waveSpeedMultiplier = val;
 		if (
 			state.activeMesh &&
 			state.activeMesh.mesh &&
 			state.activeMesh.mesh.material.uniforms &&
 			state.activeMesh.mesh.material.uniforms.uTimeSpeed
 		) {
-			state.activeMesh.mesh.material.uniforms.uTimeSpeed.value = val;
+			state.activeMesh.mesh.material.uniforms.uTimeSpeed.value =
+				state.waveSpeed;
 		}
 		sceneManager.render();
 	};
@@ -511,12 +522,11 @@ function onMouseMove(e, sceneManager, mouse, state) {
 }
 
 function updateUIForMode(state) {
-	const wavesNumberContainer = document.getElementById(
+	const waveNumberContainer = document.getElementById(
 		"waves-number-container",
 	);
-	const wavesSpeedContainer = document.getElementById(
-		"waves-speed-container",
-	);
+	const waveSpeedContainer = document.getElementById("waves-speed-container");
+	const pauseBtnContainer = document.getElementById("pause-btn-container");
 	const verticalTitle = document.getElementById("vertical-gradient-title");
 
 	const horizontalTitle = document.getElementById(
@@ -524,11 +534,13 @@ function updateUIForMode(state) {
 	);
 
 	if (state.mode === VisMode.ANIMATED) {
-		wavesNumberContainer.classList.remove("hidden");
-		wavesSpeedContainer.classList.remove("hidden");
+		waveNumberContainer.classList.remove("hidden");
+		waveSpeedContainer.classList.remove("hidden");
+		pauseBtnContainer.classList.remove("hidden");
 	} else {
-		wavesNumberContainer.classList.add("hidden");
-		wavesSpeedContainer.classList.add("hidden");
+		waveNumberContainer.classList.add("hidden");
+		waveSpeedContainer.classList.add("hidden");
+		pauseBtnContainer.classList.add("hidden");
 	}
 
 	const colorGauge = document.getElementById("color-gauge");
