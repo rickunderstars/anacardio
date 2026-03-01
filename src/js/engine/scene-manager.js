@@ -200,6 +200,12 @@ export class SceneManager {
 
 	togglePause() {
 		this.isPaused = !this.isPaused;
+		const el = document.getElementById("pause-indicator");
+		if (this.isPaused) {
+			el.classList.remove("hidden");
+		} else {
+			el.classList.add("hidden");
+		}
 	}
 
 	toggleGimbal() {
