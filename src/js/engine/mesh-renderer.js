@@ -132,8 +132,8 @@ export function updateActiveMesh(dependencies) {
 					uAmbientLightIntensity: {
 						value: state.ambientLightIntensity,
 					},
-					uTimeSpeed: { value: state.wavesSpeed },
-					uNumWaves: { value: state.wavesNumber },
+					uTimeSpeed: { value: state.waveSpeed },
+					uNumWaves: { value: state.waveNumber },
 					uNullColor: {
 						value: new THREE.Vector3(...SHADER_COLORS.NULL),
 					},
@@ -224,8 +224,8 @@ export function updateActiveMesh(dependencies) {
 				uMax: { value: max },
 				uTime: { value: 0 },
 				uAmbientLightIntensity: { value: state.ambientLightIntensity },
-				uTimeSpeed: { value: state.wavesSpeed },
-				uNumWaves: { value: state.wavesNumber },
+				uTimeSpeed: { value: state.waveSpeed },
+				uNumWaves: { value: state.waveNumber },
 				uWaveStartColor: {
 					value: new THREE.Vector3(...SHADER_COLORS.WAVE_START),
 				},

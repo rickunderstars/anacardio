@@ -22,6 +22,12 @@
 				>
 					Loading...
 				</div>
+				<div
+					id="pause-indicator"
+					class="absolute bottom-0 left-0 text-white light:text-black text-6xl p-8 hidden z-50 font-sans"
+				>
+					󰏤
+				</div>
 			</div>
 
 			<div
@@ -121,13 +127,22 @@
 						/>
 					</div>
 
-					<button
-						id="about-btn"
-						class="w-10 h-10 flex items-center justify-center rounded-lg border border-slate-500 light:border-slate-400 text-slate-400 light:text-slate-600 hover:text-white light:hover:text-black hover:border-white light:hover:border-black transition-colors cursor-pointer text-xl font-bold"
-						title="About AnaCardio"
-					>
-						?
-					</button>
+					<div class="flex gap-2 flex-row">
+						<button
+							id="light-mode-btn"
+							class="w-10 h-10 flex items-center justify-center rounded-lg border border-slate-500 light:border-slate-400 text-slate-400 light:text-slate-600 hover:text-white light:hover:text-black hover:border-white light:hover:border-black transition-colors cursor-pointer text-xl font-bold"
+						>
+							󰌁
+						</button>
+
+						<button
+							id="about-btn"
+							class="w-10 h-10 flex items-center justify-center rounded-lg border border-slate-500 light:border-slate-400 text-slate-400 light:text-slate-600 hover:text-white light:hover:text-black hover:border-white light:hover:border-black transition-colors cursor-pointer text-xl font-bold"
+							title="About AnaCardio"
+						>
+							?
+						</button>
+					</div>
 				</div>
 
 				<div class="mb-4">
@@ -437,7 +452,7 @@
 							<div class="flex flex-col gap-2">
 								<div class="flex flex-row items-center">
 									<div
-										class="text-md text-slate-300 light:text-black font-bold text-left w-1/3"
+										class="text-md text-slate-300 light:text-black font-bold text-right w-1/3 px-2"
 									>
 										Shading
 									</div>
@@ -455,15 +470,15 @@
 									class="flex flex-row items-center border-t border-slate-700 light:border-slate-400 pt-2"
 								>
 									<div
-										class="text-md text-slate-300 light:text-black font-bold text-left w-1/3"
+										class="text-md text-slate-300 light:text-black font-bold text-right w-1/3 px-2"
 									>
-										Waves Number
+										Wave Num
 									</div>
 									<input
 										type="range"
 										min="1"
 										max="30"
-										value="10"
+										value="1"
 										id="waves-number-slider"
 										class="w-full max-h-4 bg-slate-700 light:bg-gray-300 rounded-lg appearance-none cursor-pointer accent-blue-500"
 									/>
@@ -474,9 +489,9 @@
 									class="flex flex-row items-center border-t border-slate-700 light:border-slate-400 pt-2"
 								>
 									<div
-										class="text-md text-slate-300 light:text-black font-bold text-left w-1/3"
+										class="text-md text-slate-300 light:text-black font-bold text-right w-1/3 px-2"
 									>
-										Waves Speed
+										Wave Speed
 									</div>
 									<input
 										type="range"
@@ -486,6 +501,17 @@
 										id="waves-speed-slider"
 										class="w-full max-h-4 bg-slate-700 light:bg-gray-300 rounded-lg appearance-none cursor-pointer accent-blue-500"
 									/>
+								</div>
+								<div
+									id="pause-btn-container"
+									class="flex flex-row items-center border-t border-slate-700 pt-2 self-center w-full justify-center"
+								>
+									<button
+										id="pause-btn"
+										class="w-1/3 flex items-center justify-center rounded-lg border border-slate-500 light:border-slate-400 text-slate-400 light:text-slate-600 hover:text-white light:hover:text-black hover:border-white light:hover:border-black transition-colors cursor-pointer text-xl font-bold"
+									>
+										󰐊 / 󰏤
+									</button>
 								</div>
 							</div>
 						</fieldset>

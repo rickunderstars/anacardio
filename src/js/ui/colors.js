@@ -83,7 +83,7 @@ export function colorizeGradientDynamic(
 
 	for (let y = 0; y < height; y++) {
 		const val = 1 - y / height;
-		const wave = (time * state.wavesSpeed - val) * state.wavesNumber;
+		const wave = (time * state.waveSpeed - val) * state.waveNumber;
 		const phase = wave - Math.floor(wave);
 
 		const tWave = Math.pow(1.0 - phase, power);

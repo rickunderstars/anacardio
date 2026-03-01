@@ -22,6 +22,19 @@ export class SceneManager {
 
 		this.gimbalScene = new THREE.Scene();
 
+		const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+		this.gimbalScene.add(ambientLight);
+
+		this.gimbalCamera = new THREE.OrthographicCamera(-2, 2, 2, -2, 0.1, 10);
+		this.gimbalCamera.position.z = 5;
+
+		const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
+		directionalLight.position.set(1, 1, 1);
+		this.gimbalCamera.add(directionalLight);
+		this.gimbalCamera.add(directionalLight.target);
+		directionalLight.target.position.set(0, 0, 0);
+		this.gimbalScene.add(this.gimbalCamera);
+
 		const textureLoader = new THREE.TextureLoader();
 		const texture = textureLoader.load(
 			`${import.meta.env.BASE_URL}faccino.png`,
@@ -47,9 +60,13 @@ export class SceneManager {
 
 				obj.traverse((child) => {
 					if (child.isMesh) {
-						child.material = new THREE.MeshBasicMaterial({
+						if (child.geometry) {
+							child.geometry.computeVertexNormals();
+						}
+						child.material = new THREE.MeshPhongMaterial({
 							map: texture,
 							vertexColors: !!child.geometry.attributes.color,
+							shininess: 50,
 						});
 					}
 				});
@@ -61,8 +78,6 @@ export class SceneManager {
 				console.error("Gimbal load error:", error);
 			},
 		);
-		this.gimbalCamera = new THREE.OrthographicCamera(-2, 2, 2, -2, 0.1, 10);
-		this.gimbalCamera.position.z = 5;
 
 		this.controls = new OrbitControls(
 			this.camera,
@@ -139,6 +154,7 @@ export class SceneManager {
 				.normalize()
 				.multiplyScalar(5);
 			this.gimbalCamera.lookAt(0, 0, 0);
+			this.gimbalCamera.updateMatrixWorld();
 
 			this.renderer.setViewport(left, bottom, gimbalSize, gimbalSize);
 			this.renderer.setScissor(left, bottom, gimbalSize, gimbalSize);
@@ -184,6 +200,12 @@ export class SceneManager {
 
 	togglePause() {
 		this.isPaused = !this.isPaused;
+		const el = document.getElementById("pause-indicator");
+		if (this.isPaused) {
+			el.classList.remove("hidden");
+		} else {
+			el.classList.add("hidden");
+		}
 	}
 
 	toggleGimbal() {
