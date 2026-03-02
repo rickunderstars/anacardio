@@ -571,37 +571,86 @@
 
 		<dialog
 			id="about-dialog"
-			class="fixed inset-0 m-auto p-0 rounded-lg shadow-2xl backdrop:bg-black/80 bg-slate-800 text-slate-200 light:bg-white light:text-slate-800 border border-slate-600 light:border-gray-300 max-w-md w-11/12"
+			class="fixed inset-0 m-auto p-0 rounded-lg shadow-2xl backdrop:bg-black/80 bg-slate-800 text-slate-200 light:bg-white light:text-slate-800 border border-slate-600 light:border-gray-300 max-w-4xl w-11/12"
 		>
-			<div class="p-6 font-normal not-italic">
-				<h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
-					AnaCardio
-					<img
-						src="assets/images/heart-icon.png"
-						class="w-6 h-6 object-contain"
-					/>
-				</h2>
-				<p class="mb-4 text-sm leading-relaxed">
-					AnaCardio is a prototype visualization tool for the
-					<i>Biosense Webster Triangulated Mesh file format 2.0</i>.
-				</p>
-				<p class="mb-4 text-sm leading-relaxed">
-					This project is part of Riccardo Bovo's bachelor degree
-					thesis in Computer Science of at the University of Milan (<a
-						href="https://www.unimi.it/en"
-						><u>Università degli Studi di Milano</u></a
-					>), under the supervision of
-					<a href="https://tarini.di.unimi.it/"
-						><u>Prof. Marco Tarini</u></a
+			<div class="flex flex-row gap-4">
+				<div
+					class="w-3/5 p-6 font-normal not-italic border-r border-slate-700 light:border-slate-400"
+				>
+					<h2
+						class="text-2xl font-bold mb-4 flex items-center justify-center gap-2"
 					>
-					and Dr. Massimo Walter Rivolta.
-				</p>
-				<p class="mb-4 text-sm leading-relaxed">
-					The source code is available
-					<a href="https://github.com/rickunderstars/anacardio"
-						><u>here</u></a
-					>.
-				</p>
+						AnaCardio
+						<img
+							src="assets/images/heart-icon.png"
+							class="w-6 h-6 object-contain"
+						/>
+					</h2>
+					<p class="mb-4 text-sm leading-relaxed text-justify">
+						AnaCardio is a prototype visualization tool for the
+						<i>Biosense Webster Triangulated Mesh file format 2.0</i
+						>.
+					</p>
+					<p class="mb-4 text-sm leading-relaxed text-justify">
+						This project is part of Riccardo Bovo's bachelor degree
+						thesis in Computer Science of at the University of Milan
+						(<a href="https://www.unimi.it/en"
+							><u>Università degli Studi di Milano</u></a
+						>), under the supervision of
+						<a href="https://tarini.di.unimi.it/"
+							><u>Prof. Marco Tarini</u></a
+						>
+						and Dr. Massimo Walter Rivolta.
+					</p>
+					<p class="mb-4 text-sm leading-relaxed text-justify">
+						The source code is available
+						<a href="https://github.com/rickunderstars/anacardio"
+							><u>here</u></a
+						>.
+					</p>
+				</div>
+				<div class="w-2/5 p-6 font-normal not-italic">
+					<h2
+						class="text-2xl font-bold mb-4 flex items-center justify-center gap-2"
+					>
+						Controls
+					</h2>
+					<div class="flex flex-col gap-4">
+						<div class="flex flex-row items-center text-xl gap-4">
+							<div
+								class="flex items-center justify-center w-12 h-12 p-2 bg-slate-200 light:bg-white rounded-lg border border-slate-400 light:border-gray-300 shadow-sm shrink-0"
+							>
+								<img
+									src="assets/images/left-click.png"
+									class="w-full h-full object-contain"
+								/>
+							</div>
+							<span>Rotate</span>
+						</div>
+						<div class="flex flex-row items-center text-xl gap-4">
+							<div
+								class="flex items-center justify-center w-12 h-12 p-2 bg-slate-200 light:bg-white rounded-lg border border-slate-400 light:border-gray-300 shadow-sm shrink-0"
+							>
+								<img
+									src="assets/images/right-click.png"
+									class="w-full h-full object-contain"
+								/>
+							</div>
+							<span>Pan</span>
+						</div>
+						<div class="flex flex-row items-center text-xl gap-4">
+							<div
+								class="flex items-center justify-center w-12 h-12 p-2 bg-slate-200 light:bg-white rounded-lg border border-slate-400 light:border-gray-300 shadow-sm shrink-0"
+							>
+								<img
+									src="assets/images/scroll.png"
+									class="w-full h-full object-contain"
+								/>
+							</div>
+							<span>Zoom</span>
+						</div>
+					</div>
+				</div>
 			</div>
 		</dialog>
 
