@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { OBJLoader } from "three/addons/loaders/OBJLoader.js";
 import { VisMode } from "@js/core/state-manager.js";
+import * as BufferGeometryUtils from "three/addons/utils/BufferGeometryUtils.js";
 
 export const CameraVersors = Object.freeze({
 	FRONT: new THREE.Vector3(0, 0, 1),
@@ -22,13 +23,13 @@ export class SceneManager {
 
 		this.gimbalScene = new THREE.Scene();
 
-		const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+		const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
 		this.gimbalScene.add(ambientLight);
 
 		this.gimbalCamera = new THREE.OrthographicCamera(-2, 2, 2, -2, 0.1, 10);
 		this.gimbalCamera.position.z = 5;
 
-		const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
+		const directionalLight = new THREE.DirectionalLight(0xffffff, 1.2);
 		directionalLight.position.set(1, 1, 1);
 		this.gimbalCamera.add(directionalLight);
 		this.gimbalCamera.add(directionalLight.target);
@@ -61,7 +62,13 @@ export class SceneManager {
 				obj.traverse((child) => {
 					if (child.isMesh) {
 						if (child.geometry) {
-							child.geometry.computeVertexNormals();
+							child.geometry.deleteAttribute("normal");
+							const merged = BufferGeometryUtils.mergeVertices(
+								child.geometry,
+								1e-4,
+							);
+							merged.computeVertexNormals();
+							child.geometry = merged;
 						}
 						child.material = new THREE.MeshPhongMaterial({
 							map: texture,
