@@ -4,9 +4,9 @@ import { LineMaterial } from "three/addons/lines/LineMaterial.js";
 import { LineSegmentsGeometry } from "three/addons/lines/LineSegmentsGeometry.js";
 import { updateActiveMesh } from "@js/engine/mesh-renderer.js";
 import { VisMode } from "@js/core/state-manager.js";
-import { renderMeshDropdown } from "@js/ui/ui-file-handlers.js";
 import { updateMinMaxUI } from "@js/ui/ui-event-handlers.js";
 import { SEGMENT_COLORS } from "@js/ui/colors.js";
+import { STANDARD_CAMERA_DISTANCE } from "@js/engine/scene-manager";
 
 export const FIELD_KEYS = [
 	"unipolar",
@@ -155,7 +155,12 @@ export async function addMesh(dependencies) {
 		sceneManager.saveCameraVersor(state.activeMesh);
 	}
 
-	sceneManager.setCamera(center, radius, new THREE.Vector3(0, 0, 1), 2.5);
+	sceneManager.setCamera(
+		center,
+		radius,
+		new THREE.Vector3(0, 0, 1),
+		STANDARD_CAMERA_DISTANCE,
+	);
 
 	const meshData = {
 		mesh: heart,

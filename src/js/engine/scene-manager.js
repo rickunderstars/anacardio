@@ -4,6 +4,8 @@ import { OBJLoader } from "three/addons/loaders/OBJLoader.js";
 import { VisMode } from "@js/core/state-manager.js";
 import * as BufferGeometryUtils from "three/addons/utils/BufferGeometryUtils.js";
 
+export const STANDARD_CAMERA_DISTANCE = 2.1;
+
 export const CameraVersors = Object.freeze({
 	FRONT: new THREE.Vector3(0, 0, 1),
 	BACK: new THREE.Vector3(0, 0, -1),
@@ -278,10 +280,20 @@ export class SceneManager {
 
 	restoreCameraVersor(meshData) {
 		const versor = meshData.cameraVersor ?? CameraVersors.FRONT;
-		this.setCamera(meshData.center, meshData.radius, versor, 2.5);
+		this.setCamera(
+			meshData.center,
+			meshData.radius,
+			versor,
+			STANDARD_CAMERA_DISTANCE,
+		);
 	}
 
-	setCamera(center, radius, versor, distanceMultiplier = 2.5) {
+	setCamera(
+		center,
+		radius,
+		versor,
+		distanceMultiplier = STANDARD_CAMERA_DISTANCE,
+	) {
 		this.controls.target.copy(center);
 		const distance = radius * distanceMultiplier;
 		const offset = versor.clone().normalize().multiplyScalar(distance);

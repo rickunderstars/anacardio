@@ -1,6 +1,5 @@
 import * as THREE from "three";
 
-import { reloadShaderMaterial } from "@js/engine/shader-loader.js";
 import { surfaceSampler } from "@js/engine/raycaster.js";
 import { setGaugeLine, SHADER_COLORS } from "@js/ui/colors.js";
 import { updateActiveMesh } from "@js/engine/mesh-renderer.js";
@@ -9,7 +8,7 @@ import { VisMode, AppEvents } from "@js/core/state-manager.js";
 import { formatNumber, get2Min, getMax } from "@js/utils/math-utils.js";
 import { CameraVersors } from "@js/engine/scene-manager.js";
 import { renderMeshDropdown, toggleLoading } from "@js/ui/ui-file-handlers.js";
-import { uniform } from "three/tsl";
+import { STANDARD_CAMERA_DISTANCE } from "@js/engine/scene-manager";
 
 export function updateMinMaxUI(min, max, state) {
 	let unit = "";
@@ -90,7 +89,12 @@ export function setupEventHandlers(dependencies) {
 		document.getElementById(id).addEventListener("click", () => {
 			if (state.activeMesh) {
 				const mesh = state.activeMesh;
-				sceneManager.setCamera(mesh.center, mesh.radius, versor, 2.5);
+				sceneManager.setCamera(
+					mesh.center,
+					mesh.radius,
+					versor,
+					STANDARD_CAMERA_DISTANCE,
+				);
 				setActiveCameraButton(id);
 			}
 		});
@@ -161,7 +165,12 @@ export function setupEventHandlers(dependencies) {
 		}
 
 		if (versor) {
-			sceneManager.setCamera(mesh.center, mesh.radius, versor, 2.5);
+			sceneManager.setCamera(
+				mesh.center,
+				mesh.radius,
+				versor,
+				STANDARD_CAMERA_DISTANCE,
+			);
 		}
 	});
 
@@ -428,7 +437,12 @@ function cameraReset(sceneManager, state) {
 	if (!state.activeMesh) return;
 	const center = state.activeMesh.center;
 	const radius = state.activeMesh.radius;
-	sceneManager.setCamera(center, radius, new THREE.Vector3(0, 0, 1), 2.5);
+	sceneManager.setCamera(
+		center,
+		radius,
+		new THREE.Vector3(0, 0, 1),
+		STANDARD_CAMERA_DISTANCE,
+	);
 }
 
 function onMouseMove(e, sceneManager, mouse, state) {
