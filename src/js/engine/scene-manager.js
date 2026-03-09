@@ -23,7 +23,7 @@ export class SceneManager {
 
 		this.gimbalScene = new THREE.Scene();
 
-		const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
+		const ambientLight = new THREE.AmbientLight(0xffffff, 1.7);
 		this.gimbalScene.add(ambientLight);
 
 		this.gimbalCamera = new THREE.OrthographicCamera(-2, 2, 2, -2, 0.1, 10);
