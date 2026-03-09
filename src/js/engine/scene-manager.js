@@ -4,6 +4,8 @@ import { OBJLoader } from "three/addons/loaders/OBJLoader.js";
 import { VisMode } from "@js/core/state-manager.js";
 import * as BufferGeometryUtils from "three/addons/utils/BufferGeometryUtils.js";
 
+export const STANDARD_CAMERA_DISTANCE = 2.1;
+
 export const CameraVersors = Object.freeze({
 	FRONT: new THREE.Vector3(0, 0, 1),
 	BACK: new THREE.Vector3(0, 0, -1),
@@ -23,7 +25,7 @@ export class SceneManager {
 
 		this.gimbalScene = new THREE.Scene();
 
-		const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
+		const ambientLight = new THREE.AmbientLight(0xffffff, 1.7);
 		this.gimbalScene.add(ambientLight);
 
 		this.gimbalCamera = new THREE.OrthographicCamera(-2, 2, 2, -2, 0.1, 10);
@@ -102,6 +104,8 @@ export class SceneManager {
 		this.isPaused = false;
 		this.accumulatedTime = 0;
 		this.isGimbalVisible = true;
+		this.cameraTween = null;
+		this.isAnimatingCamera = false;
 
 		this.resizeObserver = new ResizeObserver(() => {
 			this.onWindowResize();
@@ -278,15 +282,106 @@ export class SceneManager {
 
 	restoreCameraVersor(meshData) {
 		const versor = meshData.cameraVersor ?? CameraVersors.FRONT;
-		this.setCamera(meshData.center, meshData.radius, versor, 2.5);
+		this.setCamera(
+			meshData.center,
+			meshData.radius,
+			versor,
+			STANDARD_CAMERA_DISTANCE,
+		);
 	}
 
-	setCamera(center, radius, versor, distanceMultiplier = 2.5) {
-		this.controls.target.copy(center);
+	setCamera(
+		center,
+		radius,
+		versor,
+		distanceMultiplier = STANDARD_CAMERA_DISTANCE,
+		animate = true,
+	) {
+		const targetTarget = center.clone();
 		const distance = radius * distanceMultiplier;
-		const offset = versor.clone().normalize().multiplyScalar(distance);
-		this.camera.position.copy(center).add(offset);
-		this.controls.update();
+		const targetPosition = center
+			.clone()
+			.add(versor.clone().normalize().multiplyScalar(distance));
+
+		if (!animate) {
+			this.controls.target.copy(targetTarget);
+			this.camera.position.copy(targetPosition);
+			this.controls.update();
+			this.render();
+			return;
+		}
+
+		if (this.cameraTween) cancelAnimationFrame(this.cameraTween);
+
+		const startPosition = this.camera.position.clone();
+		const startTarget = this.controls.target.clone();
+		const duration = 250;
+		const startTime = performance.now();
+
+		const startOffset = new THREE.Vector3().subVectors(
+			startPosition,
+			startTarget,
+		);
+		const targetOffset = new THREE.Vector3().subVectors(
+			targetPosition,
+			targetTarget,
+		);
+
+		const startSpherical = new THREE.Spherical().setFromVector3(startOffset);
+		const targetSpherical =
+			new THREE.Spherical().setFromVector3(targetOffset);
+
+		let startTheta = startSpherical.theta;
+		let targetTheta = targetSpherical.theta;
+
+		while (targetTheta - startTheta > Math.PI) targetTheta -= 2 * Math.PI;
+		while (targetTheta - startTheta < -Math.PI) targetTheta += 2 * Math.PI;
+
+		this.isAnimatingCamera = true;
+
+		const animateStep = (now) => {
+			const elapsed = now - startTime;
+			const progress = Math.min(elapsed / duration, 1);
+			const ease = 1 - Math.pow(1 - progress, 3);
+
+			const currentTarget = new THREE.Vector3().lerpVectors(
+				startTarget,
+				targetTarget,
+				ease,
+			);
+
+			const currentRadius =
+				startSpherical.radius +
+				(targetSpherical.radius - startSpherical.radius) * ease;
+			const currentPhi =
+				startSpherical.phi +
+				(targetSpherical.phi - startSpherical.phi) * ease;
+			const currentTheta = startTheta + (targetTheta - startTheta) * ease;
+
+			const currentSpherical = new THREE.Spherical(
+				currentRadius,
+				currentPhi,
+				currentTheta,
+			);
+			const currentOffset = new THREE.Vector3().setFromSpherical(
+				currentSpherical,
+			);
+
+			this.camera.position.copy(currentTarget).add(currentOffset);
+			this.controls.target.copy(currentTarget);
+
+			this.controls.update();
+			this.render();
+
+			if (progress < 1) {
+				this.cameraTween = requestAnimationFrame(animateStep);
+			} else {
+				this.cameraTween = null;
+				this.isAnimatingCamera = false;
+			}
+		};
+
+		this.cameraTween = requestAnimationFrame(animateStep);
 	}
 
 	takeScreenshot(targetWidth = 2000) {
