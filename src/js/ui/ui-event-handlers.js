@@ -352,6 +352,7 @@ export function setupEventHandlers(dependencies) {
 	});
 
 	sceneManager.controls.addEventListener("change", () => {
+		if (sceneManager.isAnimatingCamera) return;
 		setActiveCameraButton(null);
 		if (state.mode != VisMode.ANIMATED) {
 			sceneManager.render();
