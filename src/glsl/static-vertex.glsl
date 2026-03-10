@@ -6,6 +6,7 @@ uniform float uOnlyTwo;
 
 varying float val;
 varying vec3 vNormal;
+varying vec3 vViewPosition;
 
 float normalizeValue(float value, float minVal, float maxVal) {
 	return (value - minVal) / (maxVal - minVal);
@@ -17,5 +18,7 @@ void main() {
 
 	vNormal = normalize(normalMatrix * normal);
 
-	gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+	vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+	vViewPosition = -mvPosition.xyz;
+	gl_Position = projectionMatrix * mvPosition;
 }

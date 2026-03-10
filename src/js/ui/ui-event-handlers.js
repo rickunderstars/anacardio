@@ -174,20 +174,39 @@ export function setupEventHandlers(dependencies) {
 		}
 	});
 
-	document.getElementById("light-slider").oninput = function () {
-		const intensity = (100 - this.value) / 100;
+	const lightSlider = document.getElementById("light-slider");
+	lightSlider.oninput = function () {
+		const val = parseFloat(this.value);
+		let intensity = 1.0;
+		let specular = 0.0;
+
+		if (val <= 60) {
+			intensity = (60 - val) / 59;
+			specular = 0.0;
+		} else {
+			intensity = 0.0;
+			specular = (val - 60) / 40;
+		}
+
 		state.ambientLightIntensity = intensity;
+		state.specularIntensity = specular;
+
 		if (
 			state.activeMesh &&
 			state.activeMesh.mesh &&
-			state.activeMesh.mesh.material.uniforms &&
-			state.activeMesh.mesh.material.uniforms.uAmbientLightIntensity
+			state.activeMesh.mesh.material.uniforms
 		) {
-			state.activeMesh.mesh.material.uniforms.uAmbientLightIntensity.value =
-				intensity;
+			const uniforms = state.activeMesh.mesh.material.uniforms;
+			if (uniforms.uAmbientLightIntensity) {
+				uniforms.uAmbientLightIntensity.value = intensity;
+			}
+			if (uniforms.uSpecularIntensity) {
+				uniforms.uSpecularIntensity.value = specular;
+			}
 		}
 		sceneManager.render();
 	};
+	lightSlider.oninput();
 
 	document.getElementById("waves-number-slider").oninput = function () {
 		const val = parseFloat(this.value);

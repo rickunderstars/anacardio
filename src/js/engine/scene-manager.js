@@ -327,9 +327,12 @@ export class SceneManager {
 			targetTarget,
 		);
 
-		const startSpherical = new THREE.Spherical().setFromVector3(startOffset);
-		const targetSpherical =
-			new THREE.Spherical().setFromVector3(targetOffset);
+		const startSpherical = new THREE.Spherical().setFromVector3(
+			startOffset,
+		);
+		const targetSpherical = new THREE.Spherical().setFromVector3(
+			targetOffset,
+		);
 
 		let startTheta = startSpherical.theta;
 		let targetTheta = targetSpherical.theta;
