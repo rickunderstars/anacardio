@@ -1,5 +1,6 @@
 uniform float uTime;
 uniform float uAmbientLightIntensity;
+uniform float uSpecularIntensity;
 uniform float uTimeSpeed;
 uniform int uNumWaves;
 uniform vec3 uNullColor;
@@ -14,6 +15,7 @@ varying float xtml;
 varying float vIsNull;
 varying float vGroupId;
 varying vec3 vNormal;
+varying vec3 vViewPosition;
 
 vec3 gradientWave(float t, vec3 colorStart, vec3 colorEnd) {
 	t = 1.0 - t;
@@ -39,6 +41,19 @@ void main() {
 				   light3Diffuse * vec3(0.7) + light4Diffuse * vec3(0.7);
 	lambert = lambert / vec3(3.0);
 
+	vec3 viewDir = normalize(vViewPosition);
+	float shininess = 256.0;
+	vec3 h1 = normalize(light1Dir + viewDir);
+	vec3 h2 = normalize(light2Dir + viewDir);
+	vec3 h3 = normalize(light3Dir + viewDir);
+	vec3 h4 = normalize(light4Dir + viewDir);
+	float spec1 = pow(max(dot(vNormal, h1), 0.0), shininess);
+	float spec2 = pow(max(dot(vNormal, h2), 0.0), shininess);
+	float spec3 = pow(max(dot(vNormal, h3), 0.0), shininess);
+	float spec4 = pow(max(dot(vNormal, h4), 0.0), shininess);
+	float specular =
+		(spec1 * 1.3 + spec2 * 1.3 + spec3 * 0.7 + spec4 * 0.7) / 6.0;
+
 	vec3 exteml = uExtemlColor;
 	vec3 nullColor = uNullColor;
 	vec3 waveColor = mix(uWavePolarStart, uWavePolarEnd, bip);
@@ -55,9 +70,12 @@ void main() {
 	float binaryIsNull = step(0.1, abs(vGroupId));
 	float binaryXtml = step(0.3, xtml);
 
+	vec3 specColor = vec3(1.0) * specular * uSpecularIntensity;
+
 	vec3 finalColor =
 		mix(mix(ambient + diffuse, nullAmbient + nullDiffuse, binaryIsNull),
-			extemlAmbient + extemlDiffuse, binaryXtml);
+			extemlAmbient + extemlDiffuse, binaryXtml) +
+		specColor;
 	gl_FragColor = vec4(finalColor, 1.0);
 
 	/*

@@ -63,6 +63,9 @@ export function updateActiveMesh(dependencies) {
 					uAmbientLightIntensity: {
 						value: state.ambientLightIntensity,
 					},
+					uSpecularIntensity: {
+						value: state.specularIntensity,
+					},
 					uColor1: {
 						value: new THREE.Vector3(
 							...SHADER_COLORS.COMBINED_GRADIENT_START,
@@ -95,6 +98,9 @@ export function updateActiveMesh(dependencies) {
 					uBipMax: { value: bipMax },
 					uAmbientLightIntensity: {
 						value: state.ambientLightIntensity,
+					},
+					uSpecularIntensity: {
+						value: state.specularIntensity,
 					},
 					uColorTL: {
 						value: new THREE.Vector3(...SHADER_COLORS.COMBINED_TL),
@@ -131,6 +137,9 @@ export function updateActiveMesh(dependencies) {
 					uTime: { value: 0 },
 					uAmbientLightIntensity: {
 						value: state.ambientLightIntensity,
+					},
+					uSpecularIntensity: {
+						value: state.specularIntensity,
 					},
 					uTimeSpeed: { value: state.waveSpeed },
 					uNumWaves: { value: state.waveNumber },
@@ -186,6 +195,7 @@ export function updateActiveMesh(dependencies) {
 				uMin: { value: renderMin },
 				uMax: { value: renderMax },
 				uAmbientLightIntensity: { value: state.ambientLightIntensity },
+				uSpecularIntensity: { value: state.specularIntensity },
 				uBinColor1: {
 					value: new THREE.Vector3(...SHADER_COLORS.BIN_COLOR_1),
 				},
@@ -204,6 +214,7 @@ export function updateActiveMesh(dependencies) {
 				uMin: { value: renderMin },
 				uMax: { value: renderMax },
 				uAmbientLightIntensity: { value: state.ambientLightIntensity },
+				uSpecularIntensity: { value: state.specularIntensity },
 				uColor: {
 					value: new THREE.Vector3(
 						...SHADER_COLORS.GRADIENT_BACKGROUND,
@@ -224,6 +235,7 @@ export function updateActiveMesh(dependencies) {
 				uMax: { value: max },
 				uTime: { value: 0 },
 				uAmbientLightIntensity: { value: state.ambientLightIntensity },
+				uSpecularIntensity: { value: state.specularIntensity },
 				uTimeSpeed: { value: state.waveSpeed },
 				uNumWaves: { value: state.waveNumber },
 				uWaveStartColor: {

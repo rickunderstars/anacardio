@@ -9,6 +9,7 @@ export const AppEvents = Object.freeze({
 	QUALITY_CHANGED: "quality-changed",
 	MODE_CHANGED: "mode-changed",
 	LIGHT_INTENSITY_CHANGED: "light-intensity-changed",
+	SPECULAR_INTENSITY_CHANGED: "specular-intensity-changed",
 	WAVES_NUMBER_CHANGED: "waves-number-changed",
 	WAVES_SPEED_CHANGED: "waves-speed-changed",
 	IS_BINARY_CHANGED: "is-binary-changed",
@@ -21,6 +22,7 @@ export class StateManager extends EventTarget {
 	#activeQuality = "unipolar";
 	#mode = VisMode.COLOR_RAMP;
 	#ambientLightIntensity = 0.6;
+	#specularIntensity = 0.0;
 	#waveNumber = 1;
 	#waveSpeedMultiplier = 0.05;
 	#isBinary = false;
@@ -68,6 +70,17 @@ export class StateManager extends EventTarget {
 		if (this.#ambientLightIntensity === clamped) return;
 		this.#ambientLightIntensity = clamped;
 		this.dispatchEvent(new CustomEvent(AppEvents.LIGHT_INTENSITY_CHANGED));
+	}
+
+	get specularIntensity() {
+		return this.#specularIntensity;
+	}
+
+	set specularIntensity(intensity) {
+		const clamped = Math.max(0, Math.min(1, intensity));
+		if (this.#specularIntensity === clamped) return;
+		this.#specularIntensity = clamped;
+		this.dispatchEvent(new CustomEvent(AppEvents.SPECULAR_INTENSITY_CHANGED));
 	}
 
 	get waveNumber() {

@@ -1,6 +1,5 @@
 import * as THREE from "three";
 
-import { reloadShaderMaterial } from "@js/engine/shader-loader.js";
 import { surfaceSampler } from "@js/engine/raycaster.js";
 import { setGaugeLine, SHADER_COLORS } from "@js/ui/colors.js";
 import { updateActiveMesh } from "@js/engine/mesh-renderer.js";
@@ -9,7 +8,7 @@ import { VisMode, AppEvents } from "@js/core/state-manager.js";
 import { formatNumber, get2Min, getMax } from "@js/utils/math-utils.js";
 import { CameraVersors } from "@js/engine/scene-manager.js";
 import { renderMeshDropdown, toggleLoading } from "@js/ui/ui-file-handlers.js";
-import { uniform } from "three/tsl";
+import { STANDARD_CAMERA_DISTANCE } from "@js/engine/scene-manager";
 
 export function updateMinMaxUI(min, max, state) {
 	let unit = "";
@@ -90,7 +89,12 @@ export function setupEventHandlers(dependencies) {
 		document.getElementById(id).addEventListener("click", () => {
 			if (state.activeMesh) {
 				const mesh = state.activeMesh;
-				sceneManager.setCamera(mesh.center, mesh.radius, versor, 2.5);
+				sceneManager.setCamera(
+					mesh.center,
+					mesh.radius,
+					versor,
+					STANDARD_CAMERA_DISTANCE,
+				);
 				setActiveCameraButton(id);
 			}
 		});
@@ -161,24 +165,48 @@ export function setupEventHandlers(dependencies) {
 		}
 
 		if (versor) {
-			sceneManager.setCamera(mesh.center, mesh.radius, versor, 2.5);
+			sceneManager.setCamera(
+				mesh.center,
+				mesh.radius,
+				versor,
+				STANDARD_CAMERA_DISTANCE,
+			);
 		}
 	});
 
-	document.getElementById("light-slider").oninput = function () {
-		const intensity = (100 - this.value) / 100;
+	const lightSlider = document.getElementById("light-slider");
+	lightSlider.oninput = function () {
+		const val = parseFloat(this.value);
+		let intensity = 1.0;
+		let specular = 0.0;
+
+		if (val <= 60) {
+			intensity = (60 - val) / 59;
+			specular = 0.0;
+		} else {
+			intensity = 0.0;
+			specular = (val - 60) / 40;
+		}
+
 		state.ambientLightIntensity = intensity;
+		state.specularIntensity = specular;
+
 		if (
 			state.activeMesh &&
 			state.activeMesh.mesh &&
-			state.activeMesh.mesh.material.uniforms &&
-			state.activeMesh.mesh.material.uniforms.uAmbientLightIntensity
+			state.activeMesh.mesh.material.uniforms
 		) {
-			state.activeMesh.mesh.material.uniforms.uAmbientLightIntensity.value =
-				intensity;
+			const uniforms = state.activeMesh.mesh.material.uniforms;
+			if (uniforms.uAmbientLightIntensity) {
+				uniforms.uAmbientLightIntensity.value = intensity;
+			}
+			if (uniforms.uSpecularIntensity) {
+				uniforms.uSpecularIntensity.value = specular;
+			}
 		}
 		sceneManager.render();
 	};
+	lightSlider.oninput();
 
 	document.getElementById("waves-number-slider").oninput = function () {
 		const val = parseFloat(this.value);
@@ -343,6 +371,7 @@ export function setupEventHandlers(dependencies) {
 	});
 
 	sceneManager.controls.addEventListener("change", () => {
+		if (sceneManager.isAnimatingCamera) return;
 		setActiveCameraButton(null);
 		if (state.mode != VisMode.ANIMATED) {
 			sceneManager.render();
@@ -428,7 +457,12 @@ function cameraReset(sceneManager, state) {
 	if (!state.activeMesh) return;
 	const center = state.activeMesh.center;
 	const radius = state.activeMesh.radius;
-	sceneManager.setCamera(center, radius, new THREE.Vector3(0, 0, 1), 2.5);
+	sceneManager.setCamera(
+		center,
+		radius,
+		new THREE.Vector3(0, 0, 1),
+		STANDARD_CAMERA_DISTANCE,
+	);
 }
 
 function onMouseMove(e, sceneManager, mouse, state) {
