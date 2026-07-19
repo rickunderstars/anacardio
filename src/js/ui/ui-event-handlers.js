@@ -128,7 +128,8 @@ export function setupEventHandlers(dependencies) {
 
 	document.addEventListener("keydown", (k) => {
 		if (k.key.toLowerCase() === "s") {
-			sceneManager.takeScreenshot(2000);
+			if (!state.activeMesh) return;
+			sceneManager.takeScreenshot(2000, state);
 		}
 	});
 
@@ -437,6 +438,7 @@ export function setupEventHandlers(dependencies) {
 			aboutDialog.showModal();
 		});
 	}
+
 
 	if (aboutDialog) {
 		aboutDialog.addEventListener("click", (e) => {
