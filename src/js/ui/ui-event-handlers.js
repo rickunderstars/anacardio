@@ -60,8 +60,8 @@ export function setupEventHandlers(dependencies) {
 		"camera-back": CameraVersors.BACK,
 		"camera-top": CameraVersors.TOP,
 		"camera-bottom": CameraVersors.BOTTOM,
-		"camera-left": CameraVersors.LEFT,
-		"camera-right": CameraVersors.RIGHT,
+		"camera-left": CameraVersors.RIGHT,
+		"camera-right": CameraVersors.LEFT,
 	};
 
 	const setActiveCameraButton = (activeId) => {
@@ -127,8 +127,9 @@ export function setupEventHandlers(dependencies) {
 	});
 
 	document.addEventListener("keydown", (k) => {
-		if (k.key.toLowerCase() === "c") {
-			sceneManager.takeScreenshot(2000);
+		if (k.key.toLowerCase() === "s") {
+			if (!state.activeMesh) return;
+			sceneManager.takeScreenshot(2000, state);
 		}
 	});
 
@@ -437,6 +438,7 @@ export function setupEventHandlers(dependencies) {
 			aboutDialog.showModal();
 		});
 	}
+
 
 	if (aboutDialog) {
 		aboutDialog.addEventListener("click", (e) => {
