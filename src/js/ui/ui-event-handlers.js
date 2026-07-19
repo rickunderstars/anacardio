@@ -60,8 +60,8 @@ export function setupEventHandlers(dependencies) {
 		"camera-back": CameraVersors.BACK,
 		"camera-top": CameraVersors.TOP,
 		"camera-bottom": CameraVersors.BOTTOM,
-		"camera-left": CameraVersors.LEFT,
-		"camera-right": CameraVersors.RIGHT,
+		"camera-left": CameraVersors.RIGHT,
+		"camera-right": CameraVersors.LEFT,
 	};
 
 	const setActiveCameraButton = (activeId) => {
@@ -127,7 +127,7 @@ export function setupEventHandlers(dependencies) {
 	});
 
 	document.addEventListener("keydown", (k) => {
-		if (k.key.toLowerCase() === "c") {
+		if (k.key.toLowerCase() === "s") {
 			sceneManager.takeScreenshot(2000);
 		}
 	});
