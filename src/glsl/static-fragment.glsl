@@ -20,6 +20,7 @@ vec3 TurboColormap(in float x) {
 	const vec2 kBlueVec2 = vec2(-89.90310912, 27.34824973);
 
 	x = clamp(x, 0.0, 1.0);
+	x = 1.0 - x;
 	vec4 v4 = vec4(1.0, x, x * x, x * x * x);
 	vec2 v2 = v4.zw * v4.z;
 	return vec3(dot(v4, kRedVec4) + dot(v2, kRedVec2),

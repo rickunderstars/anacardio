@@ -41,6 +41,7 @@ export function turboColormap(x) {
 	const kBlueVec2 = [-89.90310912, 27.34824973];
 
 	x = Math.max(0, Math.min(1, x));
+	x = 1 - x;
 	const v4 = [1, x, x * x, x * x * x];
 	const v2 = [v4[2] * v4[2], v4[3] * v4[2]];
 
