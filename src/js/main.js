@@ -1,4 +1,5 @@
 import "@css/styles.css";
+import "@js/ui/aspect-ratio.js";
 
 import * as THREE from "three";
 
