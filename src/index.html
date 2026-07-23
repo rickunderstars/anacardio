@@ -3,7 +3,13 @@
 	<head>
 		<meta charset="utf-8" />
 		<link rel="icon" href="assets/images/heart-icon.png" type="image/png" />
-		<title>AnaCardio</title>
+		<title>AnaCardio: cardiac atria visualizer</title>
+		<meta name="author" content="Riccardo Bovo, Marco Tarini" />
+		<meta
+			name="description"
+			content="Visualizer of Electrical Signal propagation in cardiac atria. Università degli Studi di Milano, 2026"
+		/>
+		<meta name="application-name" content="AnaCardio" />
 	</head>
 
 	<body
@@ -538,7 +544,9 @@
 					</div>
 				</div>
 				<div class="flex flex-col gap-2">
-					<div class="text-sm text-slate-300 light:text-black font-bold text-center">
+					<div
+						class="text-sm text-slate-300 light:text-black font-bold text-center"
+					>
 						Press S to take a screenshot
 					</div>
 					<fieldset
@@ -677,28 +685,6 @@
 			</div>
 		</dialog>
 
-		<script>
-			(function () {
-				var dismissed = false;
-				var warning = document.getElementById("aspect-ratio-warning");
-				var dismiss = document.getElementById("aspect-ratio-dismiss");
-				function check() {
-					if (dismissed) return;
-					if (window.innerWidth / window.innerHeight < 11 / 9) {
-						warning.classList.remove("hidden");
-					} else {
-						warning.classList.add("hidden");
-					}
-				}
-				dismiss.addEventListener("click", function (e) {
-					e.preventDefault();
-					dismissed = true;
-					warning.classList.add("hidden");
-				});
-				check();
-				window.addEventListener("resize", check);
-			})();
-		</script>
 		<script src="/js/emscripten/heart.out.js"></script>
 		<script type="module" src="js/main.js"></script>
 	</body>
