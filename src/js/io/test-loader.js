@@ -2,11 +2,9 @@ import { addMesh } from "@js/io/file-loader.js";
 
 export const testMeshes = [
 	{
-		filename: "CARTO_EXAMPLE_MESH.mesh",
+		filename: "Example dataset",
 		load: () =>
-			fetch(
-				`${import.meta.env.BASE_URL}example-meshes/CARTO_EXAMPLE_MESH.mesh`,
-			)
+			fetch(`${import.meta.env.BASE_URL}example-meshes/Example dataset`)
 				.then((r) => r.text())
 				.then((text) => ({ default: text })),
 	},

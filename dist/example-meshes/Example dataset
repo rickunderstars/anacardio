@@ -5,7 +5,7 @@
 
 [GeneralAttributes]
 MeshID                 = -1
-MeshName               = 
+MeshName               =
 NumVertex              = 3973
 NumTriangle            = 8031
 ; ---------------------------------------------------------------------
@@ -25,11 +25,11 @@ VisibleGroupsIDs       = 0
 VisibleGroupsTypes     = 5
 ; --------------------------------------------------------------------
 TopologyStatus         = 0
-MeshColor              = 0.00000   1.00000   0.00000   1.00000   
+MeshColor              = 0.00000   1.00000   0.00000   1.00000
 Matrix                 = 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
 NumVertexColors        = 12
-ColorsIDs              = 0  1  2  3  4  5  6  7  8  9  10  11  
-ColorsNames            = Unipolar  Bipolar  LAT  Impedance  A1  A2  A2-A1  SCI  ICL  ACL  Force  Paso  
+ColorsIDs              = 0  1  2  3  4  5  6  7  8  9  10  11
+ColorsNames            = Unipolar  Bipolar  LAT  Impedance  A1  A2  A2-A1  SCI  ICL  ACL  Force  Paso
 
 [VerticesSection]
 ;                   X             Y             Z        NormalX   NormalY   NormalZ  GroupID
